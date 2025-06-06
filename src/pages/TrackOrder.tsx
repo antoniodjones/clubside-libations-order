@@ -4,14 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock, Package, Utensils } from "lucide-react";
 
+type OrderStatus = "received" | "preparing" | "ready" | "completed";
+
 const TrackOrder = () => {
-  const orderStatus = "preparing"; // received, preparing, ready, completed
+  const orderStatus: OrderStatus = "preparing"; // received, preparing, ready, completed
+  
+  const getStepCompleted = (stepId: OrderStatus, currentStatus: OrderStatus) => {
+    const statusOrder = ["received", "preparing", "ready", "completed"];
+    const currentIndex = statusOrder.indexOf(currentStatus);
+    const stepIndex = statusOrder.indexOf(stepId);
+    return stepIndex <= currentIndex;
+  };
   
   const statusSteps = [
-    { id: "received", label: "Order Received", icon: CheckCircle, completed: true },
-    { id: "preparing", label: "Being Prepared", icon: Utensils, completed: orderStatus === "preparing" || orderStatus === "ready" || orderStatus === "completed" },
-    { id: "ready", label: "Ready for Pickup", icon: Package, completed: orderStatus === "ready" || orderStatus === "completed" },
-    { id: "completed", label: "Order Complete", icon: CheckCircle, completed: orderStatus === "completed" },
+    { id: "received" as OrderStatus, label: "Order Received", icon: CheckCircle, completed: getStepCompleted("received", orderStatus) },
+    { id: "preparing" as OrderStatus, label: "Being Prepared", icon: Utensils, completed: getStepCompleted("preparing", orderStatus) },
+    { id: "ready" as OrderStatus, label: "Ready for Pickup", icon: Package, completed: getStepCompleted("ready", orderStatus) },
+    { id: "completed" as OrderStatus, label: "Order Complete", icon: CheckCircle, completed: getStepCompleted("completed", orderStatus) },
   ];
 
   const currentOrder = {
