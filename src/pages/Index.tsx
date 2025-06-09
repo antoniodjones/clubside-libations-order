@@ -62,23 +62,28 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Transform Your Venue?
+      <section className="py-32 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="mb-8">
+            <span className="text-yellow-400 text-sm font-medium tracking-[0.2em] uppercase">Ready to Begin?</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl font-light text-white mb-8 tracking-tight leading-tight">
+            Transform Your Venue
+            <br />
+            <span className="font-normal">Experience</span>
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Join the revolution in bar and club service. Increase revenue, reduce wait times, and delight your customers.
+          <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
+            Join the revolution in bar and club service. Increase revenue, reduce wait times, and delight your customers with our premium ordering platform.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link to="/menu">
-              <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3">
-                Order Now
+              <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-12 py-4 text-lg tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/25">
+                Start Ordering
               </Button>
             </Link>
             <Link to="/backoffice">
-              <Button size="lg" variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-3">
-                Partner Dashboard
+              <Button size="lg" variant="outline" className="border-2 border-purple-400/50 text-purple-300 hover:bg-purple-400/10 hover:border-purple-400 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm">
+                Partner With Us
               </Button>
             </Link>
           </div>
