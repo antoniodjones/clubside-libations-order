@@ -16,20 +16,46 @@ const Index = () => {
       <Features />
       
       {/* Stats Section */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">50+</div>
-              <div className="text-gray-300">Partner Venues</div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-light text-white mb-4 tracking-tight">
+              Trusted by the Best
+            </h2>
+            <p className="text-lg text-gray-300 font-light">
+              Industry-leading performance you can count on
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="text-center group">
+              <div className="text-5xl md:text-6xl font-light text-yellow-400 mb-3 group-hover:scale-105 transition-transform duration-300">
+                50+
+              </div>
+              <div className="text-gray-300 text-lg font-light tracking-wide">
+                Partner Venues
+              </div>
+              <div className="w-12 h-px bg-yellow-400/30 mx-auto mt-4"></div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">10k+</div>
-              <div className="text-gray-300">Orders Served</div>
+            
+            <div className="text-center group">
+              <div className="text-5xl md:text-6xl font-light text-yellow-400 mb-3 group-hover:scale-105 transition-transform duration-300">
+                10k+
+              </div>
+              <div className="text-gray-300 text-lg font-light tracking-wide">
+                Orders Served
+              </div>
+              <div className="w-12 h-px bg-yellow-400/30 mx-auto mt-4"></div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">4.9★</div>
-              <div className="text-gray-300">Average Rating</div>
+            
+            <div className="text-center group">
+              <div className="text-5xl md:text-6xl font-light text-yellow-400 mb-3 group-hover:scale-105 transition-transform duration-300">
+                4.9★
+              </div>
+              <div className="text-gray-300 text-lg font-light tracking-wide">
+                Average Rating
+              </div>
+              <div className="w-12 h-px bg-yellow-400/30 mx-auto mt-4"></div>
             </div>
           </div>
         </div>
