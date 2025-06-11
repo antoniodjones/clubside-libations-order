@@ -82,7 +82,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/backoffice">
-              <Button size="lg" variant="outline" className="border-2 border-purple-400/50 text-purple-200 hover:bg-purple-400/10 hover:border-purple-400 hover:text-purple-100 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm">
+              <Button size="lg" variant="outline" className="border-2 border-purple-400/50 text-purple-300 hover:bg-purple-400/10 hover:border-purple-400 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm">
                 Partner With Us
               </Button>
             </Link>
