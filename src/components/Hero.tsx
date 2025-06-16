@@ -45,7 +45,7 @@ export const Hero = () => {
               </Button>
             </Link>
             <Link to="/backoffice">
-              <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white hover:text-black font-semibold text-lg px-12 py-4 rounded-none backdrop-blur-sm transition-all duration-300 min-w-[200px]">
+              <Button size="lg" variant="outline" className="border-2 border-white/30 text-orange-700 hover:bg-white hover:text-orange-800 font-semibold text-lg px-12 py-4 rounded-none backdrop-blur-sm transition-all duration-300 min-w-[200px]">
                 Partner With Us
               </Button>
             </Link>
