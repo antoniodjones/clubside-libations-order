@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, CalendarIcon, Mail, KeyRound } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Mail, Link as LinkIcon, Key } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -198,36 +198,45 @@ const Signup = () => {
           <CardContent>
             <div className="space-y-6">
               {/* Auth Method Selection */}
-              <div className="flex space-x-2">
-                <Button
+              <div className="flex flex-col space-y-3 mb-4">
+                <button
                   type="button"
-                  variant={authMethod === "password" ? "default" : "outline"}
                   onClick={() => setAuthMethod("password")}
-                  className="flex-1 text-sm"
-                  size="sm"
+                  className={`flex items-center text-left transition-colors ${
+                    authMethod === "password" 
+                      ? "text-yellow-400" 
+                      : "text-gray-300 hover:text-white"
+                  }`}
                 >
-                  Password
-                </Button>
-                <Button
+                  <Mail className="w-4 h-4 mr-3" />
+                  <span className="text-sm">Email+Password (By Default)</span>
+                </button>
+                
+                <button
                   type="button"
-                  variant={authMethod === "magic" ? "default" : "outline"}
                   onClick={() => setAuthMethod("magic")}
-                  className="flex-1 text-sm"
-                  size="sm"
+                  className={`flex items-center text-left transition-colors ${
+                    authMethod === "magic" 
+                      ? "text-yellow-400" 
+                      : "text-gray-300 hover:text-white"
+                  }`}
                 >
-                  <Mail className="w-4 h-4 mr-1" />
-                  Magic Link
-                </Button>
-                <Button
+                  <LinkIcon className="w-4 h-4 mr-3" />
+                  <span className="text-sm">Email+VerifyLink (sent to email)</span>
+                </button>
+                
+                <button
                   type="button"
-                  variant={authMethod === "otp" ? "default" : "outline"}
                   onClick={() => setAuthMethod("otp")}
-                  className="flex-1 text-sm"
-                  size="sm"
+                  className={`flex items-center text-left transition-colors ${
+                    authMethod === "otp" 
+                      ? "text-yellow-400" 
+                      : "text-gray-300 hover:text-white"
+                  }`}
                 >
-                  <KeyRound className="w-4 h-4 mr-1" />
-                  OTP
-                </Button>
+                  <Key className="w-4 h-4 mr-3" />
+                  <span className="text-sm">Email+OneTimeCode (sent to email)</span>
+                </button>
               </div>
 
               {/* Common Fields */}
