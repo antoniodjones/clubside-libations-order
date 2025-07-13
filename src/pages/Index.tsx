@@ -85,7 +85,7 @@ const Index = () => {
               <p className="text-gray-300 mb-6">
                 Handcrafted cocktails from expert bartenders using top-shelf spirits and fresh ingredients
               </p>
-              <Button variant="outline" className="border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/10 rounded-full">
+              <Button variant="outline" className="border-yellow-400/50 text-gray-900 hover:bg-yellow-400/10 rounded-full">
                 View Menu
               </Button>
             </div>
@@ -100,7 +100,7 @@ const Index = () => {
               <p className="text-gray-300 mb-6">
                 VIP bottle service with premium champagne, spirits, and mixers delivered to your table
               </p>
-              <Button variant="outline" className="border-purple-400/50 text-purple-400 hover:bg-purple-400/10 rounded-full">
+              <Button variant="outline" className="border-purple-400/50 text-gray-900 hover:bg-purple-400/10 rounded-full">
                 Reserve Now
               </Button>
             </div>
@@ -115,7 +115,7 @@ const Index = () => {
               <p className="text-gray-300 mb-6">
                 Gourmet bar food, late-night bites, and select cannabis options where available
               </p>
-              <Button variant="outline" className="border-gray-400/50 text-gray-300 hover:bg-gray-400/10 rounded-full">
+              <Button variant="outline" className="border-gray-400/50 text-gray-900 hover:bg-gray-400/10 rounded-full">
                 Order Food
               </Button>
             </div>
