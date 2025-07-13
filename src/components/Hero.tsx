@@ -38,7 +38,7 @@ export const Hero = () => {
           
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20">
-            <Link to="/menu">
+            <Link to="/login">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-lg px-12 py-4 rounded-none shadow-xl hover:shadow-2xl transition-all duration-300 border-0 min-w-[200px]">
                 <Smartphone className="mr-3 h-5 w-5" />
                 Start Ordering
