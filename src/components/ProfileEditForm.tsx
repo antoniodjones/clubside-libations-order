@@ -24,8 +24,6 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
     last_name: "",
     email: "",
     mobile_number: "",
-    home_phone: "",
-    work_phone: "",
     birthday: "",
     gender: "",
     address_line_1: "",
@@ -33,7 +31,7 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
     city: "",
     state: "",
     postal_code: "",
-    country_code: "",
+    country_code: "US", // Default to US
   });
 
   useEffect(() => {
@@ -43,8 +41,6 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
         last_name: profile.last_name || "",
         email: profile.email || "",
         mobile_number: profile.mobile_number || "",
-        home_phone: profile.home_phone || "",
-        work_phone: profile.work_phone || "",
         birthday: profile.birthday || "",
         gender: profile.gender || "",
         address_line_1: profile.address_line_1 || "",
@@ -52,7 +48,7 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
         city: profile.city || "",
         state: profile.state || "",
         postal_code: profile.postal_code || "",
-        country_code: profile.country_code || "",
+        country_code: profile.country_code || "US",
       });
     }
   }, [profile]);
@@ -92,6 +88,90 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const renderAddressFields = () => {
+    const { country_code } = formData;
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="address_line_1">
+            {country_code === "GB" ? "Address Line 1" : "Street Address"}
+          </Label>
+          <Input
+            id="address_line_1"
+            value={formData.address_line_1}
+            onChange={(e) => handleInputChange("address_line_1", e.target.value)}
+            placeholder={country_code === "GB" ? "House number and street name" : "Enter street address"}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="address_line_2">
+            {country_code === "GB" ? "Address Line 2 (optional)" : "Address Line 2"}
+          </Label>
+          <Input
+            id="address_line_2"
+            value={formData.address_line_2}
+            onChange={(e) => handleInputChange("address_line_2", e.target.value)}
+            placeholder={
+              country_code === "GB" 
+                ? "Apartment, suite, etc. (optional)" 
+                : country_code === "CA"
+                ? "Apartment, unit, etc. (optional)"
+                : "Apartment, suite, etc. (optional)"
+            }
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="city">
+              {country_code === "GB" ? "Town/City" : "City"}
+            </Label>
+            <Input
+              id="city"
+              value={formData.city}
+              onChange={(e) => handleInputChange("city", e.target.value)}
+              placeholder={country_code === "GB" ? "Enter town or city" : "Enter city"}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="state">
+              {country_code === "CA" ? "Province" : country_code === "GB" ? "County" : "State"}
+            </Label>
+            <Input
+              id="state"
+              value={formData.state}
+              onChange={(e) => handleInputChange("state", e.target.value)}
+              placeholder={
+                country_code === "CA" 
+                  ? "Enter province" 
+                  : country_code === "GB"
+                  ? "Enter county"
+                  : "Enter state"
+              }
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="postal_code">
+              {country_code === "US" ? "ZIP Code" : country_code === "GB" ? "Postcode" : "Postal Code"}
+            </Label>
+            <Input
+              id="postal_code"
+              value={formData.postal_code}
+              onChange={(e) => handleInputChange("postal_code", e.target.value)}
+              placeholder={
+                country_code === "US" 
+                  ? "Enter ZIP code" 
+                  : country_code === "GB"
+                  ? "Enter postcode"
+                  : "Enter postal code"
+              }
+            />
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -161,8 +241,21 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-semibold">Phone Numbers</h3>
-            <div className="grid grid-cols-1 gap-4">
+            <h3 className="font-semibold">Contact Information</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="country_code">Country</Label>
+                <Select value={formData.country_code} onValueChange={(value) => handleInputChange("country_code", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="US">United States</SelectItem>
+                    <SelectItem value="CA">Canada</SelectItem>
+                    <SelectItem value="GB">United Kingdom</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="mobile_number">Mobile Number</Label>
                 <Input
@@ -172,78 +265,12 @@ export const ProfileEditForm = ({ isOpen, onClose, profile, onProfileUpdate }: P
                   placeholder="Enter mobile number"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="home_phone">Home Phone</Label>
-                <Input
-                  id="home_phone"
-                  value={formData.home_phone}
-                  onChange={(e) => handleInputChange("home_phone", e.target.value)}
-                  placeholder="Enter home phone"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="work_phone">Work Phone</Label>
-                <Input
-                  id="work_phone"
-                  value={formData.work_phone}
-                  onChange={(e) => handleInputChange("work_phone", e.target.value)}
-                  placeholder="Enter work phone"
-                />
-              </div>
             </div>
           </div>
 
           <div className="space-y-4">
             <h3 className="font-semibold">Address</h3>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="address_line_1">Address Line 1</Label>
-                <Input
-                  id="address_line_1"
-                  value={formData.address_line_1}
-                  onChange={(e) => handleInputChange("address_line_1", e.target.value)}
-                  placeholder="Enter street address"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address_line_2">Address Line 2</Label>
-                <Input
-                  id="address_line_2"
-                  value={formData.address_line_2}
-                  onChange={(e) => handleInputChange("address_line_2", e.target.value)}
-                  placeholder="Apartment, suite, etc. (optional)"
-                />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    value={formData.city}
-                    onChange={(e) => handleInputChange("city", e.target.value)}
-                    placeholder="Enter city"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input
-                    id="state"
-                    value={formData.state}
-                    onChange={(e) => handleInputChange("state", e.target.value)}
-                    placeholder="Enter state"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="postal_code">Postal Code</Label>
-                  <Input
-                    id="postal_code"
-                    value={formData.postal_code}
-                    onChange={(e) => handleInputChange("postal_code", e.target.value)}
-                    placeholder="Enter postal code"
-                  />
-                </div>
-              </div>
-            </div>
+            {renderAddressFields()}
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
