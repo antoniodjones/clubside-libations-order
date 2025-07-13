@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Loyalty from "./pages/Loyalty";
+import Cannabis from "./pages/Cannabis";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
                     {/* Placeholder routes for sidebar navigation */}
                     <Route path="/orders" element={<div className="text-center py-20"><h2 className="text-2xl font-bold text-muted-foreground">Orders - Coming Soon</h2></div>} />
                     <Route path="/favorites" element={<div className="text-center py-20"><h2 className="text-2xl font-bold text-muted-foreground">Favorites - Coming Soon</h2></div>} />
+                    <Route path="/cannabis" element={<Cannabis />} />
                     <Route path="/loyalty" element={<Loyalty />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/settings" element={<div className="text-center py-20"><h2 className="text-2xl font-bold text-muted-foreground">Settings - Coming Soon</h2></div>} />
