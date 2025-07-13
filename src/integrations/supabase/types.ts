@@ -19,10 +19,11 @@ export type Database = {
           birthday: string | null
           country_code: string | null
           created_at: string
+          customer_id: string
           email: string | null
-          first_name: string
-          id: string
-          last_name: string
+          external_id: string | null
+          first_name: string | null
+          last_name: string | null
           mobile_number: string | null
           updated_at: string
           user_id: string
@@ -31,10 +32,11 @@ export type Database = {
           birthday?: string | null
           country_code?: string | null
           created_at?: string
+          customer_id?: string
           email?: string | null
-          first_name: string
-          id?: string
-          last_name: string
+          external_id?: string | null
+          first_name?: string | null
+          last_name?: string | null
           mobile_number?: string | null
           updated_at?: string
           user_id: string
@@ -43,10 +45,11 @@ export type Database = {
           birthday?: string | null
           country_code?: string | null
           created_at?: string
+          customer_id?: string
           email?: string | null
-          first_name?: string
-          id?: string
-          last_name?: string
+          external_id?: string | null
+          first_name?: string | null
+          last_name?: string | null
           mobile_number?: string | null
           updated_at?: string
           user_id?: string
