@@ -5,20 +5,23 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, CalendarIcon, Mail, Link as LinkIcon, Key } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Mail, Link as LinkIcon, Key, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import countries from "world-countries";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState<Date>();
   const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
@@ -311,15 +314,39 @@ const Signup = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="mobileNumber" className="text-white">Mobile Number</Label>
-                <Input
-                  id="mobileNumber"
-                  type="tel"
-                  placeholder="Enter your mobile number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                />
+                <div className="flex gap-2">
+                  <Select value={countryCode} onValueChange={setCountryCode}>
+                    <SelectTrigger className="w-32 bg-white/10 border-white/20 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {countries
+                        .filter(country => country.idd.root)
+                        .sort((a, b) => a.name.common.localeCompare(b.name.common))
+                        .map((country) => {
+                          const code = country.idd.root + (country.idd.suffixes?.[0] || "");
+                          return (
+                            <SelectItem key={country.cca2} value={code}>
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{country.flag}</span>
+                                <span className="text-sm">{code}</span>
+                              </div>
+                            </SelectItem>
+                          );
+                        })}
+                    </SelectContent>
+                  </Select>
+                  
+                  <Input
+                    id="mobileNumber"
+                    type="tel"
+                    placeholder="Enter your mobile number"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                    required
+                    className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                  />
+                </div>
               </div>
 
               {/* Password Signup Form */}
