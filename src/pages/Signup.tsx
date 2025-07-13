@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, CalendarIcon, Mail, Link as LinkIcon, Key, ChevronDown } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Mail, Link as LinkIcon, Key, ChevronDown, Home } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -184,10 +184,13 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="mb-8">
+        <div className="mb-8 flex justify-between items-center">
           <Link to="/login" className="inline-flex items-center text-white hover:text-purple-300 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Login
+          </Link>
+          <Link to="/" className="inline-flex items-center text-white hover:text-purple-300 transition-colors">
+            <Home className="w-5 h-5" />
           </Link>
         </div>
         
