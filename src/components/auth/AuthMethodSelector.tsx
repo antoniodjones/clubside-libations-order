@@ -18,7 +18,7 @@ export const AuthMethodSelector = ({ authMethod, onMethodChange }: AuthMethodSel
         }`}
       >
         <Mail className="w-4 h-4 mr-3" />
-        <span className="text-sm">Email+Password</span>
+        <span className="text-sm">Email+Password (By Default)</span>
       </button>
       
       <button
