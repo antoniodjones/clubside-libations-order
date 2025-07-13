@@ -192,7 +192,7 @@ const Signup = () => {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-white">Create Account</CardTitle>
             <CardDescription className="text-gray-300">
-              Join us and start ordering your favorite drinks
+              Join us and start ordering your favorite drinks using the below options:
             </CardDescription>
           </CardHeader>
           <CardContent>
