@@ -294,9 +294,9 @@ const Index = () => {
             <Button 
               variant="outline" 
               onClick={handleContinueWithoutLogin}
-              className="border-gray-400/50 text-white hover:bg-gray-400/10 rounded-full"
+              className="border-gray-400/50 text-gray-900 hover:bg-gray-400/10 rounded-full"
             >
-              Continue Without Login
+              Continue Shopping Without Login
             </Button>
           </div>
         </DialogContent>
