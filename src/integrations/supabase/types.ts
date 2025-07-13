@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      cities: {
+        Row: {
+          country: string
+          created_at: string
+          id: string
+          latitude: number
+          longitude: number
+          name: string
+          state: string
+        }
+        Insert: {
+          country?: string
+          created_at?: string
+          id?: string
+          latitude: number
+          longitude: number
+          name: string
+          state: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          state?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           birthday: string | null
@@ -55,6 +85,120 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      venue_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      venues: {
+        Row: {
+          address: string
+          category_id: string | null
+          city_id: string
+          created_at: string
+          description: string | null
+          hours_friday: string | null
+          hours_monday: string | null
+          hours_saturday: string | null
+          hours_sunday: string | null
+          hours_thursday: string | null
+          hours_tuesday: string | null
+          hours_wednesday: string | null
+          id: string
+          is_active: boolean
+          latitude: number
+          longitude: number
+          name: string
+          phone: string | null
+          price_range: number | null
+          rating: number | null
+          review_count: number | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address: string
+          category_id?: string | null
+          city_id: string
+          created_at?: string
+          description?: string | null
+          hours_friday?: string | null
+          hours_monday?: string | null
+          hours_saturday?: string | null
+          hours_sunday?: string | null
+          hours_thursday?: string | null
+          hours_tuesday?: string | null
+          hours_wednesday?: string | null
+          id?: string
+          is_active?: boolean
+          latitude: number
+          longitude: number
+          name: string
+          phone?: string | null
+          price_range?: number | null
+          rating?: number | null
+          review_count?: number | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string
+          category_id?: string | null
+          city_id?: string
+          created_at?: string
+          description?: string | null
+          hours_friday?: string | null
+          hours_monday?: string | null
+          hours_saturday?: string | null
+          hours_sunday?: string | null
+          hours_thursday?: string | null
+          hours_tuesday?: string | null
+          hours_wednesday?: string | null
+          id?: string
+          is_active?: boolean
+          latitude?: number
+          longitude?: number
+          name?: string
+          phone?: string | null
+          price_range?: number | null
+          rating?: number | null
+          review_count?: number | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venues_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "venue_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "venues_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
