@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,15 +18,6 @@ export default {
 			}
 		},
 		extend: {
-			fontFamily: {
-				'sans': ['Inter', 'sans-serif'],
-				'display': ['Space Grotesk', 'Inter', 'sans-serif'],
-				'body': ['Inter', 'sans-serif'],
-			},
-			fontSize: {
-				'hero': ['clamp(2.5rem, 8vw, 6rem)', { lineHeight: '1.1', fontWeight: '700' }],
-				'hero-sm': ['clamp(1.5rem, 4vw, 2.5rem)', { lineHeight: '1.2', fontWeight: '600' }],
-			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -71,29 +61,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				},
-				category: {
-					alcohol: 'hsl(var(--category-alcohol))',
-					'alcohol-foreground': 'hsl(var(--category-alcohol-foreground))',
-					food: 'hsl(var(--category-food))',
-					'food-foreground': 'hsl(var(--category-food-foreground))',
-					cannabis: 'hsl(var(--category-cannabis))',
-					'cannabis-foreground': 'hsl(var(--category-cannabis-foreground))',
-					merchandise: 'hsl(var(--category-merchandise))',
-					'merchandise-foreground': 'hsl(var(--category-merchandise-foreground))'
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
-			},
-			backgroundImage: {
-				'gradient-hero': 'var(--gradient-hero)',
-			},
-			boxShadow: {
-				'hero': 'var(--shadow-hero)',
-				'card-enhanced': 'var(--shadow-card)',
 			},
 			keyframes: {
 				'accordion-down': {

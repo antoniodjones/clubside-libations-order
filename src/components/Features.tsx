@@ -40,34 +40,23 @@ export const Features = () => {
   ];
 
   return (
-    <section className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 px-4">
+      <div className="max-w-6xl mx-auto">
         {/* Customer Features */}
-        <div className="text-center mb-20">
-          <div className="mb-6">
-            <span className="text-yellow-400 text-sm font-medium tracking-[0.2em] uppercase">For Customers</span>
-          </div>
-          <h2 className="text-5xl md:text-6xl font-light text-white mb-6 tracking-tight">
-            Experience nightlife
-            <br />
-            <span className="font-normal">like never before</span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
-            Skip the wait and enjoy premium service at your fingertips
-          </p>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white mb-4">For Customers</h2>
+          <p className="text-gray-300 text-lg">Experience nightlife like never before</p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           {customerFeatures.map((feature, index) => (
-            <Card key={index} className="group bg-white/5 backdrop-blur-sm border-0 hover:bg-white/10 transition-all duration-500 hover:transform hover:scale-[1.02] p-8">
-              <CardHeader className="pb-6">
-                <div className="w-16 h-16 bg-yellow-400/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-yellow-400/20 transition-colors duration-300">
-                  <feature.icon className="w-8 h-8 text-yellow-400" />
-                </div>
-                <CardTitle className="text-white text-2xl font-light tracking-wide">{feature.title}</CardTitle>
+            <Card key={index} className="bg-black/40 backdrop-blur-sm border-purple-500/20 hover:border-yellow-400/40 transition-all duration-300 hover:transform hover:scale-105">
+              <CardHeader>
+                <feature.icon className="w-12 h-12 text-yellow-400 mb-4" />
+                <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-gray-300 text-lg leading-relaxed font-light">
+              <CardContent>
+                <CardDescription className="text-gray-300 text-base leading-relaxed">
                   {feature.description}
                 </CardDescription>
               </CardContent>
@@ -76,31 +65,20 @@ export const Features = () => {
         </div>
 
         {/* Business Features */}
-        <div className="text-center mb-20">
-          <div className="mb-6">
-            <span className="text-purple-400 text-sm font-medium tracking-[0.2em] uppercase">For Venues</span>
-          </div>
-          <h2 className="text-5xl md:text-6xl font-light text-white mb-6 tracking-tight">
-            Powerful tools to
-            <br />
-            <span className="font-normal">grow your business</span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
-            Increase revenue, reduce wait times, and delight your customers
-          </p>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white mb-4">For Venues</h2>
+          <p className="text-gray-300 text-lg">Powerful tools to grow your business</p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {businessFeatures.map((feature, index) => (
-            <Card key={index} className="group bg-white/5 backdrop-blur-sm border-0 hover:bg-white/10 transition-all duration-500 hover:transform hover:scale-[1.02] p-8">
-              <CardHeader className="pb-6">
-                <div className="w-16 h-16 bg-purple-400/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-purple-400/20 transition-colors duration-300">
-                  <feature.icon className="w-8 h-8 text-purple-400" />
-                </div>
-                <CardTitle className="text-white text-2xl font-light tracking-wide">{feature.title}</CardTitle>
+            <Card key={index} className="bg-black/40 backdrop-blur-sm border-purple-500/20 hover:border-yellow-400/40 transition-all duration-300 hover:transform hover:scale-105">
+              <CardHeader>
+                <feature.icon className="w-12 h-12 text-purple-400 mb-4" />
+                <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-gray-300 text-lg leading-relaxed font-light">
+              <CardContent>
+                <CardDescription className="text-gray-300 text-base leading-relaxed">
                   {feature.description}
                 </CardDescription>
               </CardContent>
