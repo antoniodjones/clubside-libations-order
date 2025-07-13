@@ -58,6 +58,7 @@ export type Database = {
           first_name: string | null
           gender: string | null
           home_phone: string | null
+          id_document_url: string | null
           last_name: string | null
           mobile_number: string | null
           postal_code: string | null
@@ -79,6 +80,7 @@ export type Database = {
           first_name?: string | null
           gender?: string | null
           home_phone?: string | null
+          id_document_url?: string | null
           last_name?: string | null
           mobile_number?: string | null
           postal_code?: string | null
@@ -100,6 +102,7 @@ export type Database = {
           first_name?: string | null
           gender?: string | null
           home_phone?: string | null
+          id_document_url?: string | null
           last_name?: string | null
           mobile_number?: string | null
           postal_code?: string | null

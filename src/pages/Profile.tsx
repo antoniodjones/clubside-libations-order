@@ -4,17 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MapPin, Mail, Phone, User, Calendar, CreditCard, Star, TrendingUp } from "lucide-react";
+import { MapPin, Mail, Phone, User, Calendar, CreditCard, Star, TrendingUp, Upload, Image, X } from "lucide-react";
 import { ProfileEditForm } from "@/components/ProfileEditForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Tables } from "@/integrations/supabase/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 const Profile = () => {
   const { toast } = useToast();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [idDocumentUrl, setIdDocumentUrl] = useState<string | null>(null);
+  const [isUploadingId, setIsUploadingId] = useState(false);
+  const [isIdDialogOpen, setIsIdDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -47,6 +52,9 @@ const Profile = () => {
         });
       } else {
         setProfile(data);
+        if (data?.id_document_url) {
+          setIdDocumentUrl(data.id_document_url);
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -57,6 +65,123 @@ const Profile = () => {
 
   const handleProfileUpdate = (updatedProfile: Tables<"profiles">) => {
     setProfile(updatedProfile);
+    if (updatedProfile?.id_document_url) {
+      setIdDocumentUrl(updatedProfile.id_document_url);
+    }
+  };
+
+  const handleIdUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select a file smaller than 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploadingId(true);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/id-document.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('id-documents')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from('id-documents')
+        .getPublicUrl(fileName);
+
+      const publicUrl = data.publicUrl;
+
+      // Update profile with ID document URL
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ id_document_url: publicUrl })
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      setIdDocumentUrl(publicUrl);
+      setProfile(prev => prev ? { ...prev, id_document_url: publicUrl } : null);
+
+      toast({
+        title: "ID uploaded successfully",
+        description: "Your identification document has been uploaded.",
+      });
+    } catch (error) {
+      console.error('Error uploading ID:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to upload ID document. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingId(false);
+    }
+  };
+
+  const handleRemoveId = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Remove from storage
+      const fileName = `${user.id}/id-document.jpg`; // Assuming jpg for simplicity
+      await supabase.storage
+        .from('id-documents')
+        .remove([fileName]);
+
+      // Update profile
+      const { error } = await supabase
+        .from('profiles')
+        .update({ id_document_url: null })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      setIdDocumentUrl(null);
+      setProfile(prev => prev ? { ...prev, id_document_url: null } : null);
+
+      toast({
+        title: "ID removed",
+        description: "Your identification document has been removed.",
+      });
+    } catch (error) {
+      console.error('Error removing ID:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove ID document.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getInitials = () => {
@@ -181,6 +306,80 @@ const Profile = () => {
               
               <div className="pt-4 text-xs text-primary-foreground/60">
                 Last updated {new Date(profile?.updated_at || '').toLocaleDateString()}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* ID Document Section */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground">Identification Document</h3>
+                  {idDocumentUrl && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveId}
+                      className="h-6 px-2 text-xs text-destructive hover:text-destructive"
+                    >
+                      <X className="h-3 w-3 mr-1" />
+                      Remove
+                    </Button>
+                  )}
+                </div>
+                
+                {idDocumentUrl ? (
+                  <div 
+                    className="relative border rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setIsIdDialogOpen(true)}
+                  >
+                    <img 
+                      src={idDocumentUrl} 
+                      alt="ID Document" 
+                      className="w-full h-32 object-cover"
+                      onError={(e) => {
+                        console.error('Error loading ID image');
+                        e.currentTarget.src = '/placeholder.svg';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
+                      <div className="bg-white/90 rounded-full p-2">
+                        <Image className="h-4 w-4 text-primary" />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center">
+                    <div className="space-y-2">
+                      <Upload className="h-8 w-8 text-muted-foreground mx-auto" />
+                      <div className="text-sm text-muted-foreground">
+                        <p>Upload your government-issued ID</p>
+                        <p className="text-xs">For age verification at venues</p>
+                      </div>
+                      <div className="relative">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleIdUpload}
+                          disabled={isUploadingId}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          disabled={isUploadingId}
+                          className="pointer-events-none"
+                        >
+                          {isUploadingId ? "Uploading..." : "Choose File"}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Max 5MB • JPG, PNG, GIF
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -378,6 +577,28 @@ const Profile = () => {
         profile={profile}
         onProfileUpdate={handleProfileUpdate}
       />
+
+      {/* ID Document Full View Dialog */}
+      <Dialog open={isIdDialogOpen} onOpenChange={setIsIdDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Identification Document</DialogTitle>
+          </DialogHeader>
+          {idDocumentUrl && (
+            <div className="flex justify-center">
+              <img 
+                src={idDocumentUrl} 
+                alt="ID Document - Full View" 
+                className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                onError={(e) => {
+                  console.error('Error loading full ID image');
+                  e.currentTarget.src = '/placeholder.svg';
+                }}
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
