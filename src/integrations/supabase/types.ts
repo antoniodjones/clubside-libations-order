@@ -46,43 +46,67 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address_line_1: string | null
+          address_line_2: string | null
           birthday: string | null
+          city: string | null
           country_code: string | null
           created_at: string
           customer_id: string
           email: string | null
           external_id: string | null
           first_name: string | null
+          gender: string | null
+          home_phone: string | null
           last_name: string | null
           mobile_number: string | null
+          postal_code: string | null
+          state: string | null
           updated_at: string
           user_id: string
+          work_phone: string | null
         }
         Insert: {
+          address_line_1?: string | null
+          address_line_2?: string | null
           birthday?: string | null
+          city?: string | null
           country_code?: string | null
           created_at?: string
           customer_id?: string
           email?: string | null
           external_id?: string | null
           first_name?: string | null
+          gender?: string | null
+          home_phone?: string | null
           last_name?: string | null
           mobile_number?: string | null
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string
           user_id: string
+          work_phone?: string | null
         }
         Update: {
+          address_line_1?: string | null
+          address_line_2?: string | null
           birthday?: string | null
+          city?: string | null
           country_code?: string | null
           created_at?: string
           customer_id?: string
           email?: string | null
           external_id?: string | null
           first_name?: string | null
+          gender?: string | null
+          home_phone?: string | null
           last_name?: string | null
           mobile_number?: string | null
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string
           user_id?: string
+          work_phone?: string | null
         }
         Relationships: []
       }

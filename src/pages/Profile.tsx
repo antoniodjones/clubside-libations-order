@@ -1,11 +1,100 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Mail, Phone, User, Calendar, CreditCard, Star, TrendingUp } from "lucide-react";
+import { ProfileEditForm } from "@/components/ProfileEditForm";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Tables } from "@/integrations/supabase/types";
 
 const Profile = () => {
+  const { toast } = useToast();
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please log in to view your profile.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load profile data.",
+          variant: "destructive",
+        });
+      } else {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProfileUpdate = (updatedProfile: Tables<"profiles">) => {
+    setProfile(updatedProfile);
+  };
+
+  const getInitials = () => {
+    if (!profile?.first_name && !profile?.last_name) return "U";
+    return `${profile?.first_name?.[0] || ""}${profile?.last_name?.[0] || ""}`.toUpperCase();
+  };
+
+  const getFullName = () => {
+    if (!profile?.first_name && !profile?.last_name) return "User";
+    return `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim();
+  };
+
+  const formatAddress = () => {
+    if (!profile?.address_line_1) return "No address provided";
+    const parts = [profile.address_line_1];
+    if (profile.city) parts.push(profile.city);
+    if (profile.state) parts.push(profile.state);
+    return parts.join(", ");
+  };
+
+  const formatBirthday = () => {
+    if (!profile?.birthday) return "";
+    const date = new Date(profile.birthday);
+    const today = new Date();
+    const age = today.getFullYear() - date.getFullYear();
+    return `${date.toLocaleDateString()} (${age})`;
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-4">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Loading profile...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto space-y-4">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -14,7 +103,12 @@ const Profile = () => {
           <Card className="bg-primary text-primary-foreground">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/20">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-primary-foreground hover:bg-primary-foreground/20"
+                  onClick={() => setIsEditOpen(true)}
+                >
                   Edit
                 </Button>
               </div>
@@ -22,58 +116,71 @@ const Profile = () => {
               <div className="text-center space-y-4">
                 <Avatar className="h-24 w-24 mx-auto">
                   <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback className="text-2xl">JW</AvatarFallback>
+                  <AvatarFallback className="text-2xl">{getInitials()}</AvatarFallback>
                 </Avatar>
                 
                 <div>
-                  <h2 className="text-xl font-bold">Jenny Wilson</h2>
-                  <p className="text-primary-foreground/80">03.22.1990 (34)</p>
+                  <h2 className="text-xl font-bold">{getFullName()}</h2>
+                  {profile?.birthday && (
+                    <p className="text-primary-foreground/80">{formatBirthday()}</p>
+                  )}
                 </div>
               </div>
               
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
-                  <span>123 Main Street, New York</span>
+                  <span className="text-xs">{formatAddress()}</span>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  <span>jenny.w@gmail.com</span>
-                </div>
+                {profile?.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    <span className="text-xs">{profile.email}</span>
+                  </div>
+                )}
                 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    <span>Cell: (817) 234-3244</span>
-                  </div>
-                  <div className="pl-6 text-primary-foreground/80">
-                    <p>Home: (817) 234-0000</p>
-                    <p>Work: (817) 100-0000</p>
-                    <p>Other: (817) 210-0000</p>
+                  {profile?.mobile_number && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      <span className="text-xs">Cell: {profile.mobile_number}</span>
+                    </div>
+                  )}
+                  <div className="pl-6 text-primary-foreground/80 space-y-1">
+                    {profile?.home_phone && (
+                      <p className="text-xs">Home: {profile.home_phone}</p>
+                    )}
+                    {profile?.work_phone && (
+                      <p className="text-xs">Work: {profile.work_phone}</p>
+                    )}
                   </div>
                 </div>
                 
                 <div className="pt-4 border-t border-primary-foreground/20 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span>Sex: Female</span>
-                  </div>
+                  {profile?.gender && (
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      <span className="text-xs capitalize">Gender: {profile.gender}</span>
+                    </div>
+                  )}
                   
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    <span>Member Since: May 2022</span>
+                    <span className="text-xs">
+                      Member Since: {new Date(profile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </span>
                   </div>
                   
                   <div className="flex items-center gap-2">
                     <CreditCard className="h-4 w-4" />
-                    <span>Premium Member</span>
+                    <span className="text-xs">Premium Member</span>
                   </div>
                 </div>
               </div>
               
               <div className="pt-4 text-xs text-primary-foreground/60">
-                Last active on Dec 13, 2024 at 8:45pm
+                Last updated {new Date(profile?.updated_at || '').toLocaleDateString()}
               </div>
             </CardContent>
           </Card>
@@ -81,7 +188,7 @@ const Profile = () => {
         
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-6">
-          {/* Stats Cards */}
+          {/* ... keep existing code (stats cards and tabs) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardContent className="p-6">
@@ -264,6 +371,13 @@ const Profile = () => {
           </Card>
         </div>
       </div>
+
+      <ProfileEditForm
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        profile={profile}
+        onProfileUpdate={handleProfileUpdate}
+      />
     </div>
   );
 };
