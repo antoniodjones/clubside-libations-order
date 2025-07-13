@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Menu from "./pages/Menu";
 import TrackOrder from "./pages/TrackOrder";
 import BackOffice from "./pages/BackOffice";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/menu" element={<Menu />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
