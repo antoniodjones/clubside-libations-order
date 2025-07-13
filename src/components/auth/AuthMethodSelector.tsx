@@ -31,7 +31,7 @@ export const AuthMethodSelector = ({ authMethod, onMethodChange }: AuthMethodSel
         }`}
       >
         <Link className="w-4 h-4 mr-3" />
-        <span className="text-sm">Email+VerifyLink</span>
+        <span className="text-sm">Email+VerifyLink (sent to email)</span>
       </button>
       
       <button
@@ -44,7 +44,7 @@ export const AuthMethodSelector = ({ authMethod, onMethodChange }: AuthMethodSel
         }`}
       >
         <Key className="w-4 h-4 mr-3" />
-        <span className="text-sm">Email+OneTimeCode</span>
+        <span className="text-sm">Email+OneTimeCode (sent to email)</span>
       </button>
     </div>
   );
