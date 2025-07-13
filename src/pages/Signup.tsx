@@ -5,10 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, CalendarIcon } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Mail, KeyRound } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,12 +21,161 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [authMethod, setAuthMethod] = useState<"password" | "magic" | "otp">("password");
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handlePasswordSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just navigate to menu after form submission
-    navigate("/menu");
+    setLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/menu`,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            mobile_number: mobileNumber,
+            birthday: birthday?.toISOString(),
+          }
+        }
+      });
+      
+      if (error) throw error;
+      toast({ 
+        title: "Account created!", 
+        description: "Please check your email to verify your account." 
+      });
+      navigate("/login");
+    } catch (error: any) {
+      toast({ 
+        title: "Signup failed", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMagicLinkSignup = async () => {
+    if (!email || !firstName || !lastName) {
+      toast({ 
+        title: "Required fields missing", 
+        description: "Please fill in your name and email address.",
+        variant: "destructive" 
+      });
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/menu`,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            mobile_number: mobileNumber,
+            birthday: birthday?.toISOString(),
+          }
+        }
+      });
+      
+      if (error) throw error;
+      toast({ 
+        title: "Magic link sent!", 
+        description: "Check your email to complete signup." 
+      });
+    } catch (error: any) {
+      toast({ 
+        title: "Failed to send magic link", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOtpSignupRequest = async () => {
+    if (!email || !firstName || !lastName) {
+      toast({ 
+        title: "Required fields missing", 
+        description: "Please fill in your name and email address.",
+        variant: "destructive" 
+      });
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            mobile_number: mobileNumber,
+            birthday: birthday?.toISOString(),
+          }
+        }
+      });
+      
+      if (error) throw error;
+      setOtpSent(true);
+      toast({ 
+        title: "OTP sent!", 
+        description: "Check your email for the 6-digit code." 
+      });
+    } catch (error: any) {
+      toast({ 
+        title: "Failed to send OTP", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOtpVerify = async () => {
+    if (otp.length !== 6) {
+      toast({ 
+        title: "Invalid OTP", 
+        description: "Please enter the complete 6-digit code.",
+        variant: "destructive" 
+      });
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: 'email'
+      });
+      
+      if (error) throw error;
+      navigate("/menu");
+      toast({ title: "Welcome!", description: "Your account has been created successfully." });
+    } catch (error: any) {
+      toast({ 
+        title: "Verification failed", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,7 +196,41 @@ const Signup = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
+              {/* Auth Method Selection */}
+              <div className="flex space-x-2">
+                <Button
+                  type="button"
+                  variant={authMethod === "password" ? "default" : "outline"}
+                  onClick={() => setAuthMethod("password")}
+                  className="flex-1 text-sm"
+                  size="sm"
+                >
+                  Password
+                </Button>
+                <Button
+                  type="button"
+                  variant={authMethod === "magic" ? "default" : "outline"}
+                  onClick={() => setAuthMethod("magic")}
+                  className="flex-1 text-sm"
+                  size="sm"
+                >
+                  <Mail className="w-4 h-4 mr-1" />
+                  Magic Link
+                </Button>
+                <Button
+                  type="button"
+                  variant={authMethod === "otp" ? "default" : "outline"}
+                  onClick={() => setAuthMethod("otp")}
+                  className="flex-1 text-sm"
+                  size="sm"
+                >
+                  <KeyRound className="w-4 h-4 mr-1" />
+                  OTP
+                </Button>
+              </div>
+
+              {/* Common Fields */}
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="text-white">First Name</Label>
                 <Input
@@ -126,27 +313,107 @@ const Signup = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">Create Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                />
-              </div>
-              
-              <Button
-                type="submit"
-                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                size="lg"
-              >
-                Create Account & Start Ordering
-              </Button>
-            </form>
+              {/* Password Signup Form */}
+              {authMethod === "password" && (
+                <form onSubmit={handlePasswordSignup} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-white">Create Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                    size="lg"
+                  >
+                    {loading ? "Creating Account..." : "Create Account & Start Ordering"}
+                  </Button>
+                </form>
+              )}
+
+              {/* Magic Link Signup */}
+              {authMethod === "magic" && (
+                <div className="space-y-4">
+                  <Button
+                    type="button"
+                    onClick={handleMagicLinkSignup}
+                    disabled={loading || !email || !firstName || !lastName}
+                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                    size="lg"
+                  >
+                    {loading ? "Sending..." : "Send Signup Magic Link"}
+                  </Button>
+                </div>
+              )}
+
+              {/* OTP Signup */}
+              {authMethod === "otp" && (
+                <div className="space-y-4">
+                  {!otpSent ? (
+                    <Button
+                      type="button"
+                      onClick={handleOtpSignupRequest}
+                      disabled={loading || !email || !firstName || !lastName}
+                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                      size="lg"
+                    >
+                      {loading ? "Sending..." : "Send OTP Code"}
+                    </Button>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-white">Enter 6-digit code</Label>
+                        <div className="flex justify-center">
+                          <InputOTP
+                            maxLength={6}
+                            value={otp}
+                            onChange={(value) => setOtp(value)}
+                          >
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={handleOtpVerify}
+                        disabled={loading || otp.length !== 6}
+                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                        size="lg"
+                      >
+                        {loading ? "Verifying..." : "Verify & Create Account"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          setOtpSent(false);
+                          setOtp("");
+                        }}
+                        className="w-full text-white border-white/20"
+                      >
+                        Resend OTP
+                      </Button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
             
             <div className="mt-6 text-center space-y-3">
               <p className="text-gray-300">
