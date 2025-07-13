@@ -36,7 +36,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/backoffice">
-              <Button size="lg" variant="outline" className="border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
+              <Button size="lg" variant="outline" className="border-2 border-white/20 text-gray-900 hover:bg-white/10 hover:border-white/40 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
                 Partner With Us
               </Button>
             </Link>
@@ -239,7 +239,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/backoffice">
-              <Button size="lg" variant="outline" className="border-2 border-purple-400/50 text-purple-300 hover:bg-purple-400/10 hover:border-purple-400 px-16 py-6 text-xl font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
+              <Button size="lg" variant="outline" className="border-2 border-purple-400/50 text-white hover:bg-purple-400/10 hover:border-purple-400 px-16 py-6 text-xl font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
                 Become a Partner
               </Button>
             </Link>
