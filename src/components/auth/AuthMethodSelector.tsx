@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Mail, KeyRound } from "lucide-react";
+import { Mail, Link, Key } from "lucide-react";
 
 interface AuthMethodSelectorProps {
   authMethod: "password" | "magic" | "otp";
@@ -8,36 +7,45 @@ interface AuthMethodSelectorProps {
 
 export const AuthMethodSelector = ({ authMethod, onMethodChange }: AuthMethodSelectorProps) => {
   return (
-    <div className="flex space-x-2">
-      <Button
+    <div className="flex flex-col space-y-3 mb-4">
+      <button
         type="button"
-        variant={authMethod === "password" ? "default" : "outline"}
         onClick={() => onMethodChange("password")}
-        className="flex-1 text-sm"
-        size="sm"
+        className={`flex items-center text-left transition-colors ${
+          authMethod === "password" 
+            ? "text-yellow-400" 
+            : "text-gray-300 hover:text-white"
+        }`}
       >
-        Use Email+Password
-      </Button>
-      <Button
+        <Mail className="w-4 h-4 mr-3" />
+        <span className="text-sm">Email+Password</span>
+      </button>
+      
+      <button
         type="button"
-        variant={authMethod === "magic" ? "default" : "outline"}
         onClick={() => onMethodChange("magic")}
-        className="flex-1 text-sm"
-        size="sm"
+        className={`flex items-center text-left transition-colors ${
+          authMethod === "magic" 
+            ? "text-yellow-400" 
+            : "text-gray-300 hover:text-white"
+        }`}
       >
-        <Mail className="w-4 h-4 mr-1" />
-        Use Email+ConfirmationLink
-      </Button>
-      <Button
+        <Link className="w-4 h-4 mr-3" />
+        <span className="text-sm">Email+VerifyLink</span>
+      </button>
+      
+      <button
         type="button"
-        variant={authMethod === "otp" ? "default" : "outline"}
         onClick={() => onMethodChange("otp")}
-        className="flex-1 text-sm"
-        size="sm"
+        className={`flex items-center text-left transition-colors ${
+          authMethod === "otp" 
+            ? "text-yellow-400" 
+            : "text-gray-300 hover:text-white"
+        }`}
       >
-        <KeyRound className="w-4 h-4 mr-1" />
-        Use Email+OnetimePasscode
-      </Button>
+        <Key className="w-4 h-4 mr-3" />
+        <span className="text-sm">Email+OneTimeCode</span>
+      </button>
     </div>
   );
 };
