@@ -143,8 +143,9 @@ const Signup = () => {
               </p>
               <p className="text-gray-300">
                 <Link to="/menu" className="text-yellow-400 hover:text-yellow-300 font-medium">
-                  <span className="underline">Click Here</span> to Order As Guest
+                  <span className="underline">Click Here</span>
                 </Link>
+                <span className="text-white"> to Order As Guest</span>
               </p>
             </div>
           </CardContent>
