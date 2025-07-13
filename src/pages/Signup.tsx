@@ -45,6 +45,7 @@ const Signup = () => {
             first_name: firstName,
             last_name: lastName,
             mobile_number: mobileNumber,
+            country_code: countryCode,
             birthday: birthday?.toISOString(),
           }
         }
@@ -87,6 +88,7 @@ const Signup = () => {
             first_name: firstName,
             last_name: lastName,
             mobile_number: mobileNumber,
+            country_code: countryCode,
             birthday: birthday?.toISOString(),
           }
         }
@@ -127,6 +129,7 @@ const Signup = () => {
             first_name: firstName,
             last_name: lastName,
             mobile_number: mobileNumber,
+            country_code: countryCode,
             birthday: birthday?.toISOString(),
           }
         }
