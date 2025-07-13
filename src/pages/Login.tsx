@@ -161,7 +161,7 @@ const Login = () => {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-white">Welcome Back</CardTitle>
             <CardDescription className="text-gray-300">
-              Sign in to start ordering your favorite drinks
+              Sign in to start ordering your favorite drinks with of the following options below
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -175,7 +175,7 @@ const Login = () => {
                   className="flex-1 text-sm"
                   size="sm"
                 >
-                  Password
+                  Use Email+Password
                 </Button>
                 <Button
                   type="button"
@@ -185,7 +185,7 @@ const Login = () => {
                   size="sm"
                 >
                   <Mail className="w-4 h-4 mr-1" />
-                  Magic Link
+                  Use Email+ConfirmationLink
                 </Button>
                 <Button
                   type="button"
@@ -195,7 +195,7 @@ const Login = () => {
                   size="sm"
                 >
                   <KeyRound className="w-4 h-4 mr-1" />
-                  OTP
+                  Use Email+OnetimePasscode
                 </Button>
               </div>
 
