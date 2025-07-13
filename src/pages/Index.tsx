@@ -14,8 +14,6 @@ interface Venue {
   name: string;
   description: string | null;
   address: string;
-  phone: string | null;
-  website: string | null;
   rating: number | null;
   review_count: number | null;
   price_range: number | null;
@@ -31,108 +29,55 @@ interface Venue {
   } | null;
 }
 
-interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
-
-const categoryIcons = {
-  alcohol: Wine,
-  food: Utensils,
-  cannabis: Leaf,
-  merchandise: ShoppingBag,
-} as const;
-
-const categoryColors = {
-  alcohol: 'category-alcohol',
-  food: 'category-food', 
-  cannabis: 'category-cannabis',
-  merchandise: 'category-merchandise',
-} as const;
+const categoryData = [
+  { key: 'alcohol', name: 'Alcohol', icon: Wine, color: 'bg-amber-50 text-amber-700 border-amber-200' },
+  { key: 'food', name: 'Food', icon: Utensils, color: 'bg-green-50 text-green-700 border-green-200' },
+  { key: 'cannabis', name: 'Cannabis', icon: Leaf, color: 'bg-purple-50 text-purple-700 border-purple-200' },
+  { key: 'merchandise', name: 'Merchandise', icon: ShoppingBag, color: 'bg-blue-50 text-blue-700 border-blue-200' },
+];
 
 const Index = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [filteredVenues, setFilteredVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCity, setSelectedCity] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [cities, setCities] = useState<Array<{ id: string; name: string; state: string }>>([]);
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
-  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
-  const [maxDistance, setMaxDistance] = useState<number>(25);
   const [showResults, setShowResults] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchVenues();
-    fetchFilters();
-    getUserLocation();
+    fetchData();
   }, []);
 
   useEffect(() => {
     filterVenues();
-  }, [venues, searchTerm, selectedCity, selectedCategory, userLocation, maxDistance]);
+  }, [venues, searchTerm, selectedCity, selectedCategory]);
 
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.log('Location access denied:', error);
-        }
-      );
-    }
-  };
-
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 3959; // Earth's radius in miles
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-  };
-
-  const fetchVenues = async () => {
+  const fetchData = async () => {
     try {
-      const { data, error } = await supabase
-        .from('venues')
-        .select(`
-          *,
-          cities (name, state, country),
-          venue_categories (name)
-        `)
-        .eq('is_active', true);
-
-      if (error) throw error;
-      setVenues(data || []);
-    } catch (error) {
-      console.error('Error fetching venues:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchFilters = async () => {
-    try {
-      const [citiesResponse, categoriesResponse] = await Promise.all([
+      const [venuesResponse, citiesResponse, categoriesResponse] = await Promise.all([
+        supabase
+          .from('venues')
+          .select(`
+            *,
+            cities (name, state, country),
+            venue_categories (name)
+          `)
+          .eq('is_active', true),
         supabase.from('cities').select('id, name, state'),
         supabase.from('venue_categories').select('id, name')
       ]);
 
+      setVenues(venuesResponse.data || []);
       setCities(citiesResponse.data || []);
       setCategories(categoriesResponse.data || []);
     } catch (error) {
-      console.error('Error fetching filters:', error);
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,24 +92,12 @@ const Index = () => {
       );
     }
 
-    if (selectedCity) {
+    if (selectedCity !== 'all') {
       filtered = filtered.filter(venue => venue.cities.name === selectedCity);
     }
 
-    if (selectedCategory) {
+    if (selectedCategory !== 'all') {
       filtered = filtered.filter(venue => venue.venue_categories?.name === selectedCategory);
-    }
-
-    if (userLocation) {
-      filtered = filtered.filter(venue => {
-        const distance = calculateDistance(
-          userLocation.latitude,
-          userLocation.longitude,
-          venue.latitude,
-          venue.longitude
-        );
-        return distance <= maxDistance;
-      });
     }
 
     setFilteredVenues(filtered);
@@ -178,19 +111,9 @@ const Index = () => {
     navigate('/menu', { state: { venue } });
   };
 
-  const getPriceRangeDisplay = (range: number): string => {
-    return '$'.repeat(range);
-  };
-
-  const getDistanceDisplay = (venue: Venue): string | null => {
-    if (!userLocation) return null;
-    const distance = calculateDistance(
-      userLocation.latitude,
-      userLocation.longitude,
-      venue.latitude,
-      venue.longitude
-    );
-    return `${distance.toFixed(1)} mi`;
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCategory(categoryName.toLowerCase());
+    handleSearch();
   };
 
   if (loading) {
@@ -207,21 +130,21 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero py-20 lg:py-32">
+      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="font-display text-hero font-bold tracking-tight">
+            <div className="space-y-6">
+              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 Discover Premium
-                <span className="block text-primary">Venues & Experiences</span>
+                <span className="block text-primary mt-2">Venues & Experiences</span>
               </h1>
-              <p className="text-hero-sm text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
                 Find the perfect spot for drinks, dining, and premium products in your area
               </p>
             </div>
 
-            {/* Search Bar */}
-            <div className="bg-card rounded-2xl p-8 shadow-hero max-w-3xl mx-auto">
+            {/* Search Section */}
+            <div className="bg-card rounded-2xl p-6 md:p-8 shadow-lg max-w-3xl mx-auto border">
               <div className="space-y-6">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
@@ -229,21 +152,21 @@ const Index = () => {
                     placeholder="Search venues, locations, or experiences..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-12 h-14 text-lg border-0 shadow-none bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                    className="pl-12 h-12 md:h-14 text-base border-border bg-background"
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Select value={selectedCity} onValueChange={setSelectedCity}>
-                    <SelectTrigger className="h-12 border-0 bg-muted/50">
+                    <SelectTrigger className="h-12 border-border bg-background">
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-muted-foreground" />
                         <SelectValue placeholder="Select City" />
                       </div>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Cities</SelectItem>
+                      <SelectItem value="all">All Cities</SelectItem>
                       {cities.map((city) => (
                         <SelectItem key={city.id} value={city.name}>
                           {city.name}, {city.state}
@@ -253,14 +176,14 @@ const Index = () => {
                   </Select>
 
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="h-12 border-0 bg-muted/50">
+                    <SelectTrigger className="h-12 border-border bg-background">
                       <div className="flex items-center gap-2">
                         <Wine className="h-4 w-4 text-muted-foreground" />
                         <SelectValue placeholder="Category" />
                       </div>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Categories</SelectItem>
+                      <SelectItem value="all">All Categories</SelectItem>
                       {categories.map((category) => (
                         <SelectItem key={category.id} value={category.name}>
                           {category.name}
@@ -268,27 +191,12 @@ const Index = () => {
                       ))}
                     </SelectContent>
                   </Select>
-
-                  <Select value={maxDistance.toString()} onValueChange={(value) => setMaxDistance(Number(value))}>
-                    <SelectTrigger className="h-12 border-0 bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <SelectValue />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">Within 5 miles</SelectItem>
-                      <SelectItem value="10">Within 10 miles</SelectItem>
-                      <SelectItem value="25">Within 25 miles</SelectItem>
-                      <SelectItem value="50">Within 50 miles</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
 
                 <Button 
                   onClick={handleSearch} 
                   size="lg" 
-                  className="w-full h-14 text-lg font-semibold"
+                  className="w-full h-12 md:h-14 text-base font-semibold"
                 >
                   Find Venues
                 </Button>
@@ -303,34 +211,27 @@ const Index = () => {
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="font-display text-4xl lg:text-5xl font-bold mb-4">
+              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
                 Explore by Category
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
                 Discover venues offering premium alcohol, food, cannabis, and merchandise
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {Object.entries(categoryIcons).map(([category, Icon]) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {categoryData.map(({ key, name, icon: Icon, color }) => (
                 <Card 
-                  key={category} 
-                  className={`group cursor-pointer transition-all duration-300 hover:shadow-card-enhanced bg-${categoryColors[category as keyof typeof categoryColors]} border-0`}
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    handleSearch();
-                  }}
+                  key={key} 
+                  className={`group cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${color}`}
+                  onClick={() => handleCategoryClick(name)}
                 >
-                  <CardContent className="p-8 text-center">
-                    <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-${categoryColors[category as keyof typeof categoryColors]}-foreground/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className={`h-8 w-8 text-${categoryColors[category as keyof typeof categoryColors]}-foreground`} />
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="h-8 w-8" />
                     </div>
-                    <h3 className={`text-xl font-semibold mb-2 text-${categoryColors[category as keyof typeof categoryColors]}-foreground capitalize`}>
-                      {category}
-                    </h3>
-                    <p className={`text-${categoryColors[category as keyof typeof categoryColors]}-foreground/70`}>
-                      Premium {category} experiences
-                    </p>
+                    <h3 className="text-lg font-semibold mb-2">{name}</h3>
+                    <p className="text-sm opacity-80">Premium {name.toLowerCase()} experiences</p>
                   </CardContent>
                 </Card>
               ))}
@@ -344,19 +245,19 @@ const Index = () => {
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="mb-8">
-              <h2 className="font-display text-3xl font-bold mb-2">
+              <h2 className="font-display text-2xl md:text-3xl font-bold mb-2">
                 {filteredVenues.length} venues found
               </h2>
               <p className="text-muted-foreground">
                 {searchTerm && `Results for "${searchTerm}"`}
-                {selectedCity && ` in ${selectedCity}`}
-                {selectedCategory && ` • ${selectedCategory}`}
+                {selectedCity !== 'all' && ` in ${selectedCity}`}
+                {selectedCategory !== 'all' && ` • ${selectedCategory}`}
               </p>
             </div>
 
             {filteredVenues.length === 0 ? (
               <div className="text-center py-16">
-                <h3 className="text-2xl font-semibold mb-4">No venues found</h3>
+                <h3 className="text-xl font-semibold mb-4">No venues found</h3>
                 <p className="text-muted-foreground mb-8">
                   Try adjusting your search criteria or expanding your search area.
                 </p>
@@ -369,13 +270,13 @@ const Index = () => {
                 {filteredVenues.map((venue) => (
                   <Card 
                     key={venue.id} 
-                    className="group cursor-pointer transition-all duration-300 hover:shadow-card-enhanced"
+                    className="group cursor-pointer transition-all duration-300 hover:shadow-lg border"
                     onClick={() => handleVenueSelect(venue)}
                   >
                     <CardContent className="p-6">
                       <div className="space-y-4">
                         <div className="flex justify-between items-start">
-                          <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                          <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
                             {venue.name}
                           </h3>
                           {venue.rating && (
@@ -395,12 +296,6 @@ const Index = () => {
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <MapPin className="h-4 w-4" />
                           <span>{venue.cities.name}, {venue.cities.state}</span>
-                          {getDistanceDisplay(venue) && (
-                            <>
-                              <span>•</span>
-                              <span>{getDistanceDisplay(venue)}</span>
-                            </>
-                          )}
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -412,7 +307,7 @@ const Index = () => {
                             )}
                             {venue.price_range && (
                               <Badge variant="outline" className="text-xs">
-                                {getPriceRangeDisplay(venue.price_range)}
+                                {'$'.repeat(venue.price_range)}
                               </Badge>
                             )}
                           </div>
