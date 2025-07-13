@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { VenueSearch } from "@/components/VenueSearch";
+import Index from "./pages/Index";
 import Menu from "./pages/Menu";
 import TrackOrder from "./pages/TrackOrder";
 import BackOffice from "./pages/BackOffice";
@@ -39,7 +39,7 @@ const App = () => (
               <main className="flex-1 overflow-auto">
                 <div className="container mx-auto px-4 py-6">
                   <Routes>
-                    <Route path="/" element={<VenueSearch />} />
+                    <Route path="/" element={<Index />} />
                     <Route path="/menu" element={<Menu />} />
                     <Route path="/track-order" element={<TrackOrder />} />
                     <Route path="/backoffice" element={<BackOffice />} />
