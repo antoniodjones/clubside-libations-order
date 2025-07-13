@@ -145,7 +145,7 @@ const Signup = () => {
                 <Link to="/menu" className="text-yellow-400 hover:text-yellow-300 font-medium">
                   <span className="underline">Click Here</span>
                 </Link>
-                <span className="text-white"> to Order As Guest</span>
+                <span className="text-white font-normal"> to Order As Guest</span>
               </p>
             </div>
           </CardContent>
