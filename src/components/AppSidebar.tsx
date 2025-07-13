@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, Settings, MapPin, Gift, Cannabis } from "lucide-react";
+import { Search, Heart, ShoppingBag, User, Settings, MapPin, Gift } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -15,7 +15,6 @@ const navigationItems = [
   { title: "Find Venues", url: "/", icon: Search },
   { title: "My Orders", url: "/orders", icon: ShoppingBag },
   { title: "Favorites", url: "/favorites", icon: Heart },
-  { title: "Cannabis", url: "/cannabis", icon: Cannabis },
   { title: "Loyalty", url: "/loyalty", icon: Gift },
   { title: "Profile", url: "/profile", icon: User },
   { title: "Settings", url: "/settings", icon: Settings },
