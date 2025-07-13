@@ -1,11 +1,30 @@
 
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Wine, Coffee, Star, Award, Users, TrendingUp, Clock, Smartphone } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { useState } from "react";
 
 const Index = () => {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleOrderNow = () => {
+    setShowLoginModal(true);
+  };
+
+  const handleLogin = () => {
+    setShowLoginModal(false);
+    navigate('/login');
+  };
+
+  const handleContinueWithoutLogin = () => {
+    setShowLoginModal(false);
+    navigate('/menu');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <Navigation />
@@ -30,11 +49,13 @@ const Index = () => {
           </h2>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-            <Link to="/menu">
-              <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-12 py-4 text-lg tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/25 rounded-full">
-                Order Now
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              onClick={handleOrderNow}
+              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-12 py-4 text-lg tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/25 rounded-full"
+            >
+              Order Now
+            </Button>
             <Link to="/backoffice">
               <Button size="lg" variant="outline" className="border-2 border-white/20 text-gray-900 hover:bg-white/10 hover:border-white/40 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
                 Partner With Us
@@ -233,11 +254,13 @@ const Index = () => {
             Join the revolution in bar and club service. Skip the lines, enjoy premium drinks, and elevate your nightlife experience with LibationsPLUS.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link to="/menu">
-              <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-16 py-6 text-xl tracking-wide transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-400/30 rounded-full">
-                Start Ordering
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              onClick={handleOrderNow}
+              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-16 py-6 text-xl tracking-wide transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-400/30 rounded-full"
+            >
+              Start Ordering
+            </Button>
             <Link to="/backoffice">
               <Button size="lg" variant="outline" className="border-2 border-purple-400/50 text-gray-900 hover:bg-purple-400/10 hover:border-purple-400 px-16 py-6 text-xl font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
                 Become a Partner
@@ -248,6 +271,36 @@ const Index = () => {
       </section>
 
       <Footer />
+
+      {/* Login Modal */}
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="bg-gray-900 border border-purple-400/20 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-yellow-400">
+              Unlock Exclusive Benefits
+            </DialogTitle>
+            <DialogDescription className="text-center text-gray-300 mt-4">
+              Login to access member discounts, personalized recommendations, and exclusive offers available only to registered users.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex flex-col gap-4 mt-6">
+            <Button 
+              onClick={handleLogin}
+              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 rounded-full"
+            >
+              Login for Discounts
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleContinueWithoutLogin}
+              className="border-gray-400/50 text-white hover:bg-gray-400/10 rounded-full"
+            >
+              Continue Without Login
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
