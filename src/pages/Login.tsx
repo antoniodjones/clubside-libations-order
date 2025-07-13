@@ -74,7 +74,7 @@ const Login = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-2 border-white/30 text-white hover:bg-white hover:text-black font-semibold backdrop-blur-sm transition-all duration-300"
+                  className="w-full border-2 border-white/30 text-orange-700 hover:bg-white hover:text-orange-800 font-semibold backdrop-blur-sm transition-all duration-300"
                   size="lg"
                 >
                   Order as Guest
