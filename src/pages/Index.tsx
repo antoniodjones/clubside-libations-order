@@ -30,7 +30,7 @@ const Index = () => {
           </h2>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-            <Link to="/login">
+            <Link to="/menu">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-12 py-4 text-lg tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/25 rounded-full">
                 Order Now
               </Button>
@@ -233,7 +233,7 @@ const Index = () => {
             Join the revolution in bar and club service. Skip the lines, enjoy premium drinks, and elevate your nightlife experience with LibationsPLUS.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link to="/login">
+            <Link to="/menu">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-16 py-6 text-xl tracking-wide transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-400/30 rounded-full">
                 Start Ordering
               </Button>
