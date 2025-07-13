@@ -69,6 +69,17 @@ const Login = () => {
               >
                 Sign In & Order
               </Button>
+              
+              <Link to="/menu" className="block">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-2 border-white/30 text-white hover:bg-white hover:text-black font-semibold backdrop-blur-sm transition-all duration-300"
+                  size="lg"
+                >
+                  Order as Guest
+                </Button>
+              </Link>
             </form>
             
             <div className="mt-6 text-center">
