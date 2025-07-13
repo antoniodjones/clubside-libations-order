@@ -375,7 +375,7 @@ const Signup = () => {
                       className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                       size="lg"
                     >
-                      {loading ? "Sending..." : "Send OTP Code"}
+                      {loading ? "Sending..." : "Send OneTimeCode"}
                     </Button>
                   ) : (
                     <>
