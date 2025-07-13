@@ -134,11 +134,16 @@ const Signup = () => {
               </Button>
             </form>
             
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center space-y-3">
               <p className="text-gray-300">
                 Already have an account?{" "}
                 <Link to="/login" className="text-yellow-400 hover:text-yellow-300 font-medium">
                   Sign in
+                </Link>
+              </p>
+              <p className="text-gray-300">
+                <Link to="/menu" className="text-yellow-400 hover:text-yellow-300 font-medium">
+                  <span className="underline">Click Here</span> to Order As Guest
                 </Link>
               </p>
             </div>
