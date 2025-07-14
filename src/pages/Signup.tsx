@@ -151,7 +151,10 @@ const Signup = () => {
                       className="border-white/20 text-yellow-400 focus:ring-yellow-400"
                     />
                     <Label htmlFor="join-loyalty" className="text-white cursor-pointer">
-                      Join Loyalty Program: Buy & Earn (Learn More)
+                      Join Loyalty Program: Buy & Earn{" "}
+                      <Link to="/loyalty-info" className="text-yellow-400 hover:text-yellow-300 underline">
+                        (Learn More)
+                      </Link>
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3">
