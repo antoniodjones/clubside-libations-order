@@ -11,6 +11,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -21,7 +23,9 @@ const Signup = () => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [loyaltyOption, setLoyaltyOption] = useState("join");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const countries = [
     { code: "US", name: "United States", flag: "🇺🇸", prefix: "+1", format: "(XXX) XXX-XXXX" },
@@ -52,10 +56,86 @@ const Signup = () => {
     setMobileNumber(formatted);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just navigate to menu after form submission
-    navigate("/menu");
+    setLoading(true);
+
+    try {
+      // Sign up the user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+          }
+        }
+      });
+
+      if (authError) {
+        toast({
+          title: "Error creating account",
+          description: authError.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (authData.user) {
+        // Create user profile
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: authData.user.id,
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
+            mobile_number: `${countries.find(c => c.code === countryCode)?.prefix} ${mobileNumber}`,
+          });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+        }
+
+        // Create loyalty profile if user opted in
+        if (loyaltyOption === "join") {
+          const { error: loyaltyError } = await supabase
+            .from('user_loyalty')
+            .insert({
+              user_id: authData.user.id,
+              birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
+              referral_code: generateReferralCode(),
+            });
+
+          if (loyaltyError) {
+            console.error('Loyalty profile creation error:', loyaltyError);
+          }
+        }
+
+        toast({
+          title: "Account created successfully!",
+          description: "Please check your email to verify your account.",
+        });
+
+        navigate("/menu");
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateReferralCode = () => {
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
   };
 
   return (
@@ -223,10 +303,11 @@ const Signup = () => {
               
               <Button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                 size="lg"
               >
-                Create Account & Start Ordering
+                {loading ? "Creating Account..." : "Create Account & Start Ordering"}
               </Button>
             </form>
             
