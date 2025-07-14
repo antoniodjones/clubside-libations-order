@@ -64,12 +64,17 @@ export const useCart = () => {
   const cartTotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return {
     cart,
     addToCart,
     removeFromCart,
     getCartItemQuantity,
     cartTotal,
-    cartItemCount
+    cartItemCount,
+    clearCart
   };
 };

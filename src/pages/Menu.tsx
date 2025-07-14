@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
@@ -41,6 +42,7 @@ const Menu = () => {
   const [showAgeVerification, setShowAgeVerification] = useState(false);
   const [isAgeVerified, setIsAgeVerified] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { addToCart, removeFromCart, getCartItemQuantity, cartTotal, cartItemCount } = useCart();
 
   useEffect(() => {
@@ -211,7 +213,7 @@ const Menu = () => {
         <CartSummary
           itemCount={cartItemCount}
           total={cartTotal}
-          onCheckout={() => console.log('Navigate to checkout')}
+          onCheckout={handleCheckout}
         />
       </div>
 
