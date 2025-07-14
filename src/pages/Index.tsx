@@ -161,7 +161,7 @@ const Index = () => {
                 <Smartphone className="w-8 h-8 text-gray-900" />
               </div>
               <h3 className="text-xl font-bold text-white mb-4">Skip the Wait</h3>
-              <p className="text-gray-300">Order directly from your table and skip the crowded bar lines</p>
+              <p className="text-gray-300">Order directly where you stand and skip the crowded bar lines</p>
             </div>
             
             <div className="text-center group">
