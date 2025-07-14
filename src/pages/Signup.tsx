@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -16,10 +17,40 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState<Date>();
   const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("US");
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [loyaltyOption, setLoyaltyOption] = useState("join");
   const navigate = useNavigate();
+
+  const countries = [
+    { code: "US", name: "United States", flag: "🇺🇸", prefix: "+1", format: "(XXX) XXX-XXXX" },
+    { code: "GB", name: "United Kingdom", flag: "🇬🇧", prefix: "+44", format: "XXXX XXX XXX" },
+    { code: "CA", name: "Canada", flag: "🇨🇦", prefix: "+1", format: "(XXX) XXX-XXXX" }
+  ];
+
+  const formatPhoneNumber = (value: string, countryCode: string) => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, "");
+    
+    if (countryCode === "US" || countryCode === "CA") {
+      // Format: (XXX) XXX-XXXX
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+    } else if (countryCode === "GB") {
+      // Format: XXXX XXX XXX
+      if (digits.length <= 4) return digits;
+      if (digits.length <= 7) return `${digits.slice(0, 4)} ${digits.slice(4)}`;
+      return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7, 10)}`;
+    }
+    return digits;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value, countryCode);
+    setMobileNumber(formatted);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,15 +148,36 @@ const Signup = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="mobileNumber" className="text-white">Mobile Number</Label>
-                <Input
-                  id="mobileNumber"
-                  type="tel"
-                  placeholder="Enter your mobile number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                />
+                <div className="flex space-x-2">
+                  <Select value={countryCode} onValueChange={(value) => {
+                    setCountryCode(value);
+                    setMobileNumber(""); // Reset number when country changes
+                  }}>
+                    <SelectTrigger className="w-[180px] bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={country.code} value={country.code}>
+                          <div className="flex items-center space-x-2">
+                            <span>{country.flag}</span>
+                            <span>{country.prefix}</span>
+                            <span className="text-sm text-gray-600">{country.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    id="mobileNumber"
+                    type="tel"
+                    placeholder={countries.find(c => c.code === countryCode)?.format || "Enter phone number"}
+                    value={mobileNumber}
+                    onChange={handlePhoneChange}
+                    required
+                    className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
