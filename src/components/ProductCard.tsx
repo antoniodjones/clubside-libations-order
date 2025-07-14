@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wine, Plus, Minus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { productImageMap } from "../assets/images";
 
 interface Product {
@@ -25,40 +26,50 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, quantity, onAddToCart, onRemoveFromCart }: ProductCardProps) => {
+  const navigate = useNavigate();
+  
   const getProductImage = () => {
     const localImage = productImageMap[product.name as keyof typeof productImageMap];
     return localImage || product.image_url || null;
   };
 
+  const handleCardClick = () => {
+    navigate(`/menu/product/${product.id}`);
+  };
+
   return (
-    <Card className="bg-black/40 backdrop-blur-sm border-purple-400/20 hover:border-yellow-400/40 transition-all duration-300">
-      <CardHeader>
-        <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-yellow-600/20 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-          {getProductImage() ? (
-            <img 
-              src={getProductImage()!} 
-              alt={product.name} 
-              className="w-full h-full object-cover rounded-lg"
-            />
-          ) : (
-            <Wine className="w-12 h-12 text-yellow-400" />
-          )}
-        </div>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-white text-xl">{product.name}</CardTitle>
-            {product.alcohol_content && (
-              <Badge variant="secondary" className="mt-2">
-                {product.alcohol_content}% ABV
-              </Badge>
+    <Card className="bg-black/40 backdrop-blur-sm border-purple-400/20 hover:border-yellow-400/40 transition-all duration-300 cursor-pointer">
+      <div onClick={handleCardClick}>
+        <CardHeader>
+          <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-yellow-600/20 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+            {getProductImage() ? (
+              <img 
+                src={getProductImage()!} 
+                alt={product.name} 
+                className="w-full h-full object-cover rounded-lg"
+              />
+            ) : (
+              <Wine className="w-12 h-12 text-yellow-400" />
             )}
           </div>
-          <div className="text-2xl font-bold text-yellow-400">${product.price}</div>
-        </div>
-      </CardHeader>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-white text-xl">{product.name}</CardTitle>
+              {product.alcohol_content && (
+                <Badge variant="secondary" className="mt-2">
+                  {product.alcohol_content}% ABV
+                </Badge>
+              )}
+            </div>
+            <div className="text-2xl font-bold text-yellow-400">${product.price}</div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-300 mb-4">{product.description}</p>
+        </CardContent>
+      </div>
       <CardContent>
-        <p className="text-gray-300 mb-4">{product.description}</p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
           {quantity > 0 ? (
             <div className="flex items-center space-x-3">
               <Button

@@ -281,9 +281,11 @@ export type Database = {
       products: {
         Row: {
           alcohol_content: number | null
+          allergy_information: string | null
           category_id: string
           created_at: string
           description: string | null
+          fine_print: string | null
           id: string
           image_url: string | null
           is_available: boolean
@@ -297,9 +299,11 @@ export type Database = {
         }
         Insert: {
           alcohol_content?: number | null
+          allergy_information?: string | null
           category_id: string
           created_at?: string
           description?: string | null
+          fine_print?: string | null
           id?: string
           image_url?: string | null
           is_available?: boolean
@@ -313,9 +317,11 @@ export type Database = {
         }
         Update: {
           alcohol_content?: number | null
+          allergy_information?: string | null
           category_id?: string
           created_at?: string
           description?: string | null
+          fine_print?: string | null
           id?: string
           image_url?: string | null
           is_available?: boolean
