@@ -42,11 +42,15 @@ const ProductDetail = () => {
 
   const fetchProduct = async () => {
     try {
+      console.log('Fetching product with ID:', id);
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .eq('id', id)
         .single();
+
+      console.log('Product data:', data);
+      console.log('Product error:', error);
 
       if (error) {
         console.error('Error fetching product:', error);
