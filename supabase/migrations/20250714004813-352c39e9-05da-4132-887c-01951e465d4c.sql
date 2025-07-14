@@ -1,0 +1,90 @@
+-- Insert Cocktails (category_id: 728c915a-4e53-4898-bae8-52d78a681ae2)
+INSERT INTO public.products (name, description, price, category_id, venue_id, is_available, is_featured, image_url, alcohol_content, volume_ml) VALUES
+('Classic Margarita', 'Premium tequila, fresh lime juice, and Cointreau served with a salted rim', 14.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a', 15.0, 240),
+('Old Fashioned', 'Bourbon whiskey, sugar, bitters, and orange peel garnish', 16.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b', 35.0, 180),
+('Espresso Martini', 'Vodka, coffee liqueur, fresh espresso, and simple syrup', 15.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024709-8f23befc6f87', 25.0, 150),
+('Negroni', 'Gin, Campari, sweet vermouth, and orange peel', 14.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1536935338788-846bb9981813', 30.0, 180),
+('Moscow Mule', 'Vodka, ginger beer, lime juice in a copper mug', 13.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b', 20.0, 300),
+('Whiskey Sour', 'Bourbon, lemon juice, simple syrup, egg white foam', 14.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024506-0bccd828d307', 32.0, 180),
+('Manhattan', 'Rye whiskey, sweet vermouth, Angostura bitters, cherry garnish', 16.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1564419320461-6870880221ad', 35.0, 150),
+('Gin & Tonic', 'Premium gin, tonic water, lime garnish', 12.00, '728c915a-4e53-4898-bae8-52d78a681ae2', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024506-0bccd828d307', 25.0, 300),
+
+-- Insert Beer (category_id: f20022bf-dfa7-4715-9480-371a4cda6d9f)
+('IPA - Local Craft', 'Hoppy American IPA with citrus and pine notes', 8.00, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1608270586620-248524c67de9', 6.5, 473),
+('Wheat Beer', 'Smooth wheat beer with orange and coriander', 7.00, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9', 5.2, 473),
+('Pilsner', 'Crisp Czech-style pilsner with floral hops', 7.00, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608270586620-248524c67de9', 4.8, 473),
+('Stout', 'Rich coffee and chocolate notes in this dark beer', 8.50, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9', 7.2, 473),
+('Lager', 'Clean, crisp German-style lager', 6.50, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608270586620-248524c67de9', 4.5, 473),
+('Belgian Ale', 'Complex Belgian ale with spicy yeast character', 9.00, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9', 8.5, 473),
+('Pale Ale', 'Balanced pale ale with moderate hop character', 7.50, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608270586620-248524c67de9', 5.8, 473),
+('Sour Beer', 'Tart and refreshing fruit sour', 9.50, 'f20022bf-dfa7-4715-9480-371a4cda6d9f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9', 4.2, 473),
+
+-- Insert Wine (category_id: f403c9d9-9867-4aca-96c9-7d7bb4d78f73)
+('Cabernet Sauvignon', 'Full-bodied red with blackcurrant and oak notes', 12.00, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1606280086852-9be02a6ed6f7', 13.5, 148),
+('Chardonnay', 'Crisp white wine with apple and pear flavors', 11.00, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608883616112-e9f9c4e8c8e4', 12.5, 148),
+('Pinot Noir', 'Light-bodied red with cherry and earthy notes', 13.00, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1606280086852-9be02a6ed6f7', 13.0, 148),
+('Sauvignon Blanc', 'Fresh white with citrus and grass notes', 10.00, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608883616112-e9f9c4e8c8e4', 12.0, 148),
+('Rosé', 'Dry rosé with strawberry and watermelon flavors', 10.50, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1596142332921-d84ad74c8b50', 12.5, 148),
+('Prosecco', 'Italian sparkling wine with apple and pear notes', 11.50, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608883616112-e9f9c4e8c8e4', 11.0, 148),
+('Merlot', 'Smooth red wine with plum and chocolate notes', 11.50, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1606280086852-9be02a6ed6f7', 13.5, 148),
+('Riesling', 'Off-dry white with peach and honey notes', 9.50, 'f403c9d9-9867-4aca-96c9-7d7bb4d78f73', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1608883616112-e9f9c4e8c8e4', 11.5, 148),
+
+-- Insert Spirits (category_id: 4bcdfe33-ab83-4212-add7-1e00ba67b625)
+('Macallan 18', 'Premium single malt Scotch whisky', 45.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 43.0, 30),
+('Grey Goose Vodka', 'Premium French vodka, smooth and clean', 18.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 40.0, 30),
+('Hendricks Gin', 'Scottish gin with cucumber and rose petal', 16.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 41.4, 30),
+('Don Julio 1942', 'Premium aged tequila with vanilla and caramel', 65.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 40.0, 30),
+('Bacardi 8 Year', 'Aged dark rum with oak and spice notes', 20.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 40.0, 30),
+('Jameson Irish Whiskey', 'Smooth triple-distilled Irish whiskey', 14.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 40.0, 30),
+('Patron Silver', 'Premium 100% agave silver tequila', 22.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 40.0, 30),
+('Hennessy VS', 'Classic French cognac with fruit and spice', 24.00, '4bcdfe33-ab83-4212-add7-1e00ba67b625', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b', 40.0, 30),
+
+-- Insert Non-Alcoholic (category_id: 2e3147e1-9412-4b84-b26d-99ce6450ee5e)
+('Virgin Mojito', 'Fresh mint, lime juice, soda water, and simple syrup', 8.00, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 300),
+('Ginger Fizz', 'Ginger beer, lime juice, and fresh herbs', 7.00, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 300),
+('Fresh Fruit Smoothie', 'Seasonal fruit blend with yogurt and honey', 9.00, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 400),
+('Arnold Palmer', 'Half iced tea, half lemonade', 6.00, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 400),
+('Craft Soda - Orange', 'Artisanal orange soda with real fruit', 5.00, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 355),
+('Sparkling Water', 'Premium sparkling water with lime', 4.00, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 355),
+('Virgin Mary', 'Tomato juice, spices, celery, and lime', 7.50, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 300),
+('Kombucha', 'Probiotic fermented tea drink', 6.50, '2e3147e1-9412-4b84-b26d-99ce6450ee5e', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', 0.0, 355),
+
+-- Insert Appetizers (category_id: 09acd99c-b0fb-4301-b56b-73d0e90f1650)
+('Buffalo Wings', 'Crispy chicken wings tossed in spicy buffalo sauce', 14.00, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1527477396000-e27163b481c2', NULL, NULL),
+('Mozzarella Sticks', 'Breaded mozzarella served with marinara sauce', 12.00, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1619740985254-8fc82e5bd9bb', NULL, NULL),
+('Loaded Nachos', 'House-made tortilla chips with cheese, jalapeños, and sour cream', 16.00, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d', NULL, NULL),
+('Truffle Fries', 'Hand-cut fries with truffle oil and parmesan', 13.00, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1576107232684-1279f390859f', NULL, NULL),
+('Calamari Rings', 'Crispy fried squid with spicy marinara dipping sauce', 15.00, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b', NULL, NULL),
+('Sliders Trio', 'Three mini burgers: classic, BBQ, and spicy', 17.00, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd', NULL, NULL),
+('Spinach Artichoke Dip', 'Creamy dip served hot with tortilla chips', 13.50, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1541014741259-de529411b96a', NULL, NULL),
+('Stuffed Mushrooms', 'Button mushrooms stuffed with Italian sausage and herbs', 14.50, '09acd99c-b0fb-4301-b56b-73d0e90f1650', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1566659628045-e7f45d04c23b', NULL, NULL),
+
+-- Insert Entrees (category_id: 74b6397e-3ddd-4ca4-a9d6-3297833792ff)
+('Grilled Ribeye Steak', '12oz ribeye with garlic mashed potatoes and seasonal vegetables', 38.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1546833999-b9f581a1996d', NULL, NULL),
+('Fish & Chips', 'Beer-battered cod with house-made fries and tartar sauce', 22.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1544982503-9f984c14501a', NULL, NULL),
+('BBQ Ribs', 'Fall-off-the-bone ribs with house BBQ sauce and coleslaw', 28.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1544025162-d76694265947', NULL, NULL),
+('Chicken Parmesan', 'Breaded chicken breast with marinara and mozzarella over pasta', 24.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b', NULL, NULL),
+('Classic Burger', '8oz beef patty with lettuce, tomato, onion, and fries', 18.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd', NULL, NULL),
+('Grilled Salmon', 'Atlantic salmon with lemon herb butter and rice pilaf', 26.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1467003909585-2f8a72700288', NULL, NULL),
+('Pasta Carbonara', 'House-made fettuccine with pancetta, egg, and parmesan', 20.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5', NULL, NULL),
+('Pulled Pork Sandwich', 'Slow-cooked pork with BBQ sauce on brioche bun', 16.00, '74b6397e-3ddd-4ca4-a9d6-3297833792ff', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1606755962773-d324e9a13086', NULL, NULL),
+
+-- Insert Desserts (category_id: 393d0899-58cb-4ff2-9093-7e07cba4cc7f)
+('Chocolate Lava Cake', 'Warm chocolate cake with molten center and vanilla ice cream', 12.00, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62', NULL, NULL),
+('New York Cheesecake', 'Classic cheesecake with graham cracker crust and berry sauce', 10.00, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad', NULL, NULL),
+('Tiramisu', 'Italian dessert with espresso-soaked ladyfingers and mascarpone', 11.00, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9', NULL, NULL),
+('Ice Cream Sundae', 'Three scoops with chocolate sauce, whipped cream, and cherry', 9.00, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1563805042-7684c019e1cb', NULL, NULL),
+('Apple Pie', 'House-made pie with cinnamon and vanilla ice cream', 10.50, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1621303837174-89787a7d4729', NULL, NULL),
+('Crème Brûlée', 'Classic vanilla custard with caramelized sugar top', 11.50, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc', NULL, NULL),
+('Brownie Sundae', 'Warm chocolate brownie with ice cream and hot fudge', 12.50, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62', NULL, NULL),
+('Key Lime Pie', 'Tangy key lime filling with graham cracker crust', 9.50, '393d0899-58cb-4ff2-9093-7e07cba4cc7f', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1565958011703-44f9829ba187', NULL, NULL),
+
+-- Insert Cannabis (category_id: 294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9)
+('CBD Relaxation Gummies', 'THC-free CBD gummies for relaxation (where legally available)', 25.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1559827260-dc66d52bef19', NULL, NULL),
+('Cannabis-Infused Brownie', 'House-made brownie with 10mg THC (where legally available)', 15.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62', NULL, NULL),
+('THC Seltzer', 'Low-dose THC sparkling water (5mg, where legally available)', 12.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', NULL, 355),
+('Hemp Seed Salad', 'Mixed greens with hemp hearts and hemp oil dressing', 16.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd', NULL, NULL),
+('CBD Coffee', 'Premium coffee infused with 20mg CBD', 8.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, true, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', NULL, 355),
+('Cannabis Chocolate', 'Artisanal dark chocolate with 5mg THC (where legally available)', 18.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62', NULL, NULL),
+('CBD Mocktail', 'House special mocktail with 15mg CBD and fresh fruit', 14.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1551024708-8f23befc6f87', NULL, 300),
+('Hemp Oil Tincture', 'Full-spectrum hemp oil drops (where legally available)', 35.00, '294e32e6-3d2c-45d2-8712-9fb8dc6ff7e9', (SELECT id FROM venues LIMIT 1), true, false, 'https://images.unsplash.com/photo-1559827260-dc66d52bef19', NULL, 30);
