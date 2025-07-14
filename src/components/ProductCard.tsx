@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wine, Plus, Minus } from "lucide-react";
+import { productImageMap } from "../assets/images";
 
 interface Product {
   id: string;
@@ -24,11 +25,24 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, quantity, onAddToCart, onRemoveFromCart }: ProductCardProps) => {
+  const getProductImage = () => {
+    const localImage = productImageMap[product.name as keyof typeof productImageMap];
+    return localImage || product.image_url || null;
+  };
+
   return (
     <Card className="bg-black/40 backdrop-blur-sm border-purple-400/20 hover:border-yellow-400/40 transition-all duration-300">
       <CardHeader>
-        <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-yellow-600/20 rounded-lg mb-4 flex items-center justify-center">
-          <Wine className="w-12 h-12 text-yellow-400" />
+        <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-yellow-600/20 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+          {getProductImage() ? (
+            <img 
+              src={getProductImage()!} 
+              alt={product.name} 
+              className="w-full h-full object-cover rounded-lg"
+            />
+          ) : (
+            <Wine className="w-12 h-12 text-yellow-400" />
+          )}
         </div>
         <div className="flex justify-between items-start">
           <div>
