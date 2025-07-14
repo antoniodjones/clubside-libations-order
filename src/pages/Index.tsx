@@ -177,7 +177,7 @@ const Index = () => {
                 <Award className="w-8 h-8 text-gray-900" />
               </div>
               <h3 className="text-xl font-bold text-white mb-4">Premium Quality</h3>
-              <p className="text-gray-300">Only the finest spirits, wines, and craft cocktails</p>
+              <p className="text-gray-300">Only the finest spirits, wines, craft cocktails, and bottle services</p>
             </div>
             
             <div className="text-center group">
