@@ -147,19 +147,17 @@ const Menu = () => {
           <div className="mb-16">
             <div className="bg-gradient-to-r from-yellow-400/10 to-purple-400/10 rounded-3xl p-8 border border-yellow-400/20">
               <h2 className="text-3xl font-bold text-white mb-6 text-center">Featured Today</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {featuredProducts.map((product) => (
-                  <Card key={product.id} className="bg-black/40 border-yellow-400/30 hover:border-yellow-400/60 transition-all">
-                    <CardContent className="p-4">
-                      <div className="aspect-square bg-gradient-to-br from-yellow-400/20 to-purple-400/20 rounded-lg mb-4 flex items-center justify-center">
-                        <Wine className="w-12 h-12 text-yellow-400" />
-                      </div>
-                      <h3 className="font-bold text-white">{product.name}</h3>
-                      <p className="text-yellow-400 font-bold">${product.price}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 {featuredProducts.map((product) => (
+                   <ProductCard
+                     key={product.id}
+                     product={product}
+                     quantity={getCartItemQuantity(product.id)}
+                     onAddToCart={addToCart}
+                     onRemoveFromCart={removeFromCart}
+                   />
+                 ))}
+               </div>
             </div>
           </div>
         )}
