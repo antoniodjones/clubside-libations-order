@@ -153,7 +153,7 @@ const Signup = () => {
                     setCountryCode(value);
                     setMobileNumber(""); // Reset number when country changes
                   }}>
-                    <SelectTrigger className="w-[180px] bg-white/10 border-white/20 text-white">
+                    <SelectTrigger className="w-fit bg-white/10 border-white/20 text-white">
                       <SelectValue placeholder="Select country" />
                     </SelectTrigger>
                     <SelectContent className="bg-gray-800 border-white/20">
