@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      check_ins: {
+        Row: {
+          bonus_type: string | null
+          created_at: string
+          id: string
+          points_earned: number
+          user_id: string
+          venue_id: string
+        }
+        Insert: {
+          bonus_type?: string | null
+          created_at?: string
+          id?: string
+          points_earned?: number
+          user_id: string
+          venue_id: string
+        }
+        Update: {
+          bonus_type?: string | null
+          created_at?: string
+          id?: string
+          points_earned?: number
+          user_id?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "check_ins_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cities: {
         Row: {
           country: string
@@ -41,6 +76,42 @@ export type Database = {
           longitude?: number
           name?: string
           state?: string
+        }
+        Relationships: []
+      }
+      loyalty_tiers: {
+        Row: {
+          benefits: Json | null
+          color: string | null
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          minimum_points: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          benefits?: Json | null
+          color?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          minimum_points?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          benefits?: Json | null
+          color?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          minimum_points?: number
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -129,6 +200,50 @@ export type Database = {
             columns: ["venue_id"]
             isOneToOne: false
             referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      points_transactions: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          order_id: string | null
+          points: number
+          reason: string
+          reward_id: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          points: number
+          reason: string
+          reward_id?: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          points?: number
+          reason?: string
+          reward_id?: string | null
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
@@ -298,6 +413,225 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          referral_code: string
+          referred_id: string
+          referred_points: number
+          referrer_id: string
+          referrer_points: number
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code: string
+          referred_id: string
+          referred_points?: number
+          referrer_id: string
+          referrer_points?: number
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code?: string
+          referred_id?: string
+          referred_points?: number
+          referrer_id?: string
+          referrer_points?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      reward_redemptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          order_id: string | null
+          points_spent: number
+          reward_id: string
+          status: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          order_id?: string | null
+          points_spent: number
+          reward_id: string
+          status?: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          order_id?: string | null
+          points_spent?: number
+          reward_id?: string
+          status?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_redemptions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_redemptions_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "rewards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rewards: {
+        Row: {
+          created_at: string
+          current_redemptions: number
+          description: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_redemptions: number | null
+          minimum_tier_id: string | null
+          name: string
+          points_cost: number
+          product_id: string | null
+          reward_type: string
+          reward_value: number | null
+          updated_at: string
+          venue_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          current_redemptions?: number
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_redemptions?: number | null
+          minimum_tier_id?: string | null
+          name: string
+          points_cost: number
+          product_id?: string | null
+          reward_type: string
+          reward_value?: number | null
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          current_redemptions?: number
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_redemptions?: number | null
+          minimum_tier_id?: string | null
+          name?: string
+          points_cost?: number
+          product_id?: string | null
+          reward_type?: string
+          reward_value?: number | null
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rewards_minimum_tier_id_fkey"
+            columns: ["minimum_tier_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_tiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rewards_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rewards_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_loyalty: {
+        Row: {
+          anniversary_date: string | null
+          available_points: number
+          birthday: string | null
+          created_at: string
+          id: string
+          lifetime_spent: number
+          referral_code: string | null
+          referred_by: string | null
+          social_sharing_enabled: boolean
+          tier_id: string | null
+          total_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          anniversary_date?: string | null
+          available_points?: number
+          birthday?: string | null
+          created_at?: string
+          id?: string
+          lifetime_spent?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          social_sharing_enabled?: boolean
+          tier_id?: string | null
+          total_points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          anniversary_date?: string | null
+          available_points?: number
+          birthday?: string | null
+          created_at?: string
+          id?: string
+          lifetime_spent?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          social_sharing_enabled?: boolean
+          tier_id?: string | null
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_loyalty_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       venue_categories: {
         Row: {
           created_at: string
@@ -417,7 +751,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

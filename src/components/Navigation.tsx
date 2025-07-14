@@ -26,6 +26,13 @@ export const Navigation = () => {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link 
+              to="/loyalty" 
+              className="text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-base tracking-wide relative group"
+            >
+              Rewards
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link 
               to="/track-order" 
               className="text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-base tracking-wide relative group"
             >
@@ -68,6 +75,13 @@ export const Navigation = () => {
               onClick={() => setIsOpen(false)}
             >
               Menu
+            </Link>
+            <Link 
+              to="/loyalty" 
+              className="block text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-lg tracking-wide"
+              onClick={() => setIsOpen(false)}
+            >
+              Rewards
             </Link>
             <Link 
               to="/track-order" 
