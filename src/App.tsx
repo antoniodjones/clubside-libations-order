@@ -11,6 +11,7 @@ import BackOffice from "./pages/BackOffice";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Loyalty from "./pages/Loyalty";
+import LoyaltyInfo from "./pages/LoyaltyInfo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/loyalty" element={<Loyalty />} />
+          <Route path="/loyalty-info" element={<LoyaltyInfo />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />
           <Route path="/login" element={<Login />} />
