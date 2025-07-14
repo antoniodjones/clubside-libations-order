@@ -156,13 +156,13 @@ const Signup = () => {
                     <SelectTrigger className="w-[180px] bg-white/10 border-white/20 text-white">
                       <SelectValue placeholder="Select country" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-gray-800 border-white/20">
                       {countries.map((country) => (
-                        <SelectItem key={country.code} value={country.code}>
+                        <SelectItem key={country.code} value={country.code} className="text-white hover:bg-white/10 focus:bg-white/10">
                           <div className="flex items-center space-x-2">
                             <span>{country.flag}</span>
                             <span>{country.prefix}</span>
-                            <span className="text-sm text-gray-600">{country.name}</span>
+                            <span className="text-sm text-gray-300">{country.name}</span>
                           </div>
                         </SelectItem>
                       ))}
