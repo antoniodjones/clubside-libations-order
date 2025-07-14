@@ -162,7 +162,6 @@ const Signup = () => {
                           <div className="flex items-center space-x-2">
                             <span>{country.flag}</span>
                             <span>{country.prefix}</span>
-                            <span className="text-sm text-gray-300">{country.name}</span>
                           </div>
                         </SelectItem>
                       ))}
