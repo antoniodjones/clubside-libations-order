@@ -151,7 +151,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
               WHY CHOOSE
               <br />
-              <span className="text-yellow-400">LIBATIONS</span><span className="text-purple-400">PLUS</span>
+              <span className="text-yellow-400">DRANX</span><span className="text-purple-400">+</span>
             </h2>
           </div>
           
@@ -251,7 +251,7 @@ const Index = () => {
             <span className="text-yellow-400">NIGHT OUT</span>
           </h2>
           <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
-            Join the revolution in bar and club service. Skip the lines, enjoy premium drinks, and elevate your nightlife experience with LibationsPLUS.
+            Join the revolution in bar and club service. Skip the lines, enjoy premium drinks, and elevate your nightlife experience with dranx+.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button 

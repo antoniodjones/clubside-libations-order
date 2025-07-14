@@ -13,7 +13,7 @@ export const Navigation = () => {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-yellow-400 rounded-lg shadow-lg group-hover:shadow-purple-400/25 transition-shadow duration-300"></div>
-            <span className="text-2xl font-light text-white tracking-wide">LibationsPLUS</span>
+            <span className="text-2xl font-light text-white tracking-wide">dranx+</span>
           </Link>
           
           {/* Desktop Navigation */}
