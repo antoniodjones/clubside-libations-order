@@ -179,7 +179,7 @@ const Menu = () => {
                   className={`h-24 flex flex-col items-center justify-center space-y-2 ${
                     isSelected 
                       ? 'bg-yellow-400 hover:bg-yellow-500 text-black font-semibold' 
-                      : 'border-purple-400/30 text-white hover:bg-purple-400/10'
+                      : 'border-purple-400/30 text-gray-900 hover:bg-purple-400/10 hover:text-white bg-white/90'
                   }`}
                 >
                   <IconComponent className="w-6 h-6" />
