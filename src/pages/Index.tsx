@@ -185,7 +185,7 @@ const Index = () => {
                 <Users className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-white mb-4">Group Orders</h3>
-              <p className="text-gray-300">Easy splitting and sharing for your entire party</p>
+              <p className="text-gray-300">Easy splitting bill and sharing for your entire party</p>
             </div>
           </div>
         </div>
