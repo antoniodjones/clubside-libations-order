@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -17,6 +18,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [loyaltyOption, setLoyaltyOption] = useState("join");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -137,6 +139,32 @@ const Signup = () => {
                   required
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                 />
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-white text-base font-medium">Loyalty Program</Label>
+                <RadioGroup value={loyaltyOption} onValueChange={setLoyaltyOption} className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <RadioGroupItem 
+                      value="join" 
+                      id="join-loyalty" 
+                      className="border-white/20 text-yellow-400 focus:ring-yellow-400"
+                    />
+                    <Label htmlFor="join-loyalty" className="text-white cursor-pointer">
+                      Join Loyalty Program - Earn points and rewards
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <RadioGroupItem 
+                      value="opt-out" 
+                      id="opt-out-loyalty" 
+                      className="border-white/20 text-yellow-400 focus:ring-yellow-400"
+                    />
+                    <Label htmlFor="opt-out-loyalty" className="text-white cursor-pointer">
+                      Opt Out of Loyalty Program
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
               
               <Button
