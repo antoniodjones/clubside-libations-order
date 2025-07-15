@@ -104,6 +104,10 @@ const Menu = () => {
     }
   };
 
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
+
 
   const filteredProducts = selectedCategory 
     ? products.filter(product => product.category_id === selectedCategory)
