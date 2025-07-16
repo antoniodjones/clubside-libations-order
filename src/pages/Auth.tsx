@@ -8,8 +8,8 @@ import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Wine } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Eye, EyeOff, Wine, Gift } from 'lucide-react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -18,6 +18,8 @@ const Auth = () => {
   const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const referralCode = searchParams.get('ref');
   
   const { signUp, signIn, user } = useAuth();
   const { toast } = useToast();
@@ -98,6 +100,15 @@ const Auth = () => {
       <Navigation />
       
       <div className="max-w-md mx-auto px-4 py-16">
+        {referralCode && (
+          <div className="mb-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg backdrop-blur-sm">
+            <div className="flex items-center text-yellow-400">
+              <Gift className="w-5 h-5 mr-2" />
+              <span className="font-medium">You've been referred! Get bonus points when you sign up.</span>
+            </div>
+          </div>
+        )}
+        
         <div className="text-center mb-8">
           <Wine className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-white mb-2">Welcome</h1>
@@ -109,16 +120,21 @@ const Auth = () => {
             <CardTitle className="text-white text-center">Get Started</CardTitle>
             <CardDescription className="text-gray-300 text-center">
               Access member discounts, loyalty points, and exclusive offers
+              {referralCode && (
+                <span className="block mt-2 text-yellow-400 font-medium">
+                  Referral code: {referralCode}
+                </span>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
+            <Tabs defaultValue={referralCode ? "signup" : "signin"} className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-800">
                 <TabsTrigger value="signin" className="data-[state=active]:bg-yellow-400 data-[state=active]:text-black">
                   Sign In
                 </TabsTrigger>
                 <TabsTrigger value="signup" className="data-[state=active]:bg-yellow-400 data-[state=active]:text-black">
-                  Sign Up
+                  Sign Up{referralCode && ' & Get Bonus!'}
                 </TabsTrigger>
               </TabsList>
               

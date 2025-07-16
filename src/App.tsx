@@ -9,8 +9,6 @@ import Menu from "./pages/Menu";
 import ProductDetail from "./pages/ProductDetail";
 import TrackOrder from "./pages/TrackOrder";
 import BackOffice from "./pages/BackOffice";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import LoyaltyInfo from "./pages/LoyaltyInfo";
 import Loyalty from "./pages/Loyalty";
@@ -37,8 +35,6 @@ const App = () => (
           <Route path="/customer-profile" element={<CustomerProfilePage />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

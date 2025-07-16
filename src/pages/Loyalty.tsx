@@ -251,7 +251,7 @@ const Loyalty = () => {
       await navigator.share({
         title: 'Join dranx+ and get rewards!',
         text: `Use my referral code ${userLoyalty.referral_code} to get bonus points when you sign up for dranx+!`,
-        url: `${window.location.origin}/signup?ref=${userLoyalty.referral_code}`
+        url: `${window.location.origin}/auth?ref=${userLoyalty.referral_code}`
       });
     } catch (error) {
       // Fallback to clipboard
