@@ -36,15 +36,14 @@ export const UserMenu = () => {
 
   if (!user) {
     return (
-      <div className="flex items-center gap-2">
-        <Button 
-          variant="outline" 
-          onClick={() => navigate('/auth')}
-          className="border-purple-400/30 text-white hover:bg-purple-400/10"
-        >
-          Sign In
-        </Button>
-      </div>
+      <Button 
+        variant="ghost" 
+        size="sm"
+        onClick={() => navigate('/auth')}
+        className="text-white hover:bg-purple-400/10 p-2"
+      >
+        <User className="w-5 h-5" />
+      </Button>
     );
   }
 
