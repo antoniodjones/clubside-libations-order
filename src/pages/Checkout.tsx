@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, CreditCard, Loader2 } from "lucide-react";
+import { ArrowLeft, CreditCard, Loader2, Trash2 } from "lucide-react";
 
 interface CheckoutProps {
   cart: Array<{
@@ -21,9 +21,10 @@ interface CheckoutProps {
   }>;
   total: number;
   onClearCart: () => void;
+  onDeleteFromCart: (productId: string) => void;
 }
 
-export const Checkout = ({ cart, total, onClearCart }: CheckoutProps) => {
+export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: CheckoutProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
@@ -127,35 +128,45 @@ export const Checkout = ({ cart, total, onClearCart }: CheckoutProps) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Order Summary */}
-            <Card className="bg-black/40 border-yellow-400/30">
+            <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white">Order Summary</CardTitle>
+                <CardTitle className="text-white font-black text-2xl tracking-tight">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {cart.map((item) => (
-                  <div key={item.product.id} className="flex justify-between items-center">
-                    <div>
-                      <p className="text-white font-medium">{item.product.name}</p>
-                      <p className="text-gray-400 text-sm">Qty: {item.quantity}</p>
+                  <div key={item.product.id} className="flex justify-between items-center p-4 bg-black/20 rounded-lg border border-purple-500/10">
+                    <div className="flex-1">
+                      <p className="text-white font-semibold text-lg">{item.product.name}</p>
+                      <p className="text-purple-300 text-sm">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-yellow-400 font-bold">
-                      ${(item.product.price * item.quantity).toFixed(2)}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <p className="text-purple-400 font-bold text-lg">
+                        ${(item.product.price * item.quantity).toFixed(2)}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onDeleteFromCart(item.product.id)}
+                        className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:text-purple-300"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
-                <Separator className="bg-gray-700" />
-                <div className="flex justify-between items-center text-lg font-bold">
+                <Separator className="bg-purple-500/30" />
+                <div className="flex justify-between items-center text-xl font-black">
                   <span className="text-white">Total</span>
-                  <span className="text-yellow-400">${total.toFixed(2)}</span>
+                  <span className="text-purple-400">${total.toFixed(2)}</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Payment Form */}
-            <Card className="bg-black/40 border-yellow-400/30">
+            <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <CreditCard className="w-5 h-5 mr-2" />
+                <CardTitle className="text-white font-black text-2xl tracking-tight flex items-center">
+                  <CreditCard className="w-6 h-6 mr-3" />
                   Mock Payment
                 </CardTitle>
               </CardHeader>
@@ -204,7 +215,7 @@ export const Checkout = ({ cart, total, onClearCart }: CheckoutProps) => {
                 <Button
                   onClick={handleMockPayment}
                   disabled={isProcessing}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg"
                 >
                   {isProcessing ? (
                     <>

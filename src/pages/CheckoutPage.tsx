@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const CheckoutPage = () => {
-  const { cart, cartTotal, cartItemCount, clearCart } = useCart();
+  const { cart, cartTotal, cartItemCount, clearCart, deleteFromCart } = useCart();
   const navigate = useNavigate();
 
   // Redirect to menu if cart is empty
@@ -19,6 +19,10 @@ const CheckoutPage = () => {
     clearCart();
   };
 
+  const handleDeleteFromCart = (productId: string) => {
+    deleteFromCart(productId);
+  };
+
   if (cartItemCount === 0) {
     return null; // Will redirect via useEffect
   }
@@ -30,6 +34,7 @@ const CheckoutPage = () => {
         cart={cart} 
         total={cartTotal} 
         onClearCart={handleClearCart}
+        onDeleteFromCart={handleDeleteFromCart}
       />
     </>
   );

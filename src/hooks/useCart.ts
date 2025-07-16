@@ -80,6 +80,14 @@ export const useCart = () => {
   const cartTotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const deleteFromCart = (productId: string) => {
+    setCart(prev => prev.filter(item => item.product.id !== productId));
+    toast({
+      title: "Item Removed",
+      description: "Item has been removed from your cart"
+    });
+  };
+
   const clearCart = () => {
     setCart([]);
   };
@@ -88,6 +96,7 @@ export const useCart = () => {
     cart,
     addToCart,
     removeFromCart,
+    deleteFromCart,
     getCartItemQuantity,
     cartTotal,
     cartItemCount,
