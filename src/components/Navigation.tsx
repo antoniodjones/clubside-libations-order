@@ -56,6 +56,13 @@ export const Navigation = () => {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link 
+              to="/customer-profile" 
+              className="text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-base tracking-wide relative group"
+            >
+              Profile
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link 
               to="/backoffice" 
               className="text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-base tracking-wide relative group"
             >
@@ -107,6 +114,13 @@ export const Navigation = () => {
               onClick={() => setIsOpen(false)}
             >
               Track Order
+            </Link>
+            <Link 
+              to="/customer-profile" 
+              className="block text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-lg tracking-wide"
+              onClick={() => setIsOpen(false)}
+            >
+              Profile
             </Link>
             <Link 
               to="/backoffice" 
