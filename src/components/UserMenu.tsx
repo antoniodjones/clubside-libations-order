@@ -12,7 +12,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-export const UserMenu = () => {
+interface UserMenuProps {
+  onLoginClick?: () => void;
+}
+
+export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -39,7 +43,7 @@ export const UserMenu = () => {
       <Button 
         variant="ghost" 
         size="sm"
-        onClick={() => navigate('/auth')}
+        onClick={onLoginClick || (() => navigate('/auth'))}
         className="text-white hover:bg-purple-400/10 p-2"
       >
         <User className="w-6 h-6" />

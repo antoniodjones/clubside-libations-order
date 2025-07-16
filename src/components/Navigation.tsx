@@ -5,9 +5,23 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { UserMenu } from "@/components/UserMenu";
 import { CartIcon } from "@/components/CartIcon";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useNavigate } from "react-router-dom";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    setShowLoginModal(false);
+    navigate('/auth');
+  };
+
+  const handleContinueWithoutLogin = () => {
+    setShowLoginModal(false);
+    navigate('/menu');
+  };
 
   return (
     <nav className="bg-black/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 shadow-lg">
@@ -48,7 +62,7 @@ export const Navigation = () => {
               Partners
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <UserMenu />
+            <UserMenu onLoginClick={() => setShowLoginModal(true)} />
             <CartIcon />
             <Link to="/menu">
               <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-2.5 rounded-none shadow-lg hover:shadow-xl transition-all duration-300 tracking-wide">
@@ -102,7 +116,7 @@ export const Navigation = () => {
               Partners
             </Link>
             <div className="pt-4 border-t border-white/10 flex items-center gap-4">
-              <UserMenu />
+              <UserMenu onLoginClick={() => setShowLoginModal(true)} />
               <CartIcon />
             </div>
             <Link to="/menu" onClick={() => setIsOpen(false)}>
@@ -113,6 +127,36 @@ export const Navigation = () => {
           </div>
         )}
       </div>
+
+      {/* Login Modal */}
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="bg-gray-900 border border-purple-400/20 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-yellow-400">
+              Unlock Exclusive Benefits
+            </DialogTitle>
+            <DialogDescription className="text-center text-gray-300 mt-4">
+              Login to access member discounts, personalized recommendations, and exclusive offers available only to registered users.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex flex-col gap-4 mt-6">
+            <Button 
+              onClick={handleLogin}
+              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 rounded-full"
+            >
+              Login for Discounts & Offers
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleContinueWithoutLogin}
+              className="border-gray-400/50 text-gray-900 hover:bg-gray-400/10 rounded-full"
+            >
+              Continue Shopping Without Login
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };
