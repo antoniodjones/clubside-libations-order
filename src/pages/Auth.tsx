@@ -24,6 +24,7 @@ const Auth = () => {
   const [lastName, setLastName] = useState('');
   const [birthdate, setBirthdate] = useState<Date>();
   const [mobileNumber, setMobileNumber] = useState('');
+  const [countryCode, setCountryCode] = useState('US');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedVenue, setSelectedVenue] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +33,25 @@ const Auth = () => {
   const [venues, setVenues] = useState<any[]>([]);
   const [searchParams] = useSearchParams();
   const referralCode = searchParams.get('ref');
+
+  // Countries with their codes, flags, and phone formats
+  const countries = [
+    { code: 'US', flag: '🇺🇸', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'United States' },
+    { code: 'CA', flag: '🇨🇦', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'Canada' },
+    { code: 'GB', flag: '🇬🇧', dialCode: '+44', format: 'XXXX XXX XXX', name: 'United Kingdom' },
+    { code: 'AU', flag: '🇦🇺', dialCode: '+61', format: 'XXXX XXX XXX', name: 'Australia' },
+    { code: 'DE', flag: '🇩🇪', dialCode: '+49', format: 'XXX XXXXXXX', name: 'Germany' },
+    { code: 'FR', flag: '🇫🇷', dialCode: '+33', format: 'XX XX XX XX XX', name: 'France' },
+    { code: 'IT', flag: '🇮🇹', dialCode: '+39', format: 'XXX XXX XXXX', name: 'Italy' },
+    { code: 'ES', flag: '🇪🇸', dialCode: '+34', format: 'XXX XXX XXX', name: 'Spain' },
+    { code: 'MX', flag: '🇲🇽', dialCode: '+52', format: 'XX XXXX XXXX', name: 'Mexico' },
+    { code: 'BR', flag: '🇧🇷', dialCode: '+55', format: '(XX) XXXXX-XXXX', name: 'Brazil' },
+    { code: 'AR', flag: '🇦🇷', dialCode: '+54', format: 'XX XXXX-XXXX', name: 'Argentina' },
+    { code: 'JP', flag: '🇯🇵', dialCode: '+81', format: 'XXX-XXXX-XXXX', name: 'Japan' },
+    { code: 'KR', flag: '🇰🇷', dialCode: '+82', format: 'XXX-XXXX-XXXX', name: 'South Korea' },
+    { code: 'CN', flag: '🇨🇳', dialCode: '+86', format: 'XXX XXXX XXXX', name: 'China' },
+    { code: 'IN', flag: '🇮🇳', dialCode: '+91', format: 'XXXXX XXXXX', name: 'India' },
+  ];
   
   const { signUp, signIn, user } = useAuth();
   const { toast } = useToast();
@@ -74,20 +94,107 @@ const Auth = () => {
     fetchCitiesAndVenues();
   }, []);
 
-  // Format mobile number
-  const formatMobileNumber = (value: string) => {
+  // Format mobile number based on country
+  const formatMobileNumber = (value: string, country: string) => {
     // Remove all non-digits
     const digits = value.replace(/\D/g, '');
     
-    // Format as (XXX) XXX-XXXX
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+    const selectedCountry = countries.find(c => c.code === country);
+    if (!selectedCountry) return digits;
+    
+    switch (country) {
+      case 'US':
+      case 'CA':
+        // Format: (XXX) XXX-XXXX
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+        return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+      
+      case 'GB':
+      case 'AU':
+        // Format: XXXX XXX XXX
+        if (digits.length <= 4) return digits;
+        if (digits.length <= 7) return `${digits.slice(0, 4)} ${digits.slice(4)}`;
+        return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7, 10)}`;
+      
+      case 'DE':
+        // Format: XXX XXXXXXX
+        if (digits.length <= 3) return digits;
+        return `${digits.slice(0, 3)} ${digits.slice(3, 10)}`;
+      
+      case 'FR':
+        // Format: XX XX XX XX XX
+        if (digits.length <= 2) return digits;
+        if (digits.length <= 4) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+        if (digits.length <= 6) return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4)}`;
+        if (digits.length <= 8) return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6)}`;
+        return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 8)} ${digits.slice(8, 10)}`;
+      
+      case 'IT':
+        // Format: XXX XXX XXXX
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 10)}`;
+      
+      case 'ES':
+        // Format: XXX XXX XXX
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)}`;
+      
+      case 'MX':
+        // Format: XX XXXX XXXX
+        if (digits.length <= 2) return digits;
+        if (digits.length <= 6) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+        return `${digits.slice(0, 2)} ${digits.slice(2, 6)} ${digits.slice(6, 10)}`;
+      
+      case 'BR':
+        // Format: (XX) XXXXX-XXXX
+        if (digits.length <= 2) return digits;
+        if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+      
+      case 'AR':
+        // Format: XX XXXX-XXXX
+        if (digits.length <= 2) return digits;
+        if (digits.length <= 6) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+        return `${digits.slice(0, 2)} ${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
+      
+      case 'JP':
+      case 'KR':
+        // Format: XXX-XXXX-XXXX
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+        return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
+      
+      case 'CN':
+        // Format: XXX XXXX XXXX
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 7) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+        return `${digits.slice(0, 3)} ${digits.slice(3, 7)} ${digits.slice(7, 11)}`;
+      
+      case 'IN':
+        // Format: XXXXX XXXXX
+        if (digits.length <= 5) return digits;
+        return `${digits.slice(0, 5)} ${digits.slice(5, 10)}`;
+      
+      default:
+        return digits;
+    }
   };
 
   const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatMobileNumber(e.target.value);
+    const formatted = formatMobileNumber(e.target.value, countryCode);
     setMobileNumber(formatted);
+  };
+
+  const handleCountryChange = (newCountryCode: string) => {
+    setCountryCode(newCountryCode);
+    // Re-format the existing number for the new country
+    if (mobileNumber) {
+      const formatted = formatMobileNumber(mobileNumber, newCountryCode);
+      setMobileNumber(formatted);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -321,18 +428,47 @@ const Auth = () => {
                     </Popover>
                   </div>
 
-                  {/* Mobile Number Field */}
+                  {/* Mobile Number Field with Country Code */}
                   <div className="space-y-2">
                     <Label htmlFor="mobile" className="text-white">Mobile Number</Label>
-                    <Input
-                      id="mobile"
-                      type="tel"
-                      value={mobileNumber}
-                      onChange={handleMobileChange}
-                      className="bg-gray-800 border-gray-600 text-white"
-                      placeholder="(555) 123-4567"
-                      maxLength={14}
-                    />
+                    <div className="flex space-x-2">
+                      <Select value={countryCode} onValueChange={handleCountryChange}>
+                        <SelectTrigger className="w-24 bg-gray-800 border-gray-600 text-white">
+                          <SelectValue>
+                            <div className="flex items-center">
+                              <span className="text-lg mr-1">
+                                {countries.find(c => c.code === countryCode)?.flag}
+                              </span>
+                              <span className="text-sm">
+                                {countries.find(c => c.code === countryCode)?.dialCode}
+                              </span>
+                            </div>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-800 border-gray-600 z-50">
+                          {countries.map((country) => (
+                            <SelectItem 
+                              key={country.code} 
+                              value={country.code} 
+                              className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                            >
+                              <div className="flex items-center space-x-2">
+                                <span className="text-lg">{country.flag}</span>
+                                <span className="text-sm">{country.dialCode}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        id="mobile"
+                        type="tel"
+                        value={mobileNumber}
+                        onChange={handleMobileChange}
+                        className="flex-1 bg-gray-800 border-gray-600 text-white"
+                        placeholder={countries.find(c => c.code === countryCode)?.format || "Enter phone number"}
+                      />
+                    </div>
                   </div>
 
                   {/* City/Province Selection */}
