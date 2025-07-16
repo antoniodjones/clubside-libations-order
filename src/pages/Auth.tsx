@@ -27,6 +27,7 @@ const Auth = () => {
   const [countryCode, setCountryCode] = useState('US');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedVenue, setSelectedVenue] = useState('');
+  const [joinRewards, setJoinRewards] = useState('yes');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cities, setCities] = useState<any[]>([]);
@@ -552,6 +553,33 @@ const Auth = () => {
                             </div>
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Join Rewards Program Field */}
+                  <div className="space-y-2">
+                    <Label className="text-white">Join Rewards Program & Earn</Label>
+                    <Select value={joinRewards} onValueChange={setJoinRewards}>
+                      <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white">
+                        <div className="flex items-center">
+                          <Gift className="w-4 h-4 mr-2" />
+                          <SelectValue placeholder="Choose rewards option" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600 z-50">
+                        <SelectItem 
+                          value="yes" 
+                          className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                        >
+                          Yes, please count me in
+                        </SelectItem>
+                        <SelectItem 
+                          value="no" 
+                          className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                        >
+                          No, not this time
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
