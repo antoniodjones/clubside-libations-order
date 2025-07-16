@@ -355,6 +355,39 @@ export const ProfileSummary = () => {
               </Card>
             </div>
 
+            {/* Middle Row - Rewards */}
+            <Card className="bg-gray-800/40 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white text-lg flex items-center gap-2">
+                  <Gift className="h-5 w-5" />
+                  Available Rewards
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {mockCustomerData.rewards.map((reward, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg border border-gray-600">
+                      <div className="flex-1">
+                        <p className="font-medium text-white text-sm">{reward.name}</p>
+                        <p className="text-xs text-gray-400">
+                          {reward.points_cost} points • Expires {new Date(reward.expires).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1"
+                        onClick={() => {
+                          console.log('Redeeming reward:', reward.name);
+                        }}
+                      >
+                        Redeem
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Bottom Row - Venues and Staff */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Venues Visited */}
