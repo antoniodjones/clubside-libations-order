@@ -320,32 +320,39 @@ export const ProfileSummary = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Top Row - Basic Customer Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <h4 className="font-medium text-white mb-2">Hobbies & Interests</h4>
-                <div className="flex flex-wrap gap-2">
-                  {mockCustomerData.aboutCustomer.hobbies.map((hobby, index) => (
-                    <Badge key={index} variant="secondary" className="bg-purple-500/20 text-purple-300">
-                      {hobby}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h4 className="font-medium text-white mb-2">Estimated Income</h4>
-                <p className="text-gray-300">{mockCustomerData.aboutCustomer.estimatedIncome}</p>
-              </div>
-              <div>
-                <h4 className="font-medium text-white mb-2">Favorite Menu Items</h4>
-                <div className="flex flex-wrap gap-2">
-                  {mockCustomerData.aboutCustomer.favoriteMenuItems.map((item, index) => (
-                    <Badge key={index} variant="outline" className="text-yellow-400 border-yellow-400">
-                      {item}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+            {/* Top Row - Hobbies & Menu Items Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Hobbies & Interests Card */}
+              <Card className="bg-gray-800/40 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white text-lg">Hobbies & Interests</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {mockCustomerData.aboutCustomer.hobbies.map((hobby, index) => (
+                      <Badge key={index} variant="secondary" className="bg-purple-500/20 text-purple-300">
+                        {hobby}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Favorite Menu Items Card */}
+              <Card className="bg-gray-800/40 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white text-lg">Favorite Menu Items</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {mockCustomerData.aboutCustomer.favoriteMenuItems.map((item, index) => (
+                      <Badge key={index} variant="outline" className="text-yellow-400 border-yellow-400">
+                        {item}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Bottom Row - Venues and Staff */}
