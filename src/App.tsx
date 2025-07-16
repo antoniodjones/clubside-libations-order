@@ -11,9 +11,9 @@ import TrackOrder from "./pages/TrackOrder";
 import BackOffice from "./pages/BackOffice";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Loyalty from "./pages/Loyalty";
-import LoyaltyInfo from "./pages/LoyaltyInfo";
 import NotFound from "./pages/NotFound";
+import LoyaltyInfo from "./pages/LoyaltyInfo";
+import Auth from "./pages/Auth";
 import CheckoutPage from "./pages/CheckoutPage";
 
 const queryClient = new QueryClient();
@@ -26,10 +26,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/menu" element={<Menu />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/menu/product/:id" element={<ProductDetail />} />
+          <Route path="/menu" element={<Menu />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/loyalty" element={<Loyalty />} />
           <Route path="/loyalty-info" element={<LoyaltyInfo />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />

@@ -17,7 +17,7 @@ const Index = () => {
 
   const handleLogin = () => {
     setShowLoginModal(false);
-    navigate('/login');
+    navigate('/auth');
   };
 
   const handleContinueWithoutLogin = () => {
