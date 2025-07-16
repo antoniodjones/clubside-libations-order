@@ -8,9 +8,12 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🔐 Setting up auth state listener...');
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('🔐 Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -19,6 +22,7 @@ export const useAuth = () => {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('🔐 Initial session check:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -27,10 +31,25 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, firstName?: string, lastName?: string) => {
+  const signUp = async (
+    email: string, 
+    password: string, 
+    firstName?: string, 
+    lastName?: string,
+    additionalData?: {
+      birthdate?: string;
+      mobileNumber?: string;
+      countryCode?: string;
+      cityId?: string;
+      venueId?: string;
+      joinRewards?: boolean;
+      referralCode?: string;
+    }
+  ) => {
+    console.log('🔐 Attempting signup for:', email);
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -38,17 +57,61 @@ export const useAuth = () => {
         data: {
           first_name: firstName,
           last_name: lastName,
+          ...additionalData
         }
       }
     });
-    return { error };
+
+    console.log('🔐 Signup result:', { error, userId: data.user?.id });
+
+    // If signup successful and we have a user, save additional profile data
+    if (!error && data.user && additionalData) {
+      console.log('🔐 Saving additional profile data:', additionalData);
+      try {
+        // Update profile with additional data
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            birthday: additionalData.birthdate || null,
+            mobile_number: additionalData.mobileNumber || null,
+            country_code: additionalData.countryCode || null,
+          })
+          .eq('user_id', data.user.id);
+
+        if (profileError) {
+          console.error('Profile update error:', profileError);
+        }
+
+        // Create or update loyalty profile if user opted in
+        if (additionalData.joinRewards) {
+          const { error: loyaltyError } = await supabase
+            .from('user_loyalty')
+            .upsert({
+              user_id: data.user.id,
+              birthday: additionalData.birthdate || null,
+              referred_by: additionalData.referralCode || null,
+              referral_code: Math.random().toString(36).substring(2, 10).toUpperCase(),
+            });
+
+          if (loyaltyError) {
+            console.error('Loyalty profile error:', loyaltyError);
+          }
+        }
+      } catch (err) {
+        console.error('Error saving additional profile data:', err);
+      }
+    }
+
+    return { error, data };
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log('🔐 Attempting signin for:', email);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    console.log('🔐 Signin result:', { error });
     return { error };
   };
 

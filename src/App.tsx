@@ -33,6 +33,7 @@ const App = () => (
           <Route path="/loyalty-info" element={<LoyaltyInfo />} />
           <Route path="/rewards" element={<Loyalty />} />
           <Route path="/customer-profile" element={<CustomerProfilePage />} />
+          <Route path="/profile" element={<CustomerProfilePage />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

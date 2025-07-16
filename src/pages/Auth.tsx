@@ -227,7 +227,17 @@ const Auth = () => {
     }
 
     try {
-      const { error } = await signUp(email, password, firstName, lastName);
+      const additionalData = {
+        birthdate: birthdate ? format(birthdate, 'yyyy-MM-dd') : undefined,
+        mobileNumber: mobileNumber ? `${countries.find(c => c.code === countryCode)?.dialCode} ${mobileNumber}` : undefined,
+        countryCode,
+        cityId: selectedCity || undefined,
+        venueId: selectedVenue || undefined,
+        joinRewards: joinRewards === 'yes',
+        referralCode: referralCode || undefined,
+      };
+
+      const { error } = await signUp(email, password, firstName, lastName, additionalData);
       
       if (error) {
         toast({
@@ -236,20 +246,13 @@ const Auth = () => {
           variant: "destructive"
         });
       } else {
-        // Store additional profile data in localStorage for now
-        // In a real app, you'd want to update the profile after successful signup
-        const additionalData = {
-          birthdate: birthdate ? format(birthdate, 'yyyy-MM-dd') : null,
-          mobileNumber,
-          selectedCity,
-          selectedVenue
-        };
-        localStorage.setItem('pendingProfileData', JSON.stringify(additionalData));
-        
         toast({
           title: "Success!",
-          description: "Please check your email to confirm your account",
+          description: "Please check your email to confirm your account. You can still continue to explore the app.",
         });
+        
+        // Navigate to home page after successful signup
+        navigate('/');
       }
     } catch (error) {
       toast({
