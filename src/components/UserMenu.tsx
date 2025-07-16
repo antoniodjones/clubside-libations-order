@@ -70,7 +70,7 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
         <DropdownMenuSeparator className="bg-purple-400/20" />
         <DropdownMenuItem 
           className="text-white hover:bg-purple-400/10 cursor-pointer"
-          onClick={() => navigate('/loyalty')}
+          onClick={() => navigate('/rewards')}
         >
           <Award className="w-4 h-4 mr-2" />
           Loyalty & Rewards

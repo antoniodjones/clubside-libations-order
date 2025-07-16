@@ -42,7 +42,7 @@ export const Navigation = () => {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link 
-              to="/loyalty" 
+              to="/rewards"
               className="text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-base tracking-wide relative group"
             >
               Rewards
@@ -102,7 +102,7 @@ export const Navigation = () => {
               Menu
             </Link>
             <Link 
-              to="/loyalty" 
+              to="/rewards"
               className="block text-gray-300 hover:text-yellow-400 transition-colors duration-200 font-light text-lg tracking-wide"
               onClick={() => setIsOpen(false)}
             >

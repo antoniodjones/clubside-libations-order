@@ -12,7 +12,7 @@ export const LoyaltyBadge = () => {
   }
 
   return (
-    <Link to="/loyalty" className="flex items-center space-x-2 group">
+    <Link to="/rewards" className="flex items-center space-x-2 group">
       <Badge 
         style={{ backgroundColor: loyaltyData.tier_color }}
         className="text-white hover:scale-105 transition-transform duration-200"
