@@ -13,7 +13,7 @@ const navigationItems = [
   { id: 'rewards', label: 'Rewards', icon: BarChart3 },
   { id: 'manage', label: 'Manage Profile', icon: Settings },
   { id: 'manage-payments', label: 'Manage Payments', icon: CreditCard },
-  { id: 'password', label: 'Update Password', icon: Lock },
+  { id: 'password', label: 'Manage Password', icon: Lock },
 ];
 
 export const ProfileSidebar = ({ activeSection, onSectionChange }: ProfileSidebarProps) => {

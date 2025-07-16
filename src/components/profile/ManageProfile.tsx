@@ -87,6 +87,14 @@ export const ManageProfile = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <Settings className="h-8 w-8 text-purple-400" />
+        <div>
+          <h2 className="text-2xl font-bold text-white">Manage Profile</h2>
+          <p className="text-gray-400">Update your personal information and preferences</p>
+        </div>
+      </div>
+
       {/* Personal Information */}
       <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
         <CardHeader>
