@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
+import { EnhancedDatePicker } from '@/components/ui/enhanced-date-picker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
@@ -436,35 +436,17 @@ const Auth = () => {
                   </div>
                   
                   {/* Birthdate Field */}
-                  <div className="space-y-2">
-                    <Label className="text-white">Birthdate</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full bg-gray-800 border-gray-600 text-white justify-start text-left font-normal hover:bg-gray-700",
-                            !birthdate && "text-gray-400"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {birthdate ? format(birthdate, "PPP") : <span>Select your birthdate</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 bg-yellow-400 border-yellow-500" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={birthdate}
-                          onSelect={setBirthdate}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                          className={cn("p-3 pointer-events-auto text-black")}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                  <EnhancedDatePicker
+                    value={birthdate}
+                    onChange={setBirthdate}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    placeholder="MM/dd/yyyy"
+                    label="Birthdate"
+                    minDate={new Date("1900-01-01")}
+                    maxDate={new Date()}
+                  />
 
                   {/* Mobile Number Field with Country Code */}
                   <div className="space-y-2">
