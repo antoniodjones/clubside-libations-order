@@ -337,13 +337,13 @@ const Auth = () => {
               
               <TabsContent value="signin" className="space-y-4 mt-6">
                 <div className="text-center mb-6">
-                  <Button 
-                    variant="outline" 
+                  <button 
+                    type="button"
                     onClick={() => navigate('/')}
-                    className="border-gray-400/50 text-gray-300 hover:bg-gray-400/10"
+                    className="text-gray-300 hover:text-yellow-400 underline text-sm transition-colors"
                   >
                     Continue as Guest
-                  </Button>
+                  </button>
                 </div>
                 
                 <form onSubmit={handleSignIn} className="space-y-4">
@@ -396,13 +396,13 @@ const Auth = () => {
               
               <TabsContent value="signup" className="space-y-4 mt-6">
                 <div className="text-center mb-6">
-                  <Button 
-                    variant="outline" 
+                  <button 
+                    type="button"
                     onClick={() => navigate('/')}
-                    className="border-gray-400/50 text-gray-300 hover:bg-gray-400/10"
+                    className="text-gray-300 hover:text-yellow-400 underline text-sm transition-colors"
                   >
                     Continue as Guest
-                  </Button>
+                  </button>
                 </div>
                 
                 <form onSubmit={handleSignUp} className="space-y-4">
