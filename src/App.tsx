@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import LoyaltyInfo from "./pages/LoyaltyInfo";
+import Loyalty from "./pages/Loyalty";
 import Auth from "./pages/Auth";
 import CheckoutPage from "./pages/CheckoutPage";
 import CustomerProfilePage from "./pages/CustomerProfile";
@@ -32,6 +33,8 @@ const App = () => (
           <Route path="/menu" element={<Menu />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/loyalty-info" element={<LoyaltyInfo />} />
+          <Route path="/loyalty" element={<Loyalty />} />
+          <Route path="/rewards" element={<Loyalty />} />
           <Route path="/customer-profile" element={<CustomerProfilePage />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />
