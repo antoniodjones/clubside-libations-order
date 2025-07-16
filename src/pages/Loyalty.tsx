@@ -62,88 +62,158 @@ const Loyalty = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  // Mock data for demo purposes (remove when authentication is implemented)
+  const mockData = {
+    userLoyalty: {
+      total_points: 2847,
+      available_points: 1250,
+      tier: {
+        id: '1',
+        name: 'Gold',
+        minimum_points: 2000,
+        benefits: {
+          multiplier: 2,
+          perks: [
+            'Double points on all purchases',
+            'Priority customer support',
+            'Exclusive access to premium products',
+            'Free delivery on orders over $50'
+          ]
+        },
+        color: '#FFD700'
+      },
+      referral_code: 'SARAH2024',
+      lifetime_spent: 3456.78
+    },
+    allTiers: [
+      {
+        id: '1',
+        name: 'Bronze',
+        minimum_points: 0,
+        benefits: {
+          multiplier: 1,
+          perks: ['Earn 1 point per $1 spent', 'Birthday bonus points']
+        },
+        color: '#CD7F32'
+      },
+      {
+        id: '2',
+        name: 'Silver',
+        minimum_points: 500,
+        benefits: {
+          multiplier: 1.5,
+          perks: ['1.5x points on all purchases', 'Early access to sales', 'Free appetizer on birthday']
+        },
+        color: '#C0C0C0'
+      },
+      {
+        id: '3',
+        name: 'Gold',
+        minimum_points: 2000,
+        benefits: {
+          multiplier: 2,
+          perks: ['Double points on all purchases', 'Priority customer support', 'Exclusive access to premium products', 'Free delivery on orders over $50']
+        },
+        color: '#FFD700'
+      },
+      {
+        id: '4',
+        name: 'Platinum',
+        minimum_points: 5000,
+        benefits: {
+          multiplier: 3,
+          perks: ['Triple points on all purchases', 'Personal concierge service', 'VIP events access', 'Complimentary premium tastings']
+        },
+        color: '#E5E4E2'
+      }
+    ],
+    rewards: [
+      {
+        id: '1',
+        name: 'Free Appetizer',
+        description: 'Choose any appetizer from our premium selection',
+        points_cost: 500,
+        reward_type: 'product',
+        reward_value: 25
+      },
+      {
+        id: '2',
+        name: '20% Off Next Order',
+        description: 'Valid on your next purchase, minimum $50',
+        points_cost: 750,
+        reward_type: 'discount',
+        reward_value: 0
+      },
+      {
+        id: '3',
+        name: 'Cannabis Sample Pack',
+        description: '3 premium cannabis products sampler',
+        points_cost: 1000,
+        reward_type: 'product',
+        reward_value: 75
+      },
+      {
+        id: '4',
+        name: 'Free Craft Cocktail',
+        description: 'Any craft cocktail from our signature menu',
+        points_cost: 600,
+        reward_type: 'product',
+        reward_value: 18
+      }
+    ],
+    transactions: [
+      {
+        id: '1',
+        points: 127,
+        transaction_type: 'earned',
+        reason: 'Purchase at Downtown Lounge',
+        created_at: '2024-01-12T19:30:00Z'
+      },
+      {
+        id: '2',
+        points: -500,
+        transaction_type: 'redeemed',
+        reason: 'Free Appetizer Reward',
+        created_at: '2024-01-10T18:15:00Z'
+      },
+      {
+        id: '3',
+        points: 89,
+        transaction_type: 'earned',
+        reason: 'Purchase at Downtown Lounge',
+        created_at: '2024-01-08T20:45:00Z'
+      },
+      {
+        id: '4',
+        points: 50,
+        transaction_type: 'earned',
+        reason: 'Birthday bonus points',
+        created_at: '2024-01-05T12:00:00Z'
+      }
+    ]
+  };
+
   useEffect(() => {
-    fetchLoyaltyData();
+    // Simulate loading for demo
+    const timer = setTimeout(() => {
+      setUserLoyalty(mockData.userLoyalty);
+      setAllTiers(mockData.allTiers);
+      setRewards(mockData.rewards);
+      setTransactions(mockData.transactions);
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchLoyaltyData = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Fetch user loyalty profile with tier info
-      const { data: loyaltyData, error: loyaltyError } = await supabase
-        .from('user_loyalty')
-        .select(`
-          *,
-          loyalty_tiers (
-            id,
-            name,
-            minimum_points,
-            benefits,
-            color
-          )
-        `)
-        .eq('user_id', user.id)
-        .single();
-
-      if (loyaltyError) throw loyaltyError;
-
-      // Fetch all tiers for progression display
-      const { data: tiersData, error: tiersError } = await supabase
-        .from('loyalty_tiers')
-        .select('*')
-        .order('minimum_points');
-
-      if (tiersError) throw tiersError;
-
-      // Fetch available rewards
-      const { data: rewardsData, error: rewardsError } = await supabase
-        .from('rewards')
-        .select('*')
-        .eq('is_active', true)
-        .order('points_cost');
-
-      if (rewardsError) throw rewardsError;
-
-      // Fetch recent transactions
-      const { data: transactionsData, error: transactionsError } = await supabase
-        .from('points_transactions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (transactionsError) throw transactionsError;
-
-      setUserLoyalty({
-        total_points: loyaltyData.total_points,
-        available_points: loyaltyData.available_points,
-        tier: loyaltyData.loyalty_tiers,
-        referral_code: loyaltyData.referral_code,
-        lifetime_spent: loyaltyData.lifetime_spent
-      });
-      setAllTiers(tiersData);
-      setRewards(rewardsData);
-      setTransactions(transactionsData);
-    } catch (error) {
-      console.error('Error fetching loyalty data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load loyalty information",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+    // This will be implemented when authentication is added
+    console.log('fetchLoyaltyData called - will be implemented with authentication');
   };
 
   const redeemReward = async (rewardId: string, pointsCost: number) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Check if user has enough points
+      // Mock redemption for demo purposes
       if (!userLoyalty || userLoyalty.available_points < pointsCost) {
         toast({
           title: "Insufficient Points",
@@ -153,25 +223,16 @@ const Loyalty = () => {
         return;
       }
 
-      // Create redemption
-      const { error } = await supabase
-        .from('reward_redemptions')
-        .insert({
-          user_id: user.id,
-          reward_id: rewardId,
-          points_spent: pointsCost,
-          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        });
-
-      if (error) throw error;
+      // Update mock data
+      setUserLoyalty(prev => prev ? {
+        ...prev,
+        available_points: prev.available_points - pointsCost
+      } : null);
 
       toast({
         title: "Reward Redeemed!",
         description: "Your reward has been added to your account. Check your profile for details.",
       });
-
-      // Refresh data
-      fetchLoyaltyData();
     } catch (error) {
       console.error('Error redeeming reward:', error);
       toast({
