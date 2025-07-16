@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ProfileSidebar } from '@/components/profile/ProfileSidebar';
 import { ProfileSummary } from '@/components/profile/ProfileSummary';
 import { ManageProfile } from '@/components/profile/ManageProfile';
 import { UpdatePassword } from '@/components/profile/UpdatePassword';
 import { OrderHistory } from '@/components/profile/OrderHistory';
 import { ManagePayments } from '@/components/profile/ManagePayments';
+import { RewardsSection } from '@/components/profile/RewardsSection';
 import { HomeIcon } from '@/components/HomeIcon';
 import { ProfileSectionProps } from '@/types/profile';
 
@@ -18,7 +20,16 @@ const SECTIONS = {
 } as const;
 
 export const CustomerProfile: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [activeSection, setActiveSection] = useState<string>(SECTIONS.SUMMARY);
+
+  // Check URL parameters on component mount
+  useEffect(() => {
+    const section = searchParams.get('section');
+    if (section && Object.values(SECTIONS).includes(section as any)) {
+      setActiveSection(section);
+    }
+  }, [searchParams]);
 
   const handleSectionChange = useCallback((section: string) => {
     setActiveSection(section);
@@ -31,7 +42,7 @@ export const CustomerProfile: React.FC = () => {
       case SECTIONS.ORDERS_HISTORY:
         return <OrderHistory />;
       case SECTIONS.REWARDS:
-        return <div className="text-white">Rewards detail page coming soon...</div>;
+        return <RewardsSection />;
       case SECTIONS.MANAGE:
         return <ManageProfile />;
       case SECTIONS.MANAGE_PAYMENTS:
