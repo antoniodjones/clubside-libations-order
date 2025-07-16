@@ -328,61 +328,61 @@ const Loyalty = () => {
         </div>
 
         {/* Current Status Card */}
-        <Card className="mb-8 bg-gradient-to-r from-purple-900/40 to-yellow-900/40 border-yellow-400/30 backdrop-blur-sm">
-          <CardHeader>
+        <Card className="mb-12 bg-gradient-to-r from-purple-900/40 to-yellow-900/40 border-yellow-400/30 backdrop-blur-sm">
+          <CardHeader className="pb-8">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-white text-2xl">
+                <CardTitle className="text-white text-4xl md:text-5xl font-black mb-4 tracking-tight">
                   {userLoyalty.tier.name} Member
                 </CardTitle>
                 <Badge 
                   style={{ backgroundColor: userLoyalty.tier.color }}
-                  className="text-white"
+                  className="text-white text-lg px-4 py-2 font-bold"
                 >
-                  <Star className="w-4 h-4 mr-1" />
+                  <Star className="w-5 h-5 mr-2" />
                   {userLoyalty.tier.name}
                 </Badge>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-yellow-400">
+                <div className="text-6xl md:text-7xl font-black text-yellow-400 leading-none">
                   {userLoyalty.available_points.toLocaleString()}
                 </div>
-                <div className="text-gray-300">Available Points</div>
+                <div className="text-xl text-gray-300 font-light mt-2">Available Points</div>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-8">
               {getNextTier() && (
                 <div>
-                  <div className="flex justify-between text-sm text-gray-300 mb-2">
+                  <div className="flex justify-between text-lg text-gray-300 mb-4 font-medium">
                     <span>Progress to {getNextTier()?.name}</span>
                     <span>
                       {userLoyalty.total_points} / {getNextTier()?.minimum_points} points
                     </span>
                   </div>
-                  <Progress value={getProgressToNextTier()} className="h-2" />
+                  <Progress value={getProgressToNextTier()} className="h-4" />
                 </div>
               )}
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-400">
+                  <div className="text-4xl md:text-5xl font-black text-purple-400 leading-none">
                     {userLoyalty.total_points.toLocaleString()}
                   </div>
-                  <div className="text-gray-300">Total Points Earned</div>
+                  <div className="text-lg text-gray-300 font-light mt-2">Total Points Earned</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400">
+                  <div className="text-4xl md:text-5xl font-black text-green-400 leading-none">
                     ${userLoyalty.lifetime_spent.toFixed(2)}
                   </div>
-                  <div className="text-gray-300">Total Spent</div>
+                  <div className="text-lg text-gray-300 font-light mt-2">Total Spent</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-400">
+                  <div className="text-4xl md:text-5xl font-black text-yellow-400 leading-none">
                     {userLoyalty.tier.benefits?.multiplier || 1}x
                   </div>
-                  <div className="text-gray-300">Points Multiplier</div>
+                  <div className="text-lg text-gray-300 font-light mt-2">Points Multiplier</div>
                 </div>
               </div>
             </div>
