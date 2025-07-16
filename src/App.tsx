@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import LoyaltyInfo from "./pages/LoyaltyInfo";
 import Auth from "./pages/Auth";
 import CheckoutPage from "./pages/CheckoutPage";
+import CustomerProfilePage from "./pages/CustomerProfile";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/menu" element={<Menu />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/loyalty-info" element={<LoyaltyInfo />} />
+          <Route path="/customer-profile" element={<CustomerProfilePage />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/backoffice" element={<BackOffice />} />
           <Route path="/login" element={<Login />} />
