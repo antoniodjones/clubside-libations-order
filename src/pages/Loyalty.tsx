@@ -282,7 +282,7 @@ const Loyalty = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         <Navigation />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-400"></div>
@@ -293,10 +293,10 @@ const Loyalty = () => {
 
   if (!userLoyalty) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         <Navigation />
         <div className="container mx-auto px-4 py-8">
-          <Card className="max-w-md mx-auto bg-black/40 border-purple-500/20">
+          <Card className="max-w-md mx-auto bg-black/40 backdrop-blur-sm border-purple-500/20">
             <CardContent className="p-6 text-center">
               <Award className="w-16 h-16 text-purple-400 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-white mb-2">Join the Loyalty Program</h2>
@@ -328,7 +328,7 @@ const Loyalty = () => {
         </div>
 
         {/* Current Status Card */}
-        <Card className="mb-12 bg-gradient-to-r from-purple-900/80 to-purple-800/70 border-yellow-400/30 backdrop-blur-sm">
+        <Card className="mb-12 bg-black/40 backdrop-blur-sm border-purple-500/20">
           <CardHeader className="pb-8">
             <div className="flex items-center justify-between">
               <div>
@@ -390,20 +390,20 @@ const Loyalty = () => {
         </Card>
 
         <Tabs defaultValue="rewards" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-black/40">
-            <TabsTrigger value="rewards" className="text-white">
+          <TabsList className="grid w-full grid-cols-4 bg-black/40 backdrop-blur-sm border-purple-500/20">
+            <TabsTrigger value="rewards" className="text-gray-300 data-[state=active]:text-white">
               <Gift className="w-4 h-4 mr-2" />
               Rewards
             </TabsTrigger>
-            <TabsTrigger value="tiers" className="text-white">
+            <TabsTrigger value="tiers" className="text-gray-300 data-[state=active]:text-white">
               <Trophy className="w-4 h-4 mr-2" />
               Tiers
             </TabsTrigger>
-            <TabsTrigger value="referrals" className="text-white">
+            <TabsTrigger value="referrals" className="text-gray-300 data-[state=active]:text-white">
               <Users className="w-4 h-4 mr-2" />
               Referrals
             </TabsTrigger>
-            <TabsTrigger value="activity" className="text-white">
+            <TabsTrigger value="activity" className="text-gray-300 data-[state=active]:text-white">
               <Clock className="w-4 h-4 mr-2" />
               Activity
             </TabsTrigger>
@@ -412,24 +412,24 @@ const Loyalty = () => {
           <TabsContent value="rewards">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {rewards.map((reward) => (
-                <Card key={reward.id} className="bg-black/40 border-purple-500/20">
+                <Card key={reward.id} className="bg-black/40 backdrop-blur-sm border-purple-500/20">
                   <CardHeader>
-                    <CardTitle className="text-white">{reward.name}</CardTitle>
-                    <p className="text-gray-300">{reward.description}</p>
+                    <CardTitle className="text-white text-lg">{reward.name}</CardTitle>
+                    <p className="text-gray-400">{reward.description}</p>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-2xl font-bold text-yellow-400">
+                      <div className="text-xl font-bold text-yellow-400">
                         {reward.points_cost} pts
                       </div>
                       {reward.reward_value && (
-                        <div className="text-green-400 font-semibold">
+                        <div className="text-yellow-400 font-bold">
                           ${reward.reward_value}
                         </div>
                       )}
                     </div>
                     <Button 
-                      className="w-full"
+                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold"
                       disabled={userLoyalty.available_points < reward.points_cost}
                       onClick={() => redeemReward(reward.id, reward.points_cost)}
                     >
@@ -448,8 +448,8 @@ const Loyalty = () => {
                   key={tier.id} 
                   className={`border-2 ${
                     tier.id === userLoyalty.tier.id 
-                      ? 'border-purple-400 bg-purple-900/20' 
-                      : 'border-gray-600 bg-black/40'
+                      ? 'border-yellow-400 bg-black/40 backdrop-blur-sm' 
+                      : 'border-gray-600 bg-black/40 backdrop-blur-sm'
                   }`}
                 >
                   <CardHeader>
@@ -462,10 +462,10 @@ const Loyalty = () => {
                           {tier.name}
                         </Badge>
                         {tier.id === userLoyalty.tier.id && (
-                          <Badge variant="secondary">Current Tier</Badge>
+                          <Badge className="bg-yellow-400 text-black font-bold">Current Tier</Badge>
                         )}
                       </div>
-                      <div className="text-white font-bold">
+                      <div className="text-yellow-400 font-bold text-lg">
                         {tier.minimum_points.toLocaleString()} pts
                       </div>
                     </div>
@@ -473,7 +473,7 @@ const Loyalty = () => {
                   <CardContent>
                     <div className="space-y-2">
                       {tier.benefits?.perks?.map((perk: string, idx: number) => (
-                        <div key={idx} className="flex items-center text-gray-300">
+                        <div key={idx} className="flex items-center text-gray-400">
                           <Zap className="w-4 h-4 text-yellow-400 mr-2" />
                           {perk}
                         </div>
@@ -486,50 +486,50 @@ const Loyalty = () => {
           </TabsContent>
 
           <TabsContent value="referrals">
-            <Card className="bg-black/40 border-purple-500/20">
+            <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white">Refer Friends & Earn</CardTitle>
-                <p className="text-gray-300">Share your referral code and both you and your friend earn bonus points!</p>
+                <CardTitle className="text-white text-xl">Refer Friends & Earn</CardTitle>
+                <p className="text-gray-400">Share your referral code and both you and your friend earn bonus points!</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="p-4 bg-purple-900/20 rounded-lg">
+                  <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                     <div className="text-center">
-                      <div className="text-sm text-gray-300 mb-2">Your Referral Code</div>
-                      <div className="text-3xl font-mono font-bold text-purple-400 mb-4">
+                      <div className="text-sm text-gray-400 mb-2">Your Referral Code</div>
+                      <div className="text-3xl font-mono font-bold text-yellow-400 mb-4">
                         {userLoyalty.referral_code}
                       </div>
-                      <Button onClick={shareReferralCode} className="w-full">
+                      <Button onClick={shareReferralCode} className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold">
                         <Share2 className="w-4 h-4 mr-2" />
                         Share Code
                       </Button>
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-green-900/20 rounded-lg">
-                      <div className="text-2xl font-bold text-green-400">100 pts</div>
-                      <div className="text-gray-300">You earn when friend signs up</div>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="text-center p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div className="text-2xl font-bold text-yellow-400">100 pts</div>
+                      <div className="text-gray-400">You earn when friend signs up</div>
                     </div>
-                    <div className="text-center p-4 bg-blue-900/20 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-400">50 pts</div>
-                      <div className="text-gray-300">Friend earns welcome bonus</div>
+                    <div className="text-center p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div className="text-2xl font-bold text-yellow-400">50 pts</div>
+                      <div className="text-gray-400">Friend earns welcome bonus</div>
                     </div>
-                  </div>
+                   </div>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="activity">
-            <Card className="bg-black/40 border-purple-500/20">
+            <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white">Recent Activity</CardTitle>
+                <CardTitle className="text-white text-xl">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {transactions.map((transaction) => (
-                    <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-900/20 rounded-lg">
+                    <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                       <div>
                         <div className="font-medium text-white">{transaction.reason}</div>
                         <div className="text-sm text-gray-400">
@@ -537,7 +537,7 @@ const Loyalty = () => {
                         </div>
                       </div>
                       <div className={`font-bold ${
-                        transaction.transaction_type === 'earned' ? 'text-green-400' : 'text-red-400'
+                        transaction.transaction_type === 'earned' ? 'text-yellow-400' : 'text-yellow-400'
                       }`}>
                         {transaction.transaction_type === 'earned' ? '+' : '-'}{Math.abs(transaction.points)} pts
                       </div>
