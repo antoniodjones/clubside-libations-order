@@ -336,6 +336,16 @@ const Auth = () => {
               </TabsList>
               
               <TabsContent value="signin" className="space-y-4 mt-6">
+                <div className="text-center mb-6">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/')}
+                    className="border-gray-400/50 text-gray-300 hover:bg-gray-400/10"
+                  >
+                    Continue as Guest
+                  </Button>
+                </div>
+                
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="signin-email" className="text-white">Email</Label>
@@ -385,6 +395,16 @@ const Auth = () => {
               </TabsContent>
               
               <TabsContent value="signup" className="space-y-4 mt-6">
+                <div className="text-center mb-6">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/')}
+                    className="border-gray-400/50 text-gray-300 hover:bg-gray-400/10"
+                  >
+                    Continue as Guest
+                  </Button>
+                </div>
+                
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -586,15 +606,6 @@ const Auth = () => {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/')}
-            className="border-gray-400/50 text-gray-300 hover:bg-gray-400/10"
-          >
-            Continue as Guest
-          </Button>
-        </div>
       </div>
 
       <Footer />
