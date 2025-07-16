@@ -63,7 +63,7 @@ export const Navigation = () => {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <UserMenu onLoginClick={() => setShowLoginModal(true)} />
-            <CartIcon />
+            <CartIcon onCartClick={() => setShowLoginModal(true)} />
             <Link to="/menu">
               <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-2.5 rounded-none shadow-lg hover:shadow-xl transition-all duration-300 tracking-wide">
                 Get Started
@@ -117,7 +117,7 @@ export const Navigation = () => {
             </Link>
             <div className="pt-4 border-t border-white/10 flex items-center gap-4">
               <UserMenu onLoginClick={() => setShowLoginModal(true)} />
-              <CartIcon />
+              <CartIcon onCartClick={() => setShowLoginModal(true)} />
             </div>
             <Link to="/menu" onClick={() => setIsOpen(false)}>
               <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 rounded-none shadow-lg tracking-wide">

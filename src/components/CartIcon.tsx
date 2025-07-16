@@ -2,25 +2,19 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
-import { useNavigate } from 'react-router-dom';
 
-export const CartIcon = () => {
+interface CartIconProps {
+  onCartClick?: () => void;
+}
+
+export const CartIcon = ({ onCartClick }: CartIconProps) => {
   const { cartItemCount } = useCart();
-  const navigate = useNavigate();
-
-  const handleCartClick = () => {
-    if (cartItemCount > 0) {
-      navigate('/checkout');
-    } else {
-      navigate('/menu');
-    }
-  };
 
   return (
     <Button 
       variant="ghost" 
       size="sm"
-      onClick={handleCartClick}
+      onClick={onCartClick}
       className="text-white hover:bg-purple-400/10 p-2 relative"
     >
       <ShoppingCart className="w-6 h-6" />
