@@ -42,7 +42,7 @@ export const UserMenu = () => {
         onClick={() => navigate('/auth')}
         className="text-white hover:bg-purple-400/10 p-2"
       >
-        <User className="w-5 h-5" />
+        <User className="w-6 h-6" />
       </Button>
     );
   }
