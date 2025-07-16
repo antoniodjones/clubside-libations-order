@@ -289,7 +289,7 @@ const Index = () => {
               onClick={handleLogin}
               className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 rounded-full"
             >
-              Login for Discounts
+              Login for Discounts & Offers
             </Button>
             <Button 
               variant="outline" 
