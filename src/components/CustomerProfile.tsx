@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ProfileSidebar } from '@/components/profile/ProfileSidebar';
 import { ProfileSummary } from '@/components/profile/ProfileSummary';
 import { ManageProfile } from '@/components/profile/ManageProfile';
@@ -6,28 +6,42 @@ import { UpdatePassword } from '@/components/profile/UpdatePassword';
 import { OrderHistory } from '@/components/profile/OrderHistory';
 import { ManagePayments } from '@/components/profile/ManagePayments';
 import { HomeIcon } from '@/components/HomeIcon';
+import { ProfileSectionProps } from '@/types/profile';
 
-export const CustomerProfile = () => {
-  const [activeSection, setActiveSection] = useState('summary');
+const SECTIONS = {
+  SUMMARY: 'summary',
+  ORDERS_HISTORY: 'orders-history',
+  REWARDS: 'rewards',
+  MANAGE: 'manage',
+  MANAGE_PAYMENTS: 'manage-payments',
+  PASSWORD: 'password'
+} as const;
 
-  const renderActiveSection = () => {
+export const CustomerProfile: React.FC = () => {
+  const [activeSection, setActiveSection] = useState<string>(SECTIONS.SUMMARY);
+
+  const handleSectionChange = useCallback((section: string) => {
+    setActiveSection(section);
+  }, []);
+
+  const renderActiveSection = useCallback(() => {
     switch (activeSection) {
-      case 'summary':
+      case SECTIONS.SUMMARY:
         return <ProfileSummary />;
-      case 'orders-history':
+      case SECTIONS.ORDERS_HISTORY:
         return <OrderHistory />;
-      case 'rewards':
+      case SECTIONS.REWARDS:
         return <div className="text-white">Rewards detail page coming soon...</div>;
-      case 'manage':
+      case SECTIONS.MANAGE:
         return <ManageProfile />;
-      case 'manage-payments':
+      case SECTIONS.MANAGE_PAYMENTS:
         return <ManagePayments />;
-      case 'password':
+      case SECTIONS.PASSWORD:
         return <UpdatePassword />;
       default:
         return <ProfileSummary />;
     }
-  };
+  }, [activeSection]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
@@ -36,7 +50,7 @@ export const CustomerProfile = () => {
       <div className="flex">
         <ProfileSidebar 
           activeSection={activeSection} 
-          onSectionChange={setActiveSection} 
+          onSectionChange={handleSectionChange} 
         />
         
         <div className="flex-1 p-8">

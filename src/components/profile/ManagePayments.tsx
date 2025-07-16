@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,41 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CreditCard, Plus, Edit, Trash2, Shield } from 'lucide-react';
-
-interface PaymentMethod {
-  id: string;
-  type: 'credit' | 'debit';
-  brand: string;
-  last4: string;
-  expiryMonth: string;
-  expiryYear: string;
-  isDefault: boolean;
-  cardholderName: string;
-}
-
-// Mock data - replace with real data from Supabase
-const mockPaymentMethods: PaymentMethod[] = [
-  {
-    id: '1',
-    type: 'credit',
-    brand: 'Visa',
-    last4: '4242',
-    expiryMonth: '12',
-    expiryYear: '2025',
-    isDefault: true,
-    cardholderName: 'John Doe'
-  },
-  {
-    id: '2',
-    type: 'debit',
-    brand: 'Mastercard',
-    last4: '5555',
-    expiryMonth: '08',
-    expiryYear: '2026',
-    isDefault: false,
-    cardholderName: 'John Doe'
-  }
-];
+import { SectionHeader } from '@/components/profile/common/SectionHeader';
+import { PaymentMethod } from '@/types/profile';
+import { mockPaymentMethods } from '@/data/mockCustomerData';
+import { generateCardBrand } from '@/utils/profile';
 
 const PaymentMethodForm = ({ method, onSave, onCancel }: { 
   method?: PaymentMethod; 
@@ -169,12 +138,12 @@ const PaymentMethodForm = ({ method, onSave, onCancel }: {
   );
 };
 
-export const ManagePayments = () => {
+export const ManagePayments: React.FC = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(mockPaymentMethods);
   const [editingMethod, setEditingMethod] = useState<PaymentMethod | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
 
-  const handleSaveMethod = (method: PaymentMethod) => {
+  const handleSaveMethod = useCallback((method: PaymentMethod) => {
     if (editingMethod) {
       setPaymentMethods(paymentMethods.map(m => m.id === method.id ? method : m));
       setEditingMethod(null);
@@ -182,27 +151,25 @@ export const ManagePayments = () => {
       setPaymentMethods([...paymentMethods, method]);
       setShowAddDialog(false);
     }
-  };
+  }, [editingMethod, paymentMethods]);
 
-  const handleDeleteMethod = (id: string) => {
+  const handleDeleteMethod = useCallback((id: string) => {
     setPaymentMethods(paymentMethods.filter(m => m.id !== id));
-  };
+  }, [paymentMethods]);
 
-  const handleSetDefault = (id: string) => {
+  const handleSetDefault = useCallback((id: string) => {
     setPaymentMethods(paymentMethods.map(m => ({ ...m, isDefault: m.id === id })));
-  };
+  }, [paymentMethods]);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <CreditCard className="h-8 w-8 text-purple-400" />
-          <div>
-            <h2 className="text-2xl font-bold text-white">Manage Payments</h2>
-            <p className="text-gray-400">Add, edit, or remove payment methods</p>
-          </div>
-        </div>
-        
+      <SectionHeader 
+        icon={CreditCard} 
+        title="Manage Payments" 
+        description="Add, edit, or remove payment methods"
+      />
+      
+      <div className="flex justify-end">
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogTrigger asChild>
             <Button className="bg-purple-600 hover:bg-purple-700 text-white">
