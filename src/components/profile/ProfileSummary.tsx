@@ -166,10 +166,10 @@ export const ProfileSummary = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Profile Info */}
-        <div className="space-y-6">
-          {/* Basic Information */}
+      <div className="space-y-6">
+        {/* Top Section - Profile and Loyalty */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Profile Information */}
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
@@ -232,68 +232,7 @@ export const ProfileSummary = () => {
             </CardContent>
           </Card>
 
-          {/* Offers */}
-          <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Gift className="h-5 w-5" />
-                Offers
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {mockCustomerData.rewards.map((reward, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg border border-gray-700">
-                  <div className="flex-1">
-                    <p className="font-medium text-white">{reward.name}</p>
-                    <p className="text-sm text-gray-400">
-                      {reward.points_cost} points • Expires {new Date(reward.expires).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <Button 
-                    size="sm" 
-                    className="bg-purple-600 hover:bg-purple-700 text-white"
-                    onClick={() => {
-                      // Handle offer redemption
-                      console.log('Redeeming offer:', reward.name);
-                    }}
-                  >
-                    Redeem
-                  </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column - Activity & Orders (Read-only) */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Spending Summary */}
-          <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <TrendingUp className="h-5 w-5" />
-                Spend Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-yellow-400">${mockCustomerData.loyalty.lifetime_spent}</p>
-                  <p className="text-sm text-gray-400">Lifetime Spent</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-yellow-400">{mockCustomerData.recentOrders.length}</p>
-                  <p className="text-sm text-gray-400">Recent Orders</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-yellow-400">{mockCustomerData.preferences.favorite_categories.length}</p>
-                  <p className="text-sm text-gray-400">Favorite Categories</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Orders (Read-only) */}
+          {/* Order History */}
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
@@ -336,17 +275,53 @@ export const ProfileSummary = () => {
               ))}
             </CardContent>
           </Card>
+        </div>
 
-          {/* About Customer Section */}
-          <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <User className="h-5 w-5" />
-                About {mockCustomerData.profile.first_name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Hobbies */}
+        {/* Full Width Offers Section */}
+        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Gift className="h-5 w-5" />
+              Available Offers
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {mockCustomerData.rewards.map((reward, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+                  <div className="flex-1">
+                    <p className="font-medium text-white">{reward.name}</p>
+                    <p className="text-sm text-gray-400">
+                      {reward.points_cost} points • Expires {new Date(reward.expires).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    className="bg-purple-600 hover:bg-purple-700 text-white"
+                    onClick={() => {
+                      // Handle offer redemption
+                      console.log('Redeeming offer:', reward.name);
+                    }}
+                  >
+                    Redeem
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Full Width About Customer Section */}
+        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <User className="h-5 w-5" />
+              About {mockCustomerData.profile.first_name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Top Row - Basic Customer Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <h4 className="font-medium text-white mb-2">Hobbies & Interests</h4>
                 <div className="flex flex-wrap gap-2">
@@ -357,25 +332,36 @@ export const ProfileSummary = () => {
                   ))}
                 </div>
               </div>
-
-              {/* Estimated Income */}
               <div>
                 <h4 className="font-medium text-white mb-2">Estimated Income</h4>
                 <p className="text-gray-300">{mockCustomerData.aboutCustomer.estimatedIncome}</p>
               </div>
+              <div>
+                <h4 className="font-medium text-white mb-2">Favorite Menu Items</h4>
+                <div className="flex flex-wrap gap-2">
+                  {mockCustomerData.aboutCustomer.favoriteMenuItems.map((item, index) => (
+                    <Badge key={index} variant="outline" className="text-yellow-400 border-yellow-400">
+                      {item}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-              {/* Favorite Places */}
+            {/* Bottom Row - Venues and Staff */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Venues Visited */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium text-white">Favorite Places</h4>
-                  {mockCustomerData.aboutCustomer.favoritePlaces.length > maxDisplayItems && (
+                  <h4 className="font-medium text-white">Venues Visited ({mockCustomerData.aboutCustomer.venuesVisited.length})</h4>
+                  {mockCustomerData.aboutCustomer.venuesVisited.length > maxDisplayItems && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setShowAllPlaces(!showAllPlaces)}
+                      onClick={() => setShowAllVenues(!showAllVenues)}
                       className="text-purple-400 hover:text-purple-300"
                     >
-                      {showAllPlaces ? (
+                      {showAllVenues ? (
                         <>Show Less <ChevronUp className="ml-1 h-4 w-4" /></>
                       ) : (
                         <>Show More <ChevronDown className="ml-1 h-4 w-4" /></>
@@ -383,24 +369,14 @@ export const ProfileSummary = () => {
                     </Button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-                  {displayedPlaces.map((place, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-gray-800/30 rounded-lg border border-gray-700">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-white text-sm truncate">{place.name}</p>
-                        <p className="text-xs text-gray-400 truncate">{place.city}, {place.state}</p>
+                <div className="space-y-2">
+                  {displayedVenues.map((venue, index) => (
+                    <div key={index} className="p-2 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-white text-sm truncate">{venue.name}</p>
+                        <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{new Date(venue.lastVisit).toLocaleDateString()}</p>
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="text-purple-400 hover:text-purple-300 ml-2 flex-shrink-0"
-                        onClick={() => {
-                          // Navigate to venue page
-                          console.log('Navigate to venue:', place.id);
-                        }}
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                      </Button>
+                      <p className="text-xs text-gray-400 truncate">{venue.address}</p>
                     </div>
                   ))}
                 </div>
@@ -425,7 +401,7 @@ export const ProfileSummary = () => {
                     </Button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                <div className="space-y-2">
                   {displayedStaff.map((staff, index) => (
                     <div key={index} className="p-2 bg-gray-800/30 rounded-lg border border-gray-700">
                       <div className="flex items-center justify-between mb-1">
@@ -440,53 +416,9 @@ export const ProfileSummary = () => {
                   ))}
                 </div>
               </div>
-
-              {/* Favorite Menu Items */}
-              <div>
-                <h4 className="font-medium text-white mb-2">Favorite Menu Items</h4>
-                <div className="flex flex-wrap gap-2">
-                  {mockCustomerData.aboutCustomer.favoriteMenuItems.map((item, index) => (
-                    <Badge key={index} variant="outline" className="text-yellow-400 border-yellow-400">
-                      {item}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Venues Visited */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium text-white">Venues Visited ({mockCustomerData.aboutCustomer.venuesVisited.length})</h4>
-                  {mockCustomerData.aboutCustomer.venuesVisited.length > maxDisplayItems && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowAllVenues(!showAllVenues)}
-                      className="text-purple-400 hover:text-purple-300"
-                    >
-                      {showAllVenues ? (
-                        <>Show Less <ChevronUp className="ml-1 h-4 w-4" /></>
-                      ) : (
-                        <>Show More <ChevronDown className="ml-1 h-4 w-4" /></>
-                      )}
-                    </Button>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-                  {displayedVenues.map((venue, index) => (
-                    <div key={index} className="p-2 bg-gray-800/30 rounded-lg border border-gray-700">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="font-medium text-white text-sm truncate">{venue.name}</p>
-                        <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{new Date(venue.lastVisit).toLocaleDateString()}</p>
-                      </div>
-                      <p className="text-xs text-gray-400 truncate">{venue.address}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
