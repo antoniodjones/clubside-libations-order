@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Product {
@@ -19,9 +19,40 @@ interface CartItem {
   quantity: number;
 }
 
+const CART_STORAGE_KEY = 'cart_items';
+
+// Helper functions for localStorage
+const getStoredCart = (): CartItem[] => {
+  try {
+    const stored = localStorage.getItem(CART_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+const setStoredCart = (cart: CartItem[]) => {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  } catch {
+    // Handle localStorage errors silently
+  }
+};
+
 export const useCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const { toast } = useToast();
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const storedCart = getStoredCart();
+    setCart(storedCart);
+  }, []);
+
+  // Update localStorage whenever cart changes
+  useEffect(() => {
+    setStoredCart(cart);
+  }, [cart]);
 
   const addToCart = (product: Product) => {
     setCart(prev => {
