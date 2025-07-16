@@ -111,7 +111,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -130,34 +130,36 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
             {/* Order Summary */}
             <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white font-black text-2xl tracking-tight">Order Summary</CardTitle>
+                <CardTitle className="text-white text-2xl">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {cart.map((item) => (
-                  <div key={item.product.id} className="flex justify-between items-center p-4 bg-black/20 rounded-lg border border-purple-500/10">
-                    <div className="flex-1">
-                      <p className="text-white font-semibold text-lg">{item.product.name}</p>
-                      <p className="text-purple-300 text-sm">Qty: {item.quantity}</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <p className="text-purple-400 font-bold text-lg">
-                        ${(item.product.price * item.quantity).toFixed(2)}
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onDeleteFromCart(item.product.id)}
-                        className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:text-purple-300"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                  <div key={item.product.id} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+                    <div className="flex justify-between items-center">
+                      <div className="flex-1">
+                        <p className="text-white font-bold text-lg">{item.product.name}</p>
+                        <p className="text-gray-400 text-sm">Qty: {item.quantity}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <p className="text-yellow-400 font-bold text-xl">
+                          ${(item.product.price * item.quantity).toFixed(2)}
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onDeleteFromCart(item.product.id)}
+                          className="border-gray-600 text-gray-400 hover:bg-gray-700 hover:text-white"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
-                <Separator className="bg-purple-500/30" />
-                <div className="flex justify-between items-center text-xl font-black">
+                <Separator className="bg-gray-700" />
+                <div className="flex justify-between items-center text-2xl font-bold">
                   <span className="text-white">Total</span>
-                  <span className="text-purple-400">${total.toFixed(2)}</span>
+                  <span className="text-yellow-400">${total.toFixed(2)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -165,14 +167,14 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
             {/* Payment Form */}
             <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white font-black text-2xl tracking-tight flex items-center">
+                <CardTitle className="text-white text-2xl flex items-center">
                   <CreditCard className="w-6 h-6 mr-3" />
                   Mock Payment
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-white">Full Name *</Label>
+                  <Label htmlFor="name" className="text-gray-400">Full Name *</Label>
                   <Input
                     id="name"
                     value={customerInfo.name}
@@ -183,7 +185,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white">Email *</Label>
+                  <Label htmlFor="email" className="text-gray-400">Email *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -195,7 +197,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-white">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-gray-400">Phone Number</Label>
                   <Input
                     id="phone"
                     value={customerInfo.phone}
@@ -205,8 +207,8 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
                   />
                 </div>
 
-                <div className="bg-blue-900/20 border border-blue-400/30 rounded-lg p-4 mt-6">
-                  <p className="text-blue-300 text-sm">
+                <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-4 mt-6">
+                  <p className="text-gray-300 text-sm">
                     🧪 <strong>Development Mode:</strong> This is a mock payment system. 
                     No real payment will be processed.
                   </p>
@@ -215,7 +217,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
                 <Button
                   onClick={handleMockPayment}
                   disabled={isProcessing}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 text-lg"
                 >
                   {isProcessing ? (
                     <>
