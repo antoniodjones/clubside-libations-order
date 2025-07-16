@@ -4,20 +4,32 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, Wine, Gift } from 'lucide-react';
+import { Eye, EyeOff, Wine, Gift, CalendarIcon, MapPin, Building } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [birthdate, setBirthdate] = useState<Date>();
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedVenue, setSelectedVenue] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [cities, setCities] = useState<any[]>([]);
+  const [venues, setVenues] = useState<any[]>([]);
   const [searchParams] = useSearchParams();
   const referralCode = searchParams.get('ref');
   
@@ -32,11 +44,57 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
+  // Fetch cities and venues
+  useEffect(() => {
+    const fetchCitiesAndVenues = async () => {
+      try {
+        // Fetch cities
+        const { data: citiesData, error: citiesError } = await supabase
+          .from('cities')
+          .select('*')
+          .order('name');
+        
+        if (citiesError) throw citiesError;
+        setCities(citiesData || []);
+
+        // Fetch venues
+        const { data: venuesData, error: venuesError } = await supabase
+          .from('venues')
+          .select('*, cities(name, state)')
+          .eq('is_active', true)
+          .order('name');
+        
+        if (venuesError) throw venuesError;
+        setVenues(venuesData || []);
+      } catch (error) {
+        console.error('Error fetching cities and venues:', error);
+      }
+    };
+
+    fetchCitiesAndVenues();
+  }, []);
+
+  // Format mobile number
+  const formatMobileNumber = (value: string) => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, '');
+    
+    // Format as (XXX) XXX-XXXX
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  };
+
+  const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatMobileNumber(e.target.value);
+    setMobileNumber(formatted);
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!email || !password) {
+    if (!email || !password || !firstName || !lastName) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -46,18 +104,36 @@ const Auth = () => {
       return;
     }
 
-    const { error } = await signUp(email, password, firstName, lastName);
-    
-    if (error) {
+    try {
+      const { error } = await signUp(email, password, firstName, lastName);
+      
+      if (error) {
+        toast({
+          title: "Sign Up Error",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        // Store additional profile data in localStorage for now
+        // In a real app, you'd want to update the profile after successful signup
+        const additionalData = {
+          birthdate: birthdate ? format(birthdate, 'yyyy-MM-dd') : null,
+          mobileNumber,
+          selectedCity,
+          selectedVenue
+        };
+        localStorage.setItem('pendingProfileData', JSON.stringify(additionalData));
+        
+        toast({
+          title: "Success!",
+          description: "Please check your email to confirm your account",
+        });
+      }
+    } catch (error) {
       toast({
-        title: "Sign Up Error",
-        description: error.message,
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Success!",
-        description: "Please check your email to confirm your account",
       });
     }
     setIsLoading(false);
@@ -212,6 +288,104 @@ const Auth = () => {
                         placeholder="Doe"
                       />
                     </div>
+                  </div>
+                  
+                  {/* Birthdate Field */}
+                  <div className="space-y-2">
+                    <Label className="text-white">Birthdate</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full bg-gray-800 border-gray-600 text-white justify-start text-left font-normal hover:bg-gray-700",
+                            !birthdate && "text-gray-400"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {birthdate ? format(birthdate, "PPP") : <span>Select your birthdate</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 bg-gray-800 border-gray-600" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={birthdate}
+                          onSelect={setBirthdate}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  {/* Mobile Number Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="mobile" className="text-white">Mobile Number</Label>
+                    <Input
+                      id="mobile"
+                      type="tel"
+                      value={mobileNumber}
+                      onChange={handleMobileChange}
+                      className="bg-gray-800 border-gray-600 text-white"
+                      placeholder="(555) 123-4567"
+                      maxLength={14}
+                    />
+                  </div>
+
+                  {/* City/Province Selection */}
+                  <div className="space-y-2">
+                    <Label className="text-white">City/Province</Label>
+                    <Select value={selectedCity} onValueChange={setSelectedCity}>
+                      <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white">
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          <SelectValue placeholder="Select your city" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600 z-50">
+                        {cities.map((city) => (
+                          <SelectItem 
+                            key={city.id} 
+                            value={city.id} 
+                            className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                          >
+                            {city.name}, {city.state}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Venue Selection */}
+                  <div className="space-y-2">
+                    <Label className="text-white">Preferred Venue</Label>
+                    <Select value={selectedVenue} onValueChange={setSelectedVenue}>
+                      <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white">
+                        <div className="flex items-center">
+                          <Building className="w-4 h-4 mr-2" />
+                          <SelectValue placeholder="Select a venue" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600 z-50">
+                        {venues
+                          .filter(venue => !selectedCity || venue.city_id === selectedCity)
+                          .map((venue) => (
+                            <SelectItem 
+                              key={venue.id} 
+                              value={venue.id} 
+                              className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-medium">{venue.name}</span>
+                                <span className="text-sm text-gray-400">{venue.address}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div className="space-y-2">
