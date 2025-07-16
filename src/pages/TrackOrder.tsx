@@ -109,19 +109,23 @@ const TrackOrder = () => {
   const displayItems = orderItems.length > 0 ? orderItems : currentOrder.items;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <Navigation />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Header */}
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-2">Track Your Order</h1>
-            <p className="text-gray-300">Order #{displayOrder.id}</p>
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-none tracking-tight">
+              TRACK YOUR
+              <br />
+              <span className="text-yellow-400">ORDER</span>
+            </h1>
+            <p className="text-xl text-gray-300 font-light">Order #{displayOrder.id}</p>
           </div>
 
           {/* Order Status */}
-          <Card className="bg-black/40 border-yellow-400/30">
+          <Card className="bg-black/40 backdrop-blur-sm border-yellow-400/30">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Coffee className="w-5 h-5" />

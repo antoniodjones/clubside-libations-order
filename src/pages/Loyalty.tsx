@@ -310,21 +310,25 @@ const Loyalty = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <HomeIcon />
       <Navigation />
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
-            LOYALTY <span className="text-purple-400">REWARDS</span>
+        <div className="text-center mb-12">
+          <h1 className="text-6xl md:text-8xl font-black text-white mb-6 leading-none tracking-tight">
+            LOYALTY
+            <br />
+            <span className="text-yellow-400">REWARDS</span>
           </h1>
-          <p className="text-xl text-gray-300">Earn points, unlock rewards, enjoy exclusive perks</p>
+          <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto">
+            Earn points, unlock rewards, enjoy exclusive perks
+          </p>
         </div>
 
         {/* Current Status Card */}
-        <Card className="mb-8 bg-gradient-to-r from-purple-900/40 to-yellow-900/40 border-purple-500/20">
+        <Card className="mb-8 bg-gradient-to-r from-purple-900/40 to-yellow-900/40 border-yellow-400/30 backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
