@@ -36,21 +36,21 @@ const Auth = () => {
 
   // Countries with their codes, flags, and phone formats
   const countries = [
-    { code: 'US', flag: '🇺🇸', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'United States' },
-    { code: 'CA', flag: '🇨🇦', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'Canada' },
-    { code: 'GB', flag: '🇬🇧', dialCode: '+44', format: 'XXXX XXX XXX', name: 'United Kingdom' },
-    { code: 'AU', flag: '🇦🇺', dialCode: '+61', format: 'XXXX XXX XXX', name: 'Australia' },
-    { code: 'DE', flag: '🇩🇪', dialCode: '+49', format: 'XXX XXXXXXX', name: 'Germany' },
-    { code: 'FR', flag: '🇫🇷', dialCode: '+33', format: 'XX XX XX XX XX', name: 'France' },
-    { code: 'IT', flag: '🇮🇹', dialCode: '+39', format: 'XXX XXX XXXX', name: 'Italy' },
-    { code: 'ES', flag: '🇪🇸', dialCode: '+34', format: 'XXX XXX XXX', name: 'Spain' },
-    { code: 'MX', flag: '🇲🇽', dialCode: '+52', format: 'XX XXXX XXXX', name: 'Mexico' },
-    { code: 'BR', flag: '🇧🇷', dialCode: '+55', format: '(XX) XXXXX-XXXX', name: 'Brazil' },
-    { code: 'AR', flag: '🇦🇷', dialCode: '+54', format: 'XX XXXX-XXXX', name: 'Argentina' },
-    { code: 'JP', flag: '🇯🇵', dialCode: '+81', format: 'XXX-XXXX-XXXX', name: 'Japan' },
-    { code: 'KR', flag: '🇰🇷', dialCode: '+82', format: 'XXX-XXXX-XXXX', name: 'South Korea' },
-    { code: 'CN', flag: '🇨🇳', dialCode: '+86', format: 'XXX XXXX XXXX', name: 'China' },
-    { code: 'IN', flag: '🇮🇳', dialCode: '+91', format: 'XXXXX XXXXX', name: 'India' },
+    { code: 'US', flag: '🇺🇸', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'United States', dbCountry: 'United States' },
+    { code: 'CA', flag: '🇨🇦', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'Canada', dbCountry: 'Canada' },
+    { code: 'GB', flag: '🇬🇧', dialCode: '+44', format: 'XXXX XXX XXX', name: 'United Kingdom', dbCountry: 'United Kingdom' },
+    { code: 'AU', flag: '🇦🇺', dialCode: '+61', format: 'XXXX XXX XXX', name: 'Australia', dbCountry: 'Australia' },
+    { code: 'DE', flag: '🇩🇪', dialCode: '+49', format: 'XXX XXXXXXX', name: 'Germany', dbCountry: 'Germany' },
+    { code: 'FR', flag: '🇫🇷', dialCode: '+33', format: 'XX XX XX XX XX', name: 'France', dbCountry: 'France' },
+    { code: 'IT', flag: '🇮🇹', dialCode: '+39', format: 'XXX XXX XXXX', name: 'Italy', dbCountry: 'Italy' },
+    { code: 'ES', flag: '🇪🇸', dialCode: '+34', format: 'XXX XXX XXX', name: 'Spain', dbCountry: 'Spain' },
+    { code: 'MX', flag: '🇲🇽', dialCode: '+52', format: 'XX XXXX XXXX', name: 'Mexico', dbCountry: 'Mexico' },
+    { code: 'BR', flag: '🇧🇷', dialCode: '+55', format: '(XX) XXXXX-XXXX', name: 'Brazil', dbCountry: 'Brazil' },
+    { code: 'AR', flag: '🇦🇷', dialCode: '+54', format: 'XX XXXX-XXXX', name: 'Argentina', dbCountry: 'Argentina' },
+    { code: 'JP', flag: '🇯🇵', dialCode: '+81', format: 'XXX-XXXX-XXXX', name: 'Japan', dbCountry: 'Japan' },
+    { code: 'KR', flag: '🇰🇷', dialCode: '+82', format: 'XXX-XXXX-XXXX', name: 'South Korea', dbCountry: 'South Korea' },
+    { code: 'CN', flag: '🇨🇳', dialCode: '+86', format: 'XXX XXXX XXXX', name: 'China', dbCountry: 'China' },
+    { code: 'IN', flag: '🇮🇳', dialCode: '+91', format: 'XXXXX XXXXX', name: 'India', dbCountry: 'India' },
   ];
   
   const { signUp, signIn, user } = useAuth();
@@ -190,12 +190,26 @@ const Auth = () => {
 
   const handleCountryChange = (newCountryCode: string) => {
     setCountryCode(newCountryCode);
+    // Reset city and venue selection when country changes
+    setSelectedCity('');
+    setSelectedVenue('');
     // Re-format the existing number for the new country
     if (mobileNumber) {
       const formatted = formatMobileNumber(mobileNumber, newCountryCode);
       setMobileNumber(formatted);
     }
   };
+
+  // Filter cities based on selected country
+  const filteredCities = cities.filter(city => {
+    const selectedCountry = countries.find(c => c.code === countryCode);
+    return selectedCountry ? city.country === selectedCountry.dbCountry : true;
+  });
+
+  // Filter venues based on selected city
+  const filteredVenues = venues.filter(venue => 
+    !selectedCity || venue.city_id === selectedCity
+  );
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -482,7 +496,7 @@ const Auth = () => {
                         </div>
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600 z-50">
-                        {cities.map((city) => (
+                        {filteredCities.map((city) => (
                           <SelectItem 
                             key={city.id} 
                             value={city.id} 
@@ -506,20 +520,18 @@ const Auth = () => {
                         </div>
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600 z-50">
-                        {venues
-                          .filter(venue => !selectedCity || venue.city_id === selectedCity)
-                          .map((venue) => (
-                            <SelectItem 
-                              key={venue.id} 
-                              value={venue.id} 
-                              className="text-white hover:bg-gray-700 focus:bg-gray-700"
-                            >
-                              <div className="flex flex-col">
-                                <span className="font-medium">{venue.name}</span>
-                                <span className="text-sm text-gray-400">{venue.address}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
+                        {filteredVenues.map((venue) => (
+                          <SelectItem 
+                            key={venue.id} 
+                            value={venue.id} 
+                            className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-medium">{venue.name}</span>
+                              <span className="text-sm text-gray-400">{venue.address}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
