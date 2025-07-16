@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { EnhancedDatePicker } from '@/components/ui/enhanced-date-picker';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
@@ -436,17 +436,18 @@ const Auth = () => {
                   </div>
                   
                   {/* Birthdate Field */}
-                  <EnhancedDatePicker
-                    value={birthdate}
-                    onChange={setBirthdate}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    placeholder="MM/dd/yyyy"
-                    label="Birthdate"
-                    minDate={new Date("1900-01-01")}
-                    maxDate={new Date()}
-                  />
+                  <div className="space-y-2">
+                    <Label className="text-white">Birthdate</Label>
+                    <DatePicker
+                      value={birthdate}
+                      onChange={setBirthdate}
+                      placeholder="Select your birthdate"
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      className="w-full"
+                    />
+                  </div>
 
                   {/* Mobile Number Field with Country Code */}
                   <div className="space-y-2">
