@@ -39,19 +39,19 @@ export const ProfileSummary: React.FC = () => {
       {/* Header */}
       <ProfileHeader 
         profile={mockCustomerData.profile} 
-        loyalty={mockCustomerData.loyalty} 
+        rewards={mockCustomerData.rewards} 
       />
 
       <div className="space-y-6">
         {/* Top Section - Profile and Loyalty */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <ProfileInfo profile={mockCustomerData.profile} />
-          <RewardsStatusCard loyalty={mockCustomerData.loyalty} />
+          <RewardsStatusCard rewards={mockCustomerData.rewards} />
           <OrderHistoryCard orders={mockCustomerData.recentOrders} />
         </div>
 
         {/* Available Offers Section */}
-        <AvailableOffersCard rewards={mockCustomerData.rewards} />
+        <AvailableOffersCard rewards={mockCustomerData.availableRewards} />
 
         {/* About Customer Section */}
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
