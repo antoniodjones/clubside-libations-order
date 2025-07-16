@@ -328,7 +328,7 @@ const Loyalty = () => {
         </div>
 
         {/* Current Status Card */}
-        <Card className="mb-12 bg-gradient-to-r from-purple-900/40 to-yellow-900/40 border-yellow-400/30 backdrop-blur-sm">
+        <Card className="mb-12 bg-gradient-to-r from-purple-900/80 to-purple-800/70 border-yellow-400/30 backdrop-blur-sm">
           <CardHeader className="pb-8">
             <div className="flex items-center justify-between">
               <div>
