@@ -383,23 +383,23 @@ export const ProfileSummary = () => {
                     </Button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
                   {displayedPlaces.map((place, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg border border-gray-700">
-                      <div>
-                        <p className="font-medium text-white">{place.name}</p>
-                        <p className="text-sm text-gray-400">{place.city}, {place.state}</p>
+                    <div key={index} className="flex items-center justify-between p-2 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-white text-sm truncate">{place.name}</p>
+                        <p className="text-xs text-gray-400 truncate">{place.city}, {place.state}</p>
                       </div>
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="text-purple-400 hover:text-purple-300"
+                        className="text-purple-400 hover:text-purple-300 ml-2 flex-shrink-0"
                         onClick={() => {
                           // Navigate to venue page
                           console.log('Navigate to venue:', place.id);
                         }}
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3 w-3" />
                       </Button>
                     </div>
                   ))}
@@ -425,17 +425,17 @@ export const ProfileSummary = () => {
                     </Button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
                   {displayedStaff.map((staff, index) => (
-                    <div key={index} className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                    <div key={index} className="p-2 bg-gray-800/30 rounded-lg border border-gray-700">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="font-medium text-white">{staff.firstName} {staff.lastName}</p>
-                        <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 text-xs">
+                        <p className="font-medium text-white text-sm truncate">{staff.firstName} {staff.lastName}</p>
+                        <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 text-xs ml-2 flex-shrink-0">
                           Staff
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-400 mb-1">{staff.venueName}</p>
-                      <p className="text-xs text-gray-500">{staff.venueAddress}</p>
+                      <p className="text-xs text-gray-400 mb-1 truncate">{staff.venueName}</p>
+                      <p className="text-xs text-gray-500 truncate">{staff.venueAddress}</p>
                     </div>
                   ))}
                 </div>
@@ -472,14 +472,14 @@ export const ProfileSummary = () => {
                     </Button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
                   {displayedVenues.map((venue, index) => (
-                    <div key={index} className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                    <div key={index} className="p-2 bg-gray-800/30 rounded-lg border border-gray-700">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="font-medium text-white">{venue.name}</p>
-                        <p className="text-sm text-gray-400">{new Date(venue.lastVisit).toLocaleDateString()}</p>
+                        <p className="font-medium text-white text-sm truncate">{venue.name}</p>
+                        <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{new Date(venue.lastVisit).toLocaleDateString()}</p>
                       </div>
-                      <p className="text-sm text-gray-400">{venue.address}</p>
+                      <p className="text-xs text-gray-400 truncate">{venue.address}</p>
                     </div>
                   ))}
                 </div>
