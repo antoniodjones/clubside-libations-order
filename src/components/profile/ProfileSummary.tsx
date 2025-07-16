@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   User, 
@@ -166,26 +167,33 @@ export const ProfileSummary = () => {
             </CardContent>
           </Card>
 
-          {/* Available Rewards (Read-only) */}
+          {/* Offers */}
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <Gift className="h-5 w-5" />
-                Available Rewards (View Only)
+                Offers
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {mockCustomerData.rewards.map((reward, index) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg border border-gray-700">
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-white">{reward.name}</p>
                     <p className="text-sm text-gray-400">
                       {reward.points_cost} points • Expires {new Date(reward.expires).toLocaleDateString()}
                     </p>
                   </div>
-                  <Badge variant="outline" className="text-gray-400">
-                    Auto-managed
-                  </Badge>
+                  <Button 
+                    size="sm" 
+                    className="bg-purple-600 hover:bg-purple-700 text-white"
+                    onClick={() => {
+                      // Handle offer redemption
+                      console.log('Redeeming offer:', reward.name);
+                    }}
+                  >
+                    Redeem
+                  </Button>
                 </div>
               ))}
             </CardContent>
