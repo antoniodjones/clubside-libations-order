@@ -40,11 +40,6 @@ export const CustomerProfile = () => {
         />
         
         <div className="flex-1 p-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4">Profile Summary</h1>
-            <p className="text-gray-300 text-lg">Manage your account and preferences</p>
-          </div>
-          
           {renderActiveSection()}
         </div>
       </div>
