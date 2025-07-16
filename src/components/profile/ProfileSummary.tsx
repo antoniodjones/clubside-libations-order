@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,10 @@ import {
   Calendar,
   CreditCard,
   Gift,
-  TrendingUp
+  TrendingUp,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 // Mock data based on our database schema
@@ -72,10 +75,32 @@ const mockCustomerData = {
   aboutCustomer: {
     hobbies: ['Wine Tasting', 'Live Music', 'Cooking', 'Travel'],
     estimatedIncome: '$75,000 - $100,000',
-    favoritePlaces: ['Downtown Lounge', 'Rooftop Bar & Grill', 'The Craft House'],
-    favoriteBartenders: ['Marcus (Downtown Lounge)', 'Sofia (Rooftop Bar)'],
+    favoritePlaces: [
+      { name: 'Downtown Lounge', city: 'San Francisco', state: 'CA', id: 'venue-1' },
+      { name: 'Rooftop Bar & Grill', city: 'San Francisco', state: 'CA', id: 'venue-2' },
+      { name: 'The Craft House', city: 'Oakland', state: 'CA', id: 'venue-3' },
+      { name: 'Vintage Wine Bar', city: 'Berkeley', state: 'CA', id: 'venue-4' },
+      { name: 'Sunset Terrace', city: 'San Francisco', state: 'CA', id: 'venue-5' },
+      { name: 'Harbor View Lounge', city: 'Sausalito', state: 'CA', id: 'venue-6' }
+    ],
+    favoriteStaffMembers: [
+      { firstName: 'Marcus', lastName: 'Rodriguez', venueName: 'Downtown Lounge', venueAddress: '123 Market St, San Francisco, CA' },
+      { firstName: 'Sofia', lastName: 'Chen', venueName: 'Rooftop Bar & Grill', venueAddress: '456 Union St, San Francisco, CA' },
+      { firstName: 'Jake', lastName: 'Thompson', venueName: 'The Craft House', venueAddress: '789 Broadway, Oakland, CA' },
+      { firstName: 'Maria', lastName: 'Gonzalez', venueName: 'Vintage Wine Bar', venueAddress: '321 Shattuck Ave, Berkeley, CA' },
+      { firstName: 'David', lastName: 'Kim', venueName: 'Sunset Terrace', venueAddress: '654 Fillmore St, San Francisco, CA' },
+      { firstName: 'Emma', lastName: 'Wilson', venueName: 'Harbor View Lounge', venueAddress: '987 Bridgeway, Sausalito, CA' }
+    ],
     favoriteMenuItems: ['Bourbon Old Fashioned', 'Truffle Mac & Cheese', 'Craft Beer Flight'],
-    venuesVisited: ['Downtown Lounge', 'Rooftop Bar & Grill', 'The Craft House', 'Vintage Wine Bar', 'Sunset Terrace']
+    venuesVisited: [
+      { name: 'Downtown Lounge', address: '123 Market St, San Francisco, CA', lastVisit: '2024-01-12' },
+      { name: 'Rooftop Bar & Grill', address: '456 Union St, San Francisco, CA', lastVisit: '2024-01-08' },
+      { name: 'The Craft House', address: '789 Broadway, Oakland, CA', lastVisit: '2024-01-05' },
+      { name: 'Vintage Wine Bar', address: '321 Shattuck Ave, Berkeley, CA', lastVisit: '2023-12-28' },
+      { name: 'Sunset Terrace', address: '654 Fillmore St, San Francisco, CA', lastVisit: '2023-12-22' },
+      { name: 'Harbor View Lounge', address: '987 Bridgeway, Sausalito, CA', lastVisit: '2023-12-15' },
+      { name: 'The Whiskey Room', address: '111 Pine St, San Francisco, CA', lastVisit: '2023-12-10' }
+    ]
   }
 };
 
@@ -94,6 +119,24 @@ const calculateAge = (birthday: string): number => {
 };
 
 export const ProfileSummary = () => {
+  const [showAllPlaces, setShowAllPlaces] = useState(false);
+  const [showAllStaff, setShowAllStaff] = useState(false);
+  const [showAllVenues, setShowAllVenues] = useState(false);
+
+  const maxDisplayItems = 5;
+
+  const displayedPlaces = showAllPlaces 
+    ? mockCustomerData.aboutCustomer.favoritePlaces 
+    : mockCustomerData.aboutCustomer.favoritePlaces.slice(0, maxDisplayItems);
+
+  const displayedStaff = showAllStaff 
+    ? mockCustomerData.aboutCustomer.favoriteStaffMembers 
+    : mockCustomerData.aboutCustomer.favoriteStaffMembers.slice(0, maxDisplayItems);
+
+  const displayedVenues = showAllVenues 
+    ? mockCustomerData.aboutCustomer.venuesVisited 
+    : mockCustomerData.aboutCustomer.venuesVisited.slice(0, maxDisplayItems);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -323,20 +366,77 @@ export const ProfileSummary = () => {
 
               {/* Favorite Places */}
               <div>
-                <h4 className="font-medium text-white mb-2">Favorite Places</h4>
-                <div className="space-y-1">
-                  {mockCustomerData.aboutCustomer.favoritePlaces.map((place, index) => (
-                    <p key={index} className="text-sm text-gray-300">• {place}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-white">Favorite Places</h4>
+                  {mockCustomerData.aboutCustomer.favoritePlaces.length > maxDisplayItems && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAllPlaces(!showAllPlaces)}
+                      className="text-purple-400 hover:text-purple-300"
+                    >
+                      {showAllPlaces ? (
+                        <>Show Less <ChevronUp className="ml-1 h-4 w-4" /></>
+                      ) : (
+                        <>Show More <ChevronDown className="ml-1 h-4 w-4" /></>
+                      )}
+                    </Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {displayedPlaces.map((place, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div>
+                        <p className="font-medium text-white">{place.name}</p>
+                        <p className="text-sm text-gray-400">{place.city}, {place.state}</p>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-purple-400 hover:text-purple-300"
+                        onClick={() => {
+                          // Navigate to venue page
+                          console.log('Navigate to venue:', place.id);
+                        }}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              {/* Favorite Bartenders */}
+              {/* Favorite Venue Staff Members */}
               <div>
-                <h4 className="font-medium text-white mb-2">Favorite Bartenders</h4>
-                <div className="space-y-1">
-                  {mockCustomerData.aboutCustomer.favoriteBartenders.map((bartender, index) => (
-                    <p key={index} className="text-sm text-gray-300">• {bartender}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-white">Favorite Venue Staff Members</h4>
+                  {mockCustomerData.aboutCustomer.favoriteStaffMembers.length > maxDisplayItems && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAllStaff(!showAllStaff)}
+                      className="text-purple-400 hover:text-purple-300"
+                    >
+                      {showAllStaff ? (
+                        <>Show Less <ChevronUp className="ml-1 h-4 w-4" /></>
+                      ) : (
+                        <>Show More <ChevronDown className="ml-1 h-4 w-4" /></>
+                      )}
+                    </Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {displayedStaff.map((staff, index) => (
+                    <div key={index} className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-white">{staff.firstName} {staff.lastName}</p>
+                        <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 text-xs">
+                          Staff
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-400 mb-1">{staff.venueName}</p>
+                      <p className="text-xs text-gray-500">{staff.venueAddress}</p>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -355,12 +455,32 @@ export const ProfileSummary = () => {
 
               {/* Venues Visited */}
               <div>
-                <h4 className="font-medium text-white mb-2">Venues Visited ({mockCustomerData.aboutCustomer.venuesVisited.length})</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {mockCustomerData.aboutCustomer.venuesVisited.map((venue, index) => (
-                    <p key={index} className="text-sm text-gray-300 bg-gray-800/30 rounded p-2">
-                      {venue}
-                    </p>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-white">Venues Visited ({mockCustomerData.aboutCustomer.venuesVisited.length})</h4>
+                  {mockCustomerData.aboutCustomer.venuesVisited.length > maxDisplayItems && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAllVenues(!showAllVenues)}
+                      className="text-purple-400 hover:text-purple-300"
+                    >
+                      {showAllVenues ? (
+                        <>Show Less <ChevronUp className="ml-1 h-4 w-4" /></>
+                      ) : (
+                        <>Show More <ChevronDown className="ml-1 h-4 w-4" /></>
+                      )}
+                    </Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {displayedVenues.map((venue, index) => (
+                    <div key={index} className="p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-white">{venue.name}</p>
+                        <p className="text-sm text-gray-400">{new Date(venue.lastVisit).toLocaleDateString()}</p>
+                      </div>
+                      <p className="text-sm text-gray-400">{venue.address}</p>
+                    </div>
                   ))}
                 </div>
               </div>
