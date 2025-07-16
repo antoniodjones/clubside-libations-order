@@ -22,7 +22,7 @@ import { Navigation } from "@/components/Navigation";
 import { HomeIcon } from "@/components/HomeIcon";
 import { Footer } from "@/components/Footer";
 
-interface LoyaltyTier {
+interface RewardsTier {
   id: string;
   name: string;
   minimum_points: number;
@@ -30,10 +30,10 @@ interface LoyaltyTier {
   color: string;
 }
 
-interface UserLoyalty {
+interface UserRewards {
   total_points: number;
   available_points: number;
-  tier: LoyaltyTier;
+  tier: RewardsTier;
   referral_code: string;
   lifetime_spent: number;
 }
@@ -55,9 +55,9 @@ interface PointsTransaction {
   created_at: string;
 }
 
-const Loyalty = () => {
-  const [userLoyalty, setUserLoyalty] = useState<UserLoyalty | null>(null);
-  const [allTiers, setAllTiers] = useState<LoyaltyTier[]>([]);
+const Rewards = () => {
+  const [userRewards, setUserRewards] = useState<UserRewards | null>(null);
+  const [allTiers, setAllTiers] = useState<RewardsTier[]>([]);
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [transactions, setTransactions] = useState<PointsTransaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,7 +65,7 @@ const Loyalty = () => {
 
   // Mock data for demo purposes (remove when authentication is implemented)
   const mockData = {
-    userLoyalty: {
+    userRewards: {
       total_points: 2847,
       available_points: 1250,
       tier: {
@@ -197,7 +197,7 @@ const Loyalty = () => {
   useEffect(() => {
     // Simulate loading for demo
     const timer = setTimeout(() => {
-      setUserLoyalty(mockData.userLoyalty);
+      setUserRewards(mockData.userRewards);
       setAllTiers(mockData.allTiers);
       setRewards(mockData.rewards);
       setTransactions(mockData.transactions);
@@ -207,15 +207,15 @@ const Loyalty = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const fetchLoyaltyData = async () => {
+  const fetchRewardsData = async () => {
     // This will be implemented when authentication is added
-    console.log('fetchLoyaltyData called - will be implemented with authentication');
+    console.log('fetchRewardsData called - will be implemented with authentication');
   };
 
   const redeemReward = async (rewardId: string, pointsCost: number) => {
     try {
       // Mock redemption for demo purposes
-      if (!userLoyalty || userLoyalty.available_points < pointsCost) {
+      if (!userRewards || userRewards.available_points < pointsCost) {
         toast({
           title: "Insufficient Points",
           description: "You don't have enough points for this reward",
@@ -225,7 +225,7 @@ const Loyalty = () => {
       }
 
       // Update mock data
-      setUserLoyalty(prev => prev ? {
+      setUserRewards(prev => prev ? {
         ...prev,
         available_points: prev.available_points - pointsCost
       } : null);
@@ -245,17 +245,17 @@ const Loyalty = () => {
   };
 
   const shareReferralCode = async () => {
-    if (!userLoyalty) return;
+    if (!userRewards) return;
     
     try {
       await navigator.share({
         title: 'Join dranx+ and get rewards!',
-        text: `Use my referral code ${userLoyalty.referral_code} to get bonus points when you sign up for dranx+!`,
-        url: `${window.location.origin}/auth?ref=${userLoyalty.referral_code}`
+        text: `Use my referral code ${userRewards.referral_code} to get bonus points when you sign up for dranx+!`,
+        url: `${window.location.origin}/auth?ref=${userRewards.referral_code}`
       });
     } catch (error) {
       // Fallback to clipboard
-      navigator.clipboard.writeText(userLoyalty.referral_code);
+      navigator.clipboard.writeText(userRewards.referral_code);
       toast({
         title: "Referral Code Copied!",
         description: "Share your code with friends to earn bonus points",
@@ -264,17 +264,17 @@ const Loyalty = () => {
   };
 
   const getNextTier = () => {
-    if (!userLoyalty || !allTiers) return null;
-    const currentTierIndex = allTiers.findIndex(tier => tier.id === userLoyalty.tier.id);
+    if (!userRewards || !allTiers) return null;
+    const currentTierIndex = allTiers.findIndex(tier => tier.id === userRewards.tier.id);
     return currentTierIndex < allTiers.length - 1 ? allTiers[currentTierIndex + 1] : null;
   };
 
   const getProgressToNextTier = () => {
     const nextTier = getNextTier();
-    if (!nextTier || !userLoyalty) return 100;
+    if (!nextTier || !userRewards) return 100;
     
-    const currentPoints = userLoyalty.total_points;
-    const currentTierMin = userLoyalty.tier.minimum_points;
+    const currentPoints = userRewards.total_points;
+    const currentTierMin = userRewards.tier.minimum_points;
     const nextTierMin = nextTier.minimum_points;
     
     return ((currentPoints - currentTierMin) / (nextTierMin - currentTierMin)) * 100;
@@ -291,7 +291,7 @@ const Loyalty = () => {
     );
   }
 
-  if (!userLoyalty) {
+  if (!userRewards) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         <Navigation />
@@ -299,7 +299,7 @@ const Loyalty = () => {
           <Card className="max-w-md mx-auto bg-black/40 backdrop-blur-sm border-purple-500/20">
             <CardContent className="p-6 text-center">
               <Award className="w-16 h-16 text-purple-400 mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-white mb-2">Join the Loyalty Program</h2>
+              <h2 className="text-xl font-bold text-white mb-2">Join the Rewards Program</h2>
               <p className="text-gray-300 mb-4">Sign up or log in to start earning rewards!</p>
               <Button className="w-full">Get Started</Button>
             </CardContent>
@@ -318,8 +318,6 @@ const Loyalty = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-6xl md:text-8xl font-black text-white mb-6 leading-none tracking-tight">
-            LOYALTY
-            <br />
             <span className="text-yellow-400">REWARDS</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto">
@@ -333,19 +331,19 @@ const Loyalty = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-white text-4xl md:text-5xl font-black mb-4 tracking-tight">
-                  {userLoyalty.tier.name} Member
+                  {userRewards.tier.name} Member
                 </CardTitle>
                 <Badge 
-                  style={{ backgroundColor: userLoyalty.tier.color }}
+                  style={{ backgroundColor: userRewards.tier.color }}
                   className="text-white text-lg px-4 py-2 font-bold"
                 >
                   <Star className="w-5 h-5 mr-2" />
-                  {userLoyalty.tier.name}
+                  {userRewards.tier.name}
                 </Badge>
               </div>
               <div className="text-right">
                 <div className="text-6xl md:text-7xl font-black text-yellow-400 leading-none">
-                  {userLoyalty.available_points.toLocaleString()}
+                  {userRewards.available_points.toLocaleString()}
                 </div>
                 <div className="text-xl text-gray-300 font-light mt-2">Available Points</div>
               </div>
@@ -358,7 +356,7 @@ const Loyalty = () => {
                   <div className="flex justify-between text-lg text-gray-300 mb-4 font-medium">
                     <span>Progress to {getNextTier()?.name}</span>
                     <span>
-                      {userLoyalty.total_points} / {getNextTier()?.minimum_points} points
+                      {userRewards.total_points} / {getNextTier()?.minimum_points} points
                     </span>
                   </div>
                   <Progress value={getProgressToNextTier()} className="h-4" />
@@ -368,19 +366,19 @@ const Loyalty = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                 <div className="text-center">
                   <div className="text-4xl md:text-5xl font-black text-purple-400 leading-none">
-                    {userLoyalty.total_points.toLocaleString()}
+                    {userRewards.total_points.toLocaleString()}
                   </div>
                   <div className="text-lg text-gray-300 font-light mt-2">Total Points Earned</div>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl md:text-5xl font-black text-green-400 leading-none">
-                    ${userLoyalty.lifetime_spent.toFixed(2)}
+                    ${userRewards.lifetime_spent.toFixed(2)}
                   </div>
                   <div className="text-lg text-gray-300 font-light mt-2">Total Spent</div>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl md:text-5xl font-black text-yellow-400 leading-none">
-                    {userLoyalty.tier.benefits?.multiplier || 1}x
+                    {userRewards.tier.benefits?.multiplier || 1}x
                   </div>
                   <div className="text-lg text-gray-300 font-light mt-2">Points Multiplier</div>
                 </div>
@@ -430,10 +428,10 @@ const Loyalty = () => {
                     </div>
                     <Button 
                       className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold"
-                      disabled={userLoyalty.available_points < reward.points_cost}
+                      disabled={userRewards.available_points < reward.points_cost}
                       onClick={() => redeemReward(reward.id, reward.points_cost)}
                     >
-                      {userLoyalty.available_points >= reward.points_cost ? 'Redeem' : 'Not Enough Points'}
+                      {userRewards.available_points >= reward.points_cost ? 'Redeem' : 'Not Enough Points'}
                     </Button>
                   </CardContent>
                 </Card>
@@ -447,7 +445,7 @@ const Loyalty = () => {
                 <Card 
                   key={tier.id} 
                   className={`border-2 ${
-                    tier.id === userLoyalty.tier.id 
+                    tier.id === userRewards.tier.id 
                       ? 'border-yellow-400 bg-black/40 backdrop-blur-sm' 
                       : 'border-gray-600 bg-black/40 backdrop-blur-sm'
                   }`}
@@ -461,7 +459,7 @@ const Loyalty = () => {
                         >
                           {tier.name}
                         </Badge>
-                        {tier.id === userLoyalty.tier.id && (
+                        {tier.id === userRewards.tier.id && (
                           <Badge className="bg-yellow-400 text-black font-bold">Current Tier</Badge>
                         )}
                       </div>
@@ -497,7 +495,7 @@ const Loyalty = () => {
                     <div className="text-center">
                       <div className="text-sm text-gray-400 mb-2">Your Referral Code</div>
                       <div className="text-3xl font-mono font-bold text-yellow-400 mb-4">
-                        {userLoyalty.referral_code}
+                        {userRewards.referral_code}
                       </div>
                       <Button onClick={shareReferralCode} className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold">
                         <Share2 className="w-4 h-4 mr-2" />
@@ -560,4 +558,4 @@ const Loyalty = () => {
   );
 };
 
-export default Loyalty;
+export default Rewards;

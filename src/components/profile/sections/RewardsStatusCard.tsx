@@ -2,15 +2,15 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy } from 'lucide-react';
-import { LoyaltyData } from '@/types/profile';
+import { RewardsData } from '@/types/profile';
 import { formatDate } from '@/utils/profile';
 
 interface RewardsStatusCardProps {
-  loyalty: LoyaltyData;
+  rewards: RewardsData;
 }
 
-export const RewardsStatusCard: React.FC<RewardsStatusCardProps> = React.memo(({ loyalty }) => {
-  const memberSince = formatDate(loyalty.anniversary_date);
+export const RewardsStatusCard: React.FC<RewardsStatusCardProps> = React.memo(({ rewards }) => {
+  const memberSince = formatDate(rewards.anniversary_date);
   
   return (
     <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
@@ -26,16 +26,16 @@ export const RewardsStatusCard: React.FC<RewardsStatusCardProps> = React.memo(({
             variant="secondary" 
             className="text-lg px-4 py-2 bg-yellow-500 text-black"
           >
-            {loyalty.tier} Member
+            {rewards.tier} Member
           </Badge>
         </div>
         <div className="grid grid-cols-2 gap-4 text-center">
           <div>
-            <p className="text-2xl font-bold text-yellow-400">{loyalty.total_points}</p>
+            <p className="text-2xl font-bold text-yellow-400">{rewards.total_points}</p>
             <p className="text-sm text-gray-400">Total Points</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-yellow-400">{loyalty.available_points}</p>
+            <p className="text-2xl font-bold text-yellow-400">{rewards.available_points}</p>
             <p className="text-sm text-gray-400">Available</p>
           </div>
         </div>

@@ -14,7 +14,7 @@ export const mockCustomerData: CustomerData = {
     postal_code: '94105',
     gender: 'Female'
   },
-  loyalty: {
+  rewards: {
     total_points: 2847,
     available_points: 1250,
     tier: 'Gold',
@@ -52,7 +52,7 @@ export const mockCustomerData: CustomerData = {
     dietary_restrictions: ['Vegetarian Friendly'],
     preferred_venue: 'Downtown Lounge'
   },
-  rewards: [
+  availableRewards: [
     { name: 'Free Appetizer', points_cost: 500, expires: '2024-02-15' },
     { name: '20% Off Next Order', points_cost: 750, expires: '2024-02-20' }
   ],

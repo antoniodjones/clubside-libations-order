@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-interface LoyaltyData {
+interface RewardsData {
   total_points: number;
   available_points: number;
   tier_name: string;
@@ -11,27 +11,27 @@ interface LoyaltyData {
   referral_code: string;
 }
 
-export const useLoyalty = () => {
-  const [loyaltyData, setLoyaltyData] = useState<LoyaltyData | null>(null);
+export const useRewards = () => {
+  const [rewardsData, setRewardsData] = useState<RewardsData | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchLoyaltyData = async () => {
+  const fetchRewardsData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setLoyaltyData(null);
+        setRewardsData(null);
         setLoading(false);
         return;
       }
 
       const { data, error } = await supabase
-        .from('user_loyalty')
+        .from('user_rewards')
         .select(`
           total_points,
           available_points,
           referral_code,
-          loyalty_tiers (
+          reward_tiers (
             name,
             color,
             benefits
@@ -44,20 +44,20 @@ export const useLoyalty = () => {
         if (error.code !== 'PGRST116') { // Not found error
           throw error;
         }
-        setLoyaltyData(null);
+        setRewardsData(null);
         return;
       }
 
-      setLoyaltyData({
+      setRewardsData({
         total_points: data.total_points,
         available_points: data.available_points,
-        tier_name: data.loyalty_tiers?.name || 'Bronze',
-        tier_color: data.loyalty_tiers?.color || '#CD7F32',
-        tier_multiplier: (data.loyalty_tiers?.benefits as any)?.multiplier || 1,
+        tier_name: data.reward_tiers?.name || 'Bronze',
+        tier_color: data.reward_tiers?.color || '#CD7F32',
+        tier_multiplier: (data.reward_tiers?.benefits as any)?.multiplier || 1,
         referral_code: data.referral_code
       });
     } catch (error) {
-      console.error('Error fetching loyalty data:', error);
+      console.error('Error fetching rewards data:', error);
     } finally {
       setLoading(false);
     }
@@ -66,10 +66,10 @@ export const useLoyalty = () => {
   const awardPoints = async (points: number, reason: string, orderId?: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user || !loyaltyData) return;
+      if (!user || !rewardsData) return;
 
       // Calculate points with tier multiplier
-      const multipliedPoints = Math.floor(points * loyaltyData.tier_multiplier);
+      const multipliedPoints = Math.floor(points * rewardsData.tier_multiplier);
 
       // Create points transaction
       const { error: transactionError } = await supabase
@@ -84,19 +84,19 @@ export const useLoyalty = () => {
 
       if (transactionError) throw transactionError;
 
-      // Update user loyalty points
+      // Update user rewards points
       const { error: updateError } = await supabase
-        .from('user_loyalty')
+        .from('user_rewards')
         .update({
-          total_points: loyaltyData.total_points + multipliedPoints,
-          available_points: loyaltyData.available_points + multipliedPoints
+          total_points: rewardsData.total_points + multipliedPoints,
+          available_points: rewardsData.available_points + multipliedPoints
         })
         .eq('user_id', user.id);
 
       if (updateError) throw updateError;
 
-      // Refresh loyalty data
-      await fetchLoyaltyData();
+      // Refresh rewards data
+      await fetchRewardsData();
 
       toast({
         title: "Points Earned!",
@@ -164,21 +164,21 @@ export const useLoyalty = () => {
   };
 
   useEffect(() => {
-    fetchLoyaltyData();
+    fetchRewardsData();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      fetchLoyaltyData();
+      fetchRewardsData();
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   return {
-    loyaltyData,
+    rewardsData,
     loading,
     awardPoints,
     checkIn,
-    refetch: fetchLoyaltyData
+    refetch: fetchRewardsData
   };
 };

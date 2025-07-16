@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MapPin, Gift } from 'lucide-react';
-import { useLoyalty } from '@/hooks/useLoyalty';
+import { useRewards } from '@/hooks/useRewards';
 
-interface LoyaltyCheckInProps {
+interface RewardsCheckInProps {
   venueId: string;
   venueName: string;
 }
 
-export const LoyaltyCheckIn = ({ venueId, venueName }: LoyaltyCheckInProps) => {
+export const RewardsCheckIn = ({ venueId, venueName }: RewardsCheckInProps) => {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
-  const { checkIn } = useLoyalty();
+  const { checkIn } = useRewards();
 
   const handleCheckIn = async () => {
     await checkIn(venueId);

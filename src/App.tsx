@@ -11,7 +11,7 @@ import TrackOrder from "./pages/TrackOrder";
 import BackOffice from "./pages/BackOffice";
 import NotFound from "./pages/NotFound";
 import RewardsInfo from "./pages/RewardsInfo";
-import Loyalty from "./pages/Loyalty";
+import Rewards from "./pages/Rewards";
 import Auth from "./pages/Auth";
 import CheckoutPage from "./pages/CheckoutPage";
 import CustomerProfilePage from "./pages/CustomerProfile";
@@ -31,7 +31,7 @@ const App = () => (
           <Route path="/menu" element={<Menu />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/rewards-info" element={<RewardsInfo />} />
-          <Route path="/rewards" element={<Loyalty />} />
+          <Route path="/rewards" element={<Rewards />} />
           <Route path="/customer-profile" element={<CustomerProfilePage />} />
           <Route path="/profile" element={<CustomerProfilePage />} />
           <Route path="/track-order" element={<TrackOrder />} />

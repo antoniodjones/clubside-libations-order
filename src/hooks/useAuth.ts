@@ -82,10 +82,10 @@ export const useAuth = () => {
           console.error('Profile update error:', profileError);
         }
 
-        // Create or update loyalty profile if user opted in
+        // Create or update rewards profile if user opted in
         if (additionalData.joinRewards) {
-          const { error: loyaltyError } = await supabase
-            .from('user_loyalty')
+          const { error: rewardsError } = await supabase
+            .from('user_rewards')
             .upsert({
               user_id: data.user.id,
               birthday: additionalData.birthdate || null,
@@ -93,8 +93,8 @@ export const useAuth = () => {
               referral_code: Math.random().toString(36).substring(2, 10).toUpperCase(),
             });
 
-          if (loyaltyError) {
-            console.error('Loyalty profile error:', loyaltyError);
+          if (rewardsError) {
+            console.error('Rewards profile error:', rewardsError);
           }
         }
       } catch (err) {

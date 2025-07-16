@@ -1,14 +1,14 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trophy, Star } from 'lucide-react';
-import { Profile, LoyaltyData } from '@/types/profile';
+import { Profile, RewardsData } from '@/types/profile';
 
 interface ProfileHeaderProps {
   profile: Profile;
-  loyalty: LoyaltyData;
+  rewards: RewardsData;
 }
 
-export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profile, loyalty }) => {
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profile, rewards }) => {
   return (
     <div className="bg-black/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-6">
       <div className="flex items-center gap-6">
@@ -25,11 +25,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profile, loyalty }
           <div className="flex items-center gap-4 text-gray-300">
             <div className="flex items-center gap-1">
               <Trophy className="h-4 w-4 text-yellow-400" />
-              <span>{loyalty.tier} Member</span>
+              <span>{rewards.tier} Member</span>
             </div>
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 text-yellow-400" />
-              <span>{loyalty.available_points} pts available</span>
+              <span>{rewards.available_points} pts available</span>
             </div>
           </div>
         </div>

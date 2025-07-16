@@ -13,7 +13,7 @@ export interface Profile {
   gender: string;
 }
 
-export interface LoyaltyData {
+export interface RewardsData {
   total_points: number;
   available_points: number;
   tier: string;
@@ -82,10 +82,10 @@ export interface CustomerPreferences {
 
 export interface CustomerData {
   profile: Profile;
-  loyalty: LoyaltyData;
+  rewards: RewardsData;
   recentOrders: OrderWithItems[];
   preferences: CustomerPreferences;
-  rewards: Reward[];
+  availableRewards: Reward[];
   aboutCustomer: {
     hobbies: string[];
     estimatedIncome: string;

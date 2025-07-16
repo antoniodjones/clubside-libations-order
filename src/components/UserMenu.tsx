@@ -73,7 +73,7 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
           onClick={() => navigate('/rewards')}
         >
           <Award className="w-4 h-4 mr-2" />
-          Loyalty & Rewards
+          Rewards
         </DropdownMenuItem>
         <DropdownMenuItem 
           className="text-white hover:bg-purple-400/10 cursor-pointer"

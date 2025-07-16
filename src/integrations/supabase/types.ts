@@ -79,42 +79,6 @@ export type Database = {
         }
         Relationships: []
       }
-      loyalty_tiers: {
-        Row: {
-          benefits: Json | null
-          color: string | null
-          created_at: string
-          display_order: number
-          id: string
-          is_active: boolean
-          minimum_points: number
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          benefits?: Json | null
-          color?: string | null
-          created_at?: string
-          display_order?: number
-          id?: string
-          is_active?: boolean
-          minimum_points?: number
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          benefits?: Json | null
-          color?: string | null
-          created_at?: string
-          display_order?: number
-          id?: string
-          is_active?: boolean
-          minimum_points?: number
-          name?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       order_items: {
         Row: {
           created_at: string
@@ -506,6 +470,42 @@ export type Database = {
           },
         ]
       }
+      reward_tiers: {
+        Row: {
+          benefits: Json | null
+          color: string | null
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          minimum_points: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          benefits?: Json | null
+          color?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          minimum_points?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          benefits?: Json | null
+          color?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          minimum_points?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rewards: {
         Row: {
           created_at: string
@@ -563,7 +563,7 @@ export type Database = {
             foreignKeyName: "rewards_minimum_tier_id_fkey"
             columns: ["minimum_tier_id"]
             isOneToOne: false
-            referencedRelation: "loyalty_tiers"
+            referencedRelation: "reward_tiers"
             referencedColumns: ["id"]
           },
           {
@@ -582,7 +582,7 @@ export type Database = {
           },
         ]
       }
-      user_loyalty: {
+      user_rewards: {
         Row: {
           anniversary_date: string | null
           available_points: number
@@ -592,8 +592,8 @@ export type Database = {
           lifetime_spent: number
           referral_code: string | null
           referred_by: string | null
+          reward_tier_id: string | null
           social_sharing_enabled: boolean
-          tier_id: string | null
           total_points: number
           updated_at: string
           user_id: string
@@ -607,8 +607,8 @@ export type Database = {
           lifetime_spent?: number
           referral_code?: string | null
           referred_by?: string | null
+          reward_tier_id?: string | null
           social_sharing_enabled?: boolean
-          tier_id?: string | null
           total_points?: number
           updated_at?: string
           user_id: string
@@ -622,8 +622,8 @@ export type Database = {
           lifetime_spent?: number
           referral_code?: string | null
           referred_by?: string | null
+          reward_tier_id?: string | null
           social_sharing_enabled?: boolean
-          tier_id?: string | null
           total_points?: number
           updated_at?: string
           user_id?: string
@@ -631,9 +631,9 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_loyalty_tier_id_fkey"
-            columns: ["tier_id"]
+            columns: ["reward_tier_id"]
             isOneToOne: false
-            referencedRelation: "loyalty_tiers"
+            referencedRelation: "reward_tiers"
             referencedColumns: ["id"]
           },
         ]
