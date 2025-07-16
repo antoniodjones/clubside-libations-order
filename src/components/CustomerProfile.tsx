@@ -3,6 +3,8 @@ import { ProfileSidebar } from '@/components/profile/ProfileSidebar';
 import { ProfileSummary } from '@/components/profile/ProfileSummary';
 import { ManageProfile } from '@/components/profile/ManageProfile';
 import { UpdatePassword } from '@/components/profile/UpdatePassword';
+import { OrderHistory } from '@/components/profile/OrderHistory';
+import { ManagePayments } from '@/components/profile/ManagePayments';
 import { HomeIcon } from '@/components/HomeIcon';
 
 export const CustomerProfile = () => {
@@ -12,10 +14,14 @@ export const CustomerProfile = () => {
     switch (activeSection) {
       case 'summary':
         return <ProfileSummary />;
+      case 'orders-history':
+        return <OrderHistory />;
       case 'rewards':
         return <div className="text-white">Rewards detail page coming soon...</div>;
       case 'manage':
         return <ManageProfile />;
+      case 'manage-payments':
+        return <ManagePayments />;
       case 'password':
         return <UpdatePassword />;
       default:

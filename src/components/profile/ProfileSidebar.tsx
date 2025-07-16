@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Lock, Settings, BarChart3 } from 'lucide-react';
+import { User, Lock, Settings, BarChart3, ShoppingBag, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ProfileSidebarProps {
@@ -9,8 +9,10 @@ interface ProfileSidebarProps {
 
 const navigationItems = [
   { id: 'summary', label: 'Profile Summary', icon: User },
+  { id: 'orders-history', label: 'Orders History', icon: ShoppingBag },
   { id: 'rewards', label: 'Rewards', icon: BarChart3 },
   { id: 'manage', label: 'Manage Profile', icon: Settings },
+  { id: 'manage-payments', label: 'Manage Payments', icon: CreditCard },
   { id: 'password', label: 'Update Password', icon: Lock },
 ];
 
