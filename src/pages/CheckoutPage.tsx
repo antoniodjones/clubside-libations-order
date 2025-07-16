@@ -1,5 +1,6 @@
 import { useCart } from "@/hooks/useCart";
 import { Checkout } from "./Checkout";
+import { HomeIcon } from "@/components/HomeIcon";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -23,11 +24,14 @@ const CheckoutPage = () => {
   }
 
   return (
-    <Checkout 
-      cart={cart} 
-      total={cartTotal} 
-      onClearCart={handleClearCart}
-    />
+    <>
+      <HomeIcon />
+      <Checkout 
+        cart={cart} 
+        total={cartTotal} 
+        onClearCart={handleClearCart}
+      />
+    </>
   );
 };
 

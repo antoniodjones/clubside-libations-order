@@ -19,6 +19,7 @@ import {
   Zap
 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
+import { HomeIcon } from "@/components/HomeIcon";
 import { Footer } from "@/components/Footer";
 
 interface LoyaltyTier {
@@ -310,6 +311,7 @@ const Loyalty = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black">
+      <HomeIcon />
       <Navigation />
       
       <div className="container mx-auto px-4 py-8">
