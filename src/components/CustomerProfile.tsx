@@ -12,6 +12,8 @@ export const CustomerProfile = () => {
     switch (activeSection) {
       case 'summary':
         return <ProfileSummary />;
+      case 'rewards':
+        return <div className="text-white">Rewards detail page coming soon...</div>;
       case 'manage':
         return <ManageProfile />;
       case 'password':

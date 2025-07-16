@@ -197,12 +197,12 @@ export const ProfileSummary = () => {
             </CardContent>
           </Card>
 
-          {/* Loyalty Status */}
+          {/* Rewards Status (Details) */}
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <Trophy className="h-5 w-5" />
-                Loyalty Status
+                Rewards Status (Details)
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">

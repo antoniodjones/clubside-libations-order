@@ -9,6 +9,7 @@ interface ProfileSidebarProps {
 
 const navigationItems = [
   { id: 'summary', label: 'Profile Summary', icon: User },
+  { id: 'rewards', label: 'Rewards', icon: BarChart3 },
   { id: 'manage', label: 'Manage Profile', icon: Settings },
   { id: 'password', label: 'Update Password', icon: Lock },
 ];
