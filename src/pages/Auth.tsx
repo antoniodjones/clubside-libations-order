@@ -427,7 +427,7 @@ const Auth = () => {
                           {birthdate ? format(birthdate, "PPP") : <span>Select your birthdate</span>}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 bg-gray-800 border-gray-600" align="start">
+                      <PopoverContent className="w-auto p-0 bg-yellow-400 border-yellow-500" align="start">
                         <Calendar
                           mode="single"
                           selected={birthdate}
@@ -436,7 +436,7 @@ const Auth = () => {
                             date > new Date() || date < new Date("1900-01-01")
                           }
                           initialFocus
-                          className={cn("p-3 pointer-events-auto")}
+                          className={cn("p-3 pointer-events-auto text-black")}
                         />
                       </PopoverContent>
                     </Popover>
