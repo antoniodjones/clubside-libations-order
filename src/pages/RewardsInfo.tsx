@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Gift, Star, Trophy, Users } from "lucide-react";
 
-const LoyaltyInfo = () => {
+const RewardsInfo = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
       <Navigation />
@@ -17,11 +17,11 @@ const LoyaltyInfo = () => {
               <Star className="w-6 h-6 text-black" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-yellow-400 bg-clip-text text-transparent">
-              dranx+ Loyalty Program
+              dranx+ Rewards Program
             </h1>
           </div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Join our loyalty program and earn points with every order. The more you drink, the more you save!
+            Join our rewards program and earn points with every order. The more you drink, the more you save!
           </p>
         </div>
 
@@ -38,7 +38,7 @@ const LoyaltyInfo = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400 text-center">
-                  Sign up for a dranx+ account and opt into our loyalty program during registration.
+                  Sign up for a dranx+ account and opt into our rewards program during registration.
                 </p>
               </CardContent>
             </Card>
@@ -126,9 +126,9 @@ const LoyaltyInfo = () => {
           </div>
         </div>
 
-        {/* Loyalty Tiers */}
+        {/* Rewards Tiers */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-center">Loyalty Tiers</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">Rewards Tiers</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader className="text-center">
@@ -186,11 +186,11 @@ const LoyaltyInfo = () => {
           <div className="space-y-6">
             <Card className="bg-black/40 backdrop-blur-sm border-purple-500/20">
               <CardHeader>
-                <CardTitle className="text-white">How do I join the loyalty program?</CardTitle>
+                <CardTitle className="text-white">How do I join the rewards program?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400">
-                  Simply create a dranx+ account and opt into the loyalty program during signup. It's completely free to join!
+                  Simply create a dranx+ account and opt into the rewards program during signup. It's completely free to join!
                 </p>
               </CardContent>
             </Card>
@@ -225,4 +225,4 @@ const LoyaltyInfo = () => {
   );
 };
 
-export default LoyaltyInfo;
+export default RewardsInfo;
