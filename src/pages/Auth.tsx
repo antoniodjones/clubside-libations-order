@@ -6,17 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DatePicker } from '@/components/ui/date-picker';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Wine, Gift, CalendarIcon, MapPin, Building } from 'lucide-react';
+import { Wine, Gift, MapPin, Building } from 'lucide-react';
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { SignInForm } from '@/components/auth/SignInForm';
+import { SignUpForm } from '@/components/auth/SignUpForm';
+import { OTPForm } from '@/components/auth/OTPForm';
+import { countries, formatPhoneWithCountryCode } from '@/utils/phoneFormatting';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -37,24 +39,6 @@ const Auth = () => {
   const [authType, setAuthType] = useState<'signup' | 'signin'>('signin');
   const referralCode = searchParams.get('ref');
 
-  // Countries with their codes, flags, and phone formats
-  const countries = [
-    { code: 'US', flag: '🇺🇸', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'United States', dbCountry: 'United States' },
-    { code: 'CA', flag: '🇨🇦', dialCode: '+1', format: '(XXX) XXX-XXXX', name: 'Canada', dbCountry: 'Canada' },
-    { code: 'GB', flag: '🇬🇧', dialCode: '+44', format: 'XXXX XXX XXX', name: 'United Kingdom', dbCountry: 'United Kingdom' },
-    { code: 'AU', flag: '🇦🇺', dialCode: '+61', format: 'XXXX XXX XXX', name: 'Australia', dbCountry: 'Australia' },
-    { code: 'DE', flag: '🇩🇪', dialCode: '+49', format: 'XXX XXXXXXX', name: 'Germany', dbCountry: 'Germany' },
-    { code: 'FR', flag: '🇫🇷', dialCode: '+33', format: 'XX XX XX XX XX', name: 'France', dbCountry: 'France' },
-    { code: 'IT', flag: '🇮🇹', dialCode: '+39', format: 'XXX XXX XXXX', name: 'Italy', dbCountry: 'Italy' },
-    { code: 'ES', flag: '🇪🇸', dialCode: '+34', format: 'XXX XXX XXX', name: 'Spain', dbCountry: 'Spain' },
-    { code: 'MX', flag: '🇲🇽', dialCode: '+52', format: 'XX XXXX XXXX', name: 'Mexico', dbCountry: 'Mexico' },
-    { code: 'BR', flag: '🇧🇷', dialCode: '+55', format: '(XX) XXXXX-XXXX', name: 'Brazil', dbCountry: 'Brazil' },
-    { code: 'AR', flag: '🇦🇷', dialCode: '+54', format: 'XX XXXX-XXXX', name: 'Argentina', dbCountry: 'Argentina' },
-    { code: 'JP', flag: '🇯🇵', dialCode: '+81', format: 'XXX-XXXX-XXXX', name: 'Japan', dbCountry: 'Japan' },
-    { code: 'KR', flag: '🇰🇷', dialCode: '+82', format: 'XXX-XXXX-XXXX', name: 'South Korea', dbCountry: 'South Korea' },
-    { code: 'CN', flag: '🇨🇳', dialCode: '+86', format: 'XXX XXXX XXXX', name: 'China', dbCountry: 'China' },
-    { code: 'IN', flag: '🇮🇳', dialCode: '+91', format: 'XXXXX XXXXX', name: 'India', dbCountry: 'India' },
-  ];
   
   const { sendOTP, verifyOTP, user } = useAuth();
   const { toast } = useToast();
@@ -97,122 +81,6 @@ const Auth = () => {
     fetchCitiesAndVenues();
   }, []);
 
-  // Format mobile number based on country
-  const formatMobileNumber = (value: string, country: string) => {
-    // Remove all non-digits
-    const digits = value.replace(/\D/g, '');
-    
-    const selectedCountry = countries.find(c => c.code === country);
-    if (!selectedCountry) return digits;
-    
-    switch (country) {
-      case 'US':
-      case 'CA':
-        // Format: (XXX) XXX-XXXX
-        if (digits.length <= 3) return digits;
-        if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-        return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
-      
-      case 'GB':
-      case 'AU':
-        // Format: XXXX XXX XXX
-        if (digits.length <= 4) return digits;
-        if (digits.length <= 7) return `${digits.slice(0, 4)} ${digits.slice(4)}`;
-        return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7, 10)}`;
-      
-      case 'DE':
-        // Format: XXX XXXXXXX
-        if (digits.length <= 3) return digits;
-        return `${digits.slice(0, 3)} ${digits.slice(3, 10)}`;
-      
-      case 'FR':
-        // Format: XX XX XX XX XX
-        if (digits.length <= 2) return digits;
-        if (digits.length <= 4) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-        if (digits.length <= 6) return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4)}`;
-        if (digits.length <= 8) return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6)}`;
-        return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 8)} ${digits.slice(8, 10)}`;
-      
-      case 'IT':
-        // Format: XXX XXX XXXX
-        if (digits.length <= 3) return digits;
-        if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 10)}`;
-      
-      case 'ES':
-        // Format: XXX XXX XXX
-        if (digits.length <= 3) return digits;
-        if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)}`;
-      
-      case 'MX':
-        // Format: XX XXXX XXXX
-        if (digits.length <= 2) return digits;
-        if (digits.length <= 6) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-        return `${digits.slice(0, 2)} ${digits.slice(2, 6)} ${digits.slice(6, 10)}`;
-      
-      case 'BR':
-        // Format: (XX) XXXXX-XXXX
-        if (digits.length <= 2) return digits;
-        if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-        return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
-      
-      case 'AR':
-        // Format: XX XXXX-XXXX
-        if (digits.length <= 2) return digits;
-        if (digits.length <= 6) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-        return `${digits.slice(0, 2)} ${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
-      
-      case 'JP':
-      case 'KR':
-        // Format: XXX-XXXX-XXXX
-        if (digits.length <= 3) return digits;
-        if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-        return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
-      
-      case 'CN':
-        // Format: XXX XXXX XXXX
-        if (digits.length <= 3) return digits;
-        if (digits.length <= 7) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-        return `${digits.slice(0, 3)} ${digits.slice(3, 7)} ${digits.slice(7, 11)}`;
-      
-      case 'IN':
-        // Format: XXXXX XXXXX
-        if (digits.length <= 5) return digits;
-        return `${digits.slice(0, 5)} ${digits.slice(5, 10)}`;
-      
-      default:
-        return digits;
-    }
-  };
-
-  const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatMobileNumber(e.target.value, countryCode);
-    setMobileNumber(formatted);
-  };
-
-  const handleCountryChange = (newCountryCode: string) => {
-    setCountryCode(newCountryCode);
-    // Reset city and venue selection when country changes
-    setSelectedCity('');
-    setSelectedVenue('');
-    // Re-format the existing number for the new country
-    if (mobileNumber) {
-      const formatted = formatMobileNumber(mobileNumber, newCountryCode);
-      setMobileNumber(formatted);
-    }
-  };
-
-  // Filter cities based on selected country
-  const filteredCities = cities.filter(city => {
-    const selectedCountry = countries.find(c => c.code === countryCode);
-    return selectedCountry ? city.country === selectedCountry.dbCountry : true;
-  });
-
-  // Filter venues based on selected city
-  const filteredVenues = venues.filter(venue => 
-    !selectedCity || venue.city_id === selectedCity
-  );
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -283,7 +151,7 @@ const Auth = () => {
         firstName,
         lastName,
         birthdate: birthdate ? format(birthdate, 'yyyy-MM-dd') : undefined,
-        mobileNumber: mobileNumber ? `${countries.find(c => c.code === countryCode)?.dialCode} ${mobileNumber}` : undefined,
+        mobileNumber: mobileNumber ? formatPhoneWithCountryCode(mobileNumber, countryCode) : undefined,
         countryCode,
         cityId: selectedCity || undefined,
         venueId: selectedVenue || undefined,
@@ -360,322 +228,63 @@ const Auth = () => {
               </TabsList>
               
               <TabsContent value="signin" className="space-y-4 mt-6">
-                <div className="text-center mb-6">
-                  <button 
-                    type="button"
-                    onClick={() => navigate('/')}
-                    className="text-gray-300 hover:text-yellow-400 underline text-sm transition-colors"
-                  >
-                    Continue as Guest
-                  </button>
-                </div>
-                
                 {!otpSent ? (
-                  <form onSubmit={(e) => { setAuthType('signin'); handleSendOTP(e); }} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="signin-email" className="text-white">Email</Label>
-                      <Input
-                        id="signin-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="bg-gray-800 border-gray-600 text-white"
-                        placeholder="Enter your email"
-                        required
-                      />
-                    </div>
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Sending Code..." : "Send Verification Code"}
-                    </Button>
-                  </form>
+                  <SignInForm
+                    email={email}
+                    setEmail={setEmail}
+                    onSubmit={(e) => { setAuthType('signin'); handleSendOTP(e); }}
+                    isLoading={isLoading}
+                  />
                 ) : (
-                  <form onSubmit={handleVerifyOTP} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className="text-white">Verification Code</Label>
-                      <div className="flex justify-center">
-                        <InputOTP
-                          maxLength={6}
-                          value={otpCode}
-                          onChange={setOtpCode}
-                        >
-                          <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </div>
-                      <p className="text-sm text-gray-400 text-center">
-                        Enter the 6-digit code sent to {email}
-                      </p>
-                    </div>
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Verifying..." : "Verify & Sign In"}
-                    </Button>
-                    
-                    <Button 
-                      type="button"
-                      variant="outline"
-                      onClick={() => setOtpSent(false)}
-                      className="w-full text-white border-gray-600 hover:bg-gray-800"
-                    >
-                      Back to Email
-                    </Button>
-                  </form>
+                  <OTPForm
+                    otpCode={otpCode}
+                    setOtpCode={setOtpCode}
+                    email={email}
+                    onSubmit={handleVerifyOTP}
+                    onBack={() => setOtpSent(false)}
+                    isLoading={isLoading}
+                    isSignUp={false}
+                  />
                 )}
               </TabsContent>
               
               <TabsContent value="signup" className="space-y-4 mt-6">
-                <div className="text-center mb-6">
-                  <button 
-                    type="button"
-                    onClick={() => navigate('/')}
-                    className="text-gray-300 hover:text-yellow-400 underline text-sm transition-colors"
-                  >
-                    Continue as Guest
-                  </button>
-                </div>
-                
                 {!otpSent ? (
-                  <form onSubmit={(e) => { setAuthType('signup'); handleSendOTP(e); }} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-white">First Name *</Label>
-                        <Input
-                          id="firstName"
-                          type="text"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          className="bg-gray-800 border-gray-600 text-white"
-                          placeholder="John"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-white">Last Name *</Label>
-                        <Input
-                          id="lastName"
-                          type="text"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="bg-gray-800 border-gray-600 text-white"
-                          placeholder="Doe"
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-email" className="text-white">Email *</Label>
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="bg-gray-800 border-gray-600 text-white"
-                        placeholder="john@example.com"
-                        required
-                      />
-                    </div>
-                    
-                    {/* Birthdate Field */}
-                    <div className="space-y-2">
-                      <Label className="text-white">Birthdate</Label>
-                      <DatePicker
-                        value={birthdate}
-                        onChange={setBirthdate}
-                        placeholder="Select your birthdate"
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        className="w-full"
-                      />
-                    </div>
-
-                    {/* Mobile Number Field with Country Code */}
-                    <div className="space-y-2">
-                      <Label htmlFor="mobile" className="text-white">Mobile Number</Label>
-                      <div className="flex space-x-2">
-                        <Select value={countryCode} onValueChange={handleCountryChange}>
-                          <SelectTrigger className="w-24 bg-gray-800 border-gray-600 text-white">
-                            <SelectValue>
-                              <div className="flex items-center">
-                                <span className="text-lg mr-1">
-                                  {countries.find(c => c.code === countryCode)?.flag}
-                                </span>
-                                <span className="text-sm">
-                                  {countries.find(c => c.code === countryCode)?.dialCode}
-                                </span>
-                              </div>
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-600 z-50">
-                            {countries.map((country) => (
-                              <SelectItem 
-                                key={country.code} 
-                                value={country.code} 
-                                className="text-white hover:bg-gray-700 focus:bg-gray-700"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-lg">{country.flag}</span>
-                                  <span className="text-sm">{country.dialCode}</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Input
-                          id="mobile"
-                          type="tel"
-                          value={mobileNumber}
-                          onChange={handleMobileChange}
-                          className="flex-1 bg-gray-800 border-gray-600 text-white"
-                          placeholder={countries.find(c => c.code === countryCode)?.format || "Enter phone number"}
-                        />
-                      </div>
-                    </div>
-
-                    {/* City/Province Selection */}
-                    <div className="space-y-2">
-                      <Label className="text-white">City/Province</Label>
-                      <Select value={selectedCity} onValueChange={setSelectedCity}>
-                        <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white">
-                          <div className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-2" />
-                            <SelectValue placeholder="Select your city" />
-                          </div>
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-600 z-50">
-                          {filteredCities.map((city) => (
-                            <SelectItem 
-                              key={city.id} 
-                              value={city.id} 
-                              className="text-white hover:bg-gray-700 focus:bg-gray-700"
-                            >
-                              {city.name}, {city.state}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Venue Selection */}
-                    <div className="space-y-2">
-                      <Label className="text-white">Preferred Venue</Label>
-                      <Select value={selectedVenue} onValueChange={setSelectedVenue}>
-                        <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white">
-                          <div className="flex items-center">
-                            <Building className="w-4 h-4 mr-2" />
-                            <SelectValue placeholder="Select a venue" />
-                          </div>
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-600 z-50">
-                          {filteredVenues.map((venue) => (
-                            <SelectItem 
-                              key={venue.id} 
-                              value={venue.id} 
-                              className="text-white hover:bg-gray-700 focus:bg-gray-700"
-                            >
-                              <div className="flex flex-col">
-                                <span className="font-medium">{venue.name}</span>
-                                <span className="text-sm text-gray-400">{venue.address}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Join Rewards Program Field */}
-                    <div className="space-y-2">
-                      <Label className="text-white">Join Rewards Program & Earn</Label>
-                      <Select value={joinRewards} onValueChange={setJoinRewards}>
-                        <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white">
-                          <div className="flex items-center">
-                            <Gift className="w-4 h-4 mr-2" />
-                            <SelectValue placeholder="Choose rewards option" />
-                          </div>
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-600 z-50">
-                          <SelectItem 
-                            value="yes" 
-                            className="text-white hover:bg-gray-700 focus:bg-gray-700"
-                          >
-                            Yes, please count me in
-                          </SelectItem>
-                          <SelectItem 
-                            value="no" 
-                            className="text-white hover:bg-gray-700 focus:bg-gray-700"
-                          >
-                            No, not this time
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Sending Code..." : "Send Verification Code"}
-                    </Button>
-                  </form>
+                  <SignUpForm
+                    email={email}
+                    setEmail={setEmail}
+                    firstName={firstName}
+                    setFirstName={setFirstName}
+                    lastName={lastName}
+                    setLastName={setLastName}
+                    birthdate={birthdate}
+                    setBirthdate={setBirthdate}
+                    mobileNumber={mobileNumber}
+                    setMobileNumber={setMobileNumber}
+                    countryCode={countryCode}
+                    setCountryCode={setCountryCode}
+                    selectedCity={selectedCity}
+                    setSelectedCity={setSelectedCity}
+                    selectedVenue={selectedVenue}
+                    setSelectedVenue={setSelectedVenue}
+                    joinRewards={joinRewards}
+                    setJoinRewards={setJoinRewards}
+                    cities={cities}
+                    venues={venues}
+                    onSubmit={(e) => { setAuthType('signup'); handleSendOTP(e); }}
+                    isLoading={isLoading}
+                    referralCode={referralCode}
+                  />
                 ) : (
-                  <form onSubmit={handleVerifyOTP} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className="text-white">Verification Code</Label>
-                      <div className="flex justify-center">
-                        <InputOTP
-                          maxLength={6}
-                          value={otpCode}
-                          onChange={setOtpCode}
-                        >
-                          <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </div>
-                      <p className="text-sm text-gray-400 text-center">
-                        Enter the 6-digit code sent to {email}
-                      </p>
-                    </div>
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Creating Account..." : "Verify & Create Account"}
-                    </Button>
-                    
-                    <Button 
-                      type="button"
-                      variant="outline"
-                      onClick={() => setOtpSent(false)}
-                      className="w-full text-white border-gray-600 hover:bg-gray-800"
-                    >
-                      Back to Form
-                    </Button>
-                  </form>
+                  <OTPForm
+                    otpCode={otpCode}
+                    setOtpCode={setOtpCode}
+                    email={email}
+                    onSubmit={handleVerifyOTP}
+                    onBack={() => setOtpSent(false)}
+                    isLoading={isLoading}
+                    isSignUp={true}
+                  />
                 )}
               </TabsContent>
             </Tabs>
