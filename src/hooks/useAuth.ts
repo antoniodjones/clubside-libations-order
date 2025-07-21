@@ -33,17 +33,12 @@ export const useAuth = () => {
 
   const sendOTP = async (email: string, type: 'signup' | 'signin' = 'signin') => {
     console.log('🔐 Sending OTP to:', email);
-    try {
-      const { error } = await supabase.functions.invoke('send-otp', {
-        body: { email, type }
-      });
-      
-      console.log('🔐 OTP send result:', { error });
-      return { error };
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      return { error };
-    }
+    const { error } = await supabase.functions.invoke('send-otp', {
+      body: { email, type }
+    }).catch(error => ({ error }));
+    
+    console.log('🔐 OTP send result:', { error });
+    return { error };
   };
 
   const verifyOTP = async (
@@ -63,17 +58,12 @@ export const useAuth = () => {
     }
   ) => {
     console.log('🔐 Verifying OTP for:', email);
-    try {
-      const { error } = await supabase.functions.invoke('verify-otp', {
-        body: { email, code, type, additionalData }
-      });
-      
-      console.log('🔐 OTP verify result:', { error });
-      return { error };
-    } catch (error) {
-      console.error('Error verifying OTP:', error);
-      return { error };
-    }
+    const { error } = await supabase.functions.invoke('verify-otp', {
+      body: { email, code, type, additionalData }
+    }).catch(error => ({ error }));
+    
+    console.log('🔐 OTP verify result:', { error });
+    return { error };
   };
 
   const signOut = async () => {
