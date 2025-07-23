@@ -1,8 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 interface AgeVerificationModalProps {
   open: boolean;
@@ -10,49 +15,19 @@ interface AgeVerificationModalProps {
 }
 
 export const AgeVerificationModal = ({ open, onVerified }: AgeVerificationModalProps) => {
-  const [birthMonth, setBirthMonth] = useState<string>("");
-  const [birthDay, setBirthDay] = useState<string>("");
-  const [birthYear, setBirthYear] = useState<string>("");
+  const [birthDate, setBirthDate] = useState<Date>();
   const { toast } = useToast();
 
-  const months = [
-    { value: "1", label: "January" },
-    { value: "2", label: "February" },
-    { value: "3", label: "March" },
-    { value: "4", label: "April" },
-    { value: "5", label: "May" },
-    { value: "6", label: "June" },
-    { value: "7", label: "July" },
-    { value: "8", label: "August" },
-    { value: "9", label: "September" },
-    { value: "10", label: "October" },
-    { value: "11", label: "November" },
-    { value: "12", label: "December" }
-  ];
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i - 10);
-
-  const daysInMonth = useMemo(() => {
-    if (!birthMonth || !birthYear) return 31;
-    const month = parseInt(birthMonth);
-    const year = parseInt(birthYear);
-    return new Date(year, month, 0).getDate();
-  }, [birthMonth, birthYear]);
-
-  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-
   const handleAgeVerification = () => {
-    if (!birthMonth || !birthDay || !birthYear) {
+    if (!birthDate) {
       toast({
         title: "Date Required",
-        description: "Please select your complete birth date",
+        description: "Please select your birth date",
         variant: "destructive"
       });
       return;
     }
 
-    const birthDate = new Date(parseInt(birthYear), parseInt(birthMonth) - 1, parseInt(birthDay));
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -102,52 +77,35 @@ export const AgeVerificationModal = ({ open, onVerified }: AgeVerificationModalP
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Please select your birthday
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <Select value={birthMonth} onValueChange={setBirthMonth}>
-                  <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    {months.map((month) => (
-                      <SelectItem key={month.value} value={month.value} className="text-white focus:bg-gray-700">
-                        {month.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Select value={birthDay} onValueChange={setBirthDay}>
-                  <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
-                    <SelectValue placeholder="Day" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    {days.map((day) => (
-                      <SelectItem key={day} value={day.toString()} className="text-white focus:bg-gray-700">
-                        {day}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Select value={birthYear} onValueChange={setBirthYear}>
-                  <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
-                    <SelectValue placeholder="Year" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    {years.map((year) => (
-                      <SelectItem key={year} value={year.toString()} className="text-white focus:bg-gray-700">
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="relative">
+                  <Input
+                    value={birthDate ? format(birthDate, "MM/dd/yyyy") : ""}
+                    placeholder="Pick a date"
+                    readOnly
+                    className="bg-gray-800 border-gray-600 text-white pr-10 cursor-pointer"
+                  />
+                  <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={birthDate}
+                  onSelect={setBirthDate}
+                  disabled={(date) => date > new Date()}
+                  initialFocus
+                  className="p-3 pointer-events-auto"
+                  captionLayout="dropdown"
+                  fromYear={1900}
+                  toYear={new Date().getFullYear()}
+                />
+              </PopoverContent>
+            </Popover>
+            <p className="text-xs text-gray-400 mt-1">
+              Your date of birth is used to calculate your age.
+            </p>
           </div>
           <Button 
             onClick={handleAgeVerification}
