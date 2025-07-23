@@ -12,13 +12,21 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  onMonthChange,
   ...props
 }: CalendarProps) {
+  const [month, setMonth] = React.useState<Date>(props.defaultMonth || new Date());
+
+  const handleMonthChange = React.useCallback((newMonth: Date) => {
+    setMonth(newMonth);
+    props.onMonthChange?.(newMonth);
+  }, [props]);
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
+      month={month}
+      onMonthChange={handleMonthChange}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -65,37 +73,41 @@ function Calendar({
           const currentYear = new Date().getFullYear();
           const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
           
-          const handleMonthChange = (month: string) => {
-            const newMonth = parseInt(month);
+          const handleDropdownMonthChange = (monthStr: string) => {
+            const newMonth = parseInt(monthStr);
             const newDate = new Date(displayMonth.getFullYear(), newMonth, 1);
-            onMonthChange?.(newDate);
+            handleMonthChange(newDate);
           };
           
-          const handleYearChange = (year: string) => {
-            const newYear = parseInt(year);
+          const handleDropdownYearChange = (yearStr: string) => {
+            const newYear = parseInt(yearStr);
             const newDate = new Date(newYear, displayMonth.getMonth(), 1);
-            onMonthChange?.(newDate);
+            handleMonthChange(newDate);
           };
           
           return (
             <div className="flex justify-center pt-1 relative items-center mb-4">
               <div className="flex items-center gap-2">
-                <Select value={displayMonth.getMonth().toString()} onValueChange={handleMonthChange}>
+                <Select value={displayMonth.getMonth().toString()} onValueChange={handleDropdownMonthChange}>
                   <SelectTrigger className="w-auto border-none bg-transparent p-0 h-auto font-medium text-sm">
-                    <SelectValue />
+                    <SelectValue>
+                      {monthNames[displayMonth.getMonth()]}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {monthNames.map((month, index) => (
+                    {monthNames.map((monthName, index) => (
                       <SelectItem key={index} value={index.toString()}>
-                        {month}
+                        {monthName}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <span className="text-sm font-medium">|</span>
-                <Select value={displayMonth.getFullYear().toString()} onValueChange={handleYearChange}>
+                <Select value={displayMonth.getFullYear().toString()} onValueChange={handleDropdownYearChange}>
                   <SelectTrigger className="w-auto border-none bg-transparent p-0 h-auto font-medium text-sm">
-                    <SelectValue />
+                    <SelectValue>
+                      {displayMonth.getFullYear()}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {years.map((year) => (
@@ -110,7 +122,6 @@ function Calendar({
           );
         },
       }}
-      onMonthChange={onMonthChange}
       {...props}
     />
   );
