@@ -30,7 +30,7 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section - Bar/Club Focus */}
-      <section className="relative h-screen flex items-center justify-center px-6 pt-16">
+      <section className="relative h-screen flex items-center justify-center px-6 pt-8">
         <div className="max-w-6xl mx-auto text-center">
           <div className="mb-4">
             <span className="inline-block bg-yellow-400 text-gray-900 px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
