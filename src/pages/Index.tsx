@@ -33,7 +33,7 @@ const Index = () => {
       <section className="relative h-screen flex items-center justify-center px-6 pt-16">
         <div className="max-w-6xl mx-auto text-center">
           <div className="mb-4">
-            <span className="inline-block bg-yellow-400 text-gray-900 px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
+            <span className="inline-block bg-yellow-400 text-gray-900 px-8 py-3 rounded-full text-base font-bold tracking-wide uppercase">
               Premium Bar Experience
             </span>
           </div>
