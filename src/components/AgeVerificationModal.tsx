@@ -97,7 +97,6 @@ export const AgeVerificationModal = ({ open, onVerified }: AgeVerificationModalP
                   disabled={(date) => date > new Date()}
                   initialFocus
                   className="p-3 pointer-events-auto"
-                  captionLayout="dropdown"
                   fromYear={1900}
                   toYear={new Date().getFullYear()}
                 />
