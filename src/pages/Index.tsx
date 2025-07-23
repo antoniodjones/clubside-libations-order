@@ -30,48 +30,48 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section - Bar/Club Focus */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-8">
-            <span className="inline-block bg-yellow-400 text-gray-900 px-6 py-2 rounded-full text-sm font-bold tracking-wide uppercase">
+      <section className="relative h-screen flex items-center justify-center px-6 pt-16">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="mb-4">
+            <span className="inline-block bg-yellow-400 text-gray-900 px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
               Premium Bar Experience
             </span>
           </div>
           
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-6 leading-none tracking-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-3 leading-none tracking-tight">
             PREMIUM
             <br />
             <span className="text-yellow-400">POURS</span>
           </h1>
           
-          <h2 className="text-xl md:text-2xl text-gray-300 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
+          <h2 className="text-lg md:text-xl text-gray-300 font-light mb-6 max-w-xl mx-auto">
             AT YOUR FINGERTIPS
           </h2>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <Button 
               size="lg" 
               onClick={handleOrderNow}
-              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-12 py-4 text-lg tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/25 rounded-full"
+              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-8 py-3 text-base tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/25 rounded-full"
             >
               Order Now
             </Button>
             <Link to="/backoffice">
-              <Button size="lg" variant="outline" className="border-2 border-white/20 text-gray-900 hover:bg-white/10 hover:border-white/40 px-12 py-4 text-lg font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
+              <Button size="lg" variant="outline" className="border-2 border-white/20 text-gray-900 hover:bg-white/10 hover:border-white/40 px-8 py-3 text-base font-light tracking-wide transition-all duration-300 backdrop-blur-sm rounded-full">
                 Partner With Us
               </Button>
             </Link>
           </div>
           
           {/* Age Verification Notice */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto border border-purple-400/20">
-            <p className="text-sm text-gray-300 mb-4">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 max-w-sm mx-auto border border-purple-400/20">
+            <p className="text-xs text-gray-300 mb-2">
               Must be 21+ to order alcoholic beverages
             </p>
-            <div className="flex items-center justify-center gap-4">
-              <span className="text-yellow-400 font-bold text-2xl">21+</span>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-yellow-400 font-bold text-lg">21+</span>
               <span className="text-gray-400">|</span>
-              <span className="text-purple-400 font-medium">Verified Service</span>
+              <span className="text-purple-400 font-medium text-sm">Verified Service</span>
             </div>
           </div>
         </div>
@@ -82,16 +82,16 @@ const Index = () => {
       </section>
 
       {/* Service Highlights Section */}
-      <section className="py-24 px-6 bg-gray-900/50">
+      <section className="py-12 px-6 bg-gray-900/50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-3 tracking-tight">
               CRAFTED
               <br />
               <span className="text-yellow-400">EXPERIENCES</span>
             </h2>
-            <p className="text-xl text-gray-300 font-light max-w-3xl mx-auto">
-              From signature cocktails to bottle service, we deliver premium bar experiences directly to your table
+            <p className="text-base text-gray-300 font-light max-w-2xl mx-auto">
+              Premium cocktails, bottle service, and bar experiences delivered to your table
             </p>
           </div>
           
@@ -145,10 +145,10 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-6">
+      <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-3 tracking-tight">
               WHY CHOOSE
               <br />
               <span className="text-yellow-400">DRANX</span><span className="text-purple-400">+</span>
@@ -192,15 +192,15 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 px-6 bg-gray-900/50">
+      <section className="py-12 px-6 bg-gray-900/50">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">
               TRUSTED BY THE
               <br />
               <span className="text-yellow-400">NIGHTLIFE</span>
             </h2>
-            <p className="text-lg text-gray-300 font-light">
+            <p className="text-base text-gray-300 font-light">
               Industry-leading performance you can count on
             </p>
           </div>
@@ -240,18 +240,18 @@ const Index = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-32 px-6 bg-gradient-to-r from-purple-900/30 to-yellow-900/30">
+      <section className="py-16 px-6 bg-gradient-to-r from-purple-900/30 to-yellow-900/30">
         <div className="max-w-5xl mx-auto text-center">
           <div className="mb-8">
             <span className="text-yellow-400 text-sm font-bold tracking-[0.3em] uppercase">Ready to Elevate?</span>
           </div>
-          <h2 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tight leading-none">
+          <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight leading-none">
             TRANSFORM YOUR
             <br />
             <span className="text-yellow-400">NIGHT OUT</span>
           </h2>
-          <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
-            Join the revolution in bar and club service. Skip the lines, enjoy premium drinks, and elevate your nightlife experience with dranx+.
+          <p className="text-base text-gray-300 mb-8 max-w-2xl mx-auto font-light">
+            Join the revolution in bar service. Skip lines, enjoy premium drinks, elevate your nightlife.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button 
