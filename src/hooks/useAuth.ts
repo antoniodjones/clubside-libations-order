@@ -66,6 +66,26 @@ export const useAuth = () => {
     return { error };
   };
 
+  const resetPassword = async (email: string) => {
+    console.log('🔐 Sending password reset to:', email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth?tab=reset-password`,
+    });
+    
+    console.log('🔐 Password reset result:', { error });
+    return { error };
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    console.log('🔐 Updating password');
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+    
+    console.log('🔐 Password update result:', { error });
+    return { error };
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     return { error };
@@ -77,6 +97,8 @@ export const useAuth = () => {
     loading,
     sendOTP,
     verifyOTP,
+    resetPassword,
+    updatePassword,
     signOut,
   };
 };

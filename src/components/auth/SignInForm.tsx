@@ -8,6 +8,7 @@ interface SignInFormProps {
   email: string;
   setEmail: (email: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onForgotPassword: () => void;
   isLoading: boolean;
 }
 
@@ -15,6 +16,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
   email,
   setEmail,
   onSubmit,
+  onForgotPassword,
   isLoading
 }) => {
   const navigate = useNavigate();
@@ -52,6 +54,16 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         >
           {isLoading ? "Sending Code..." : "Send Verification Code"}
         </Button>
+        
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={onForgotPassword}
+            className="text-gray-300 hover:text-yellow-400 underline text-sm transition-colors"
+          >
+            Forgot Password?
+          </button>
+        </div>
       </form>
     </>
   );

@@ -40,7 +40,7 @@ const Auth = () => {
   const referralCode = searchParams.get('ref');
 
   
-  const { sendOTP, verifyOTP, user } = useAuth();
+  const { sendOTP, verifyOTP, resetPassword, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -184,6 +184,42 @@ const Auth = () => {
     setIsLoading(false);
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({
+        title: "Error",
+        description: "Please enter your email first",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { error } = await resetPassword(email);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Password Reset Email Sent!",
+          description: "Check your email for password reset instructions.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <Navigation />
@@ -233,6 +269,7 @@ const Auth = () => {
                     email={email}
                     setEmail={setEmail}
                     onSubmit={(e) => { setAuthType('signin'); handleSendOTP(e); }}
+                    onForgotPassword={handleForgotPassword}
                     isLoading={isLoading}
                   />
                 ) : (
