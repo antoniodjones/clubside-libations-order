@@ -8,15 +8,27 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface AgeVerificationModalProps {
   open: boolean;
   onVerified: () => void;
+  onClose?: () => void;
 }
 
-export const AgeVerificationModal = ({ open, onVerified }: AgeVerificationModalProps) => {
+export const AgeVerificationModal = ({ open, onVerified, onClose }: AgeVerificationModalProps) => {
   const [birthDate, setBirthDate] = useState<Date>();
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      // Default behavior: redirect to home page
+      navigate('/');
+    }
+  };
 
   const handleAgeVerification = () => {
     if (!birthDate) {
@@ -53,7 +65,7 @@ export const AgeVerificationModal = ({ open, onVerified }: AgeVerificationModalP
   };
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="bg-gray-900 border border-purple-400/20 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-3xl font-bold text-yellow-400 mb-4">
