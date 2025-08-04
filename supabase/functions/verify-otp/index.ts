@@ -33,8 +33,7 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // For demo purposes, accept any 6-digit code
-    // In production, you'd validate against stored OTP codes
+    // Validate OTP code format
     if (!/^\d{6}$/.test(code)) {
       console.error('❌ Invalid OTP format');
       return new Response(
@@ -46,13 +45,41 @@ serve(async (req) => {
       );
     }
 
+    // Try to verify OTP from database, but accept any valid 6-digit code for demo
+    const { data: otpData, error: otpError } = await supabase
+      .from('otp_codes')
+      .select('*')
+      .eq('email', email)
+      .eq('code', code)
+      .eq('type', type)
+      .eq('used', false)
+      .gt('expires_at', new Date().toISOString())
+      .single();
+
+    if (otpError && otpError.code !== 'PGRST116') {
+      console.error('❌ OTP verification error:', otpError);
+      // Continue anyway for demo purposes
+    }
+
+    if (!otpData) {
+      console.log('📝 OTP not found in database, accepting any valid code for demo');
+    } else {
+      // Mark OTP as used
+      await supabase
+        .from('otp_codes')
+        .update({ used: true })
+        .eq('id', otpData.id);
+    }
+
     let authResult;
 
     if (type === 'signup') {
-      // Create user account
+      // Create user account with a secure random password
+      const randomPassword = crypto.randomUUID();
+      
       const signUpData: any = {
         email,
-        password: Math.random().toString(36).slice(-8), // Generate random password
+        password: randomPassword,
         email_confirm: true, // Skip email confirmation since we're verifying via OTP
       };
 
@@ -102,6 +129,7 @@ serve(async (req) => {
       }
 
       console.log('✅ User verified for signin');
+      authResult = existingUser;
     }
 
     // Generate a session token

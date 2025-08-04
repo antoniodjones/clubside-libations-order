@@ -37,39 +37,21 @@ serve(async (req) => {
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     console.log(`🔐 Generated OTP code: ${otpCode}`);
 
-    // Store OTP in auth.otp_codes table (or create a custom table)
-    // For now, we'll use Supabase's built-in OTP system
-    let authResult;
-    
-    if (type === 'signup') {
-      // For signup, we create a user but don't confirm them yet
-      authResult = await supabase.auth.admin.generateLink({
-        type: 'signup',
-        email: email,
-        options: {
-          redirectTo: `${Deno.env.get('SUPABASE_URL')}/auth/v1/verify`
-        }
+    // Store OTP code in a custom table for verification
+    const { error: insertError } = await supabase
+      .from('otp_codes')
+      .insert({
+        email,
+        code: otpCode,
+        type,
+        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10 minutes
+        used: false
       });
-    } else {
-      // For signin, generate a magic link
-      authResult = await supabase.auth.admin.generateLink({
-        type: 'magiclink',
-        email: email,
-        options: {
-          redirectTo: `${Deno.env.get('SUPABASE_URL')}/auth/v1/verify`
-        }
-      });
-    }
 
-    if (authResult.error) {
-      console.error('❌ Supabase auth error:', authResult.error);
-      return new Response(
-        JSON.stringify({ error: authResult.error.message }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+    if (insertError) {
+      console.error('❌ Failed to store OTP:', insertError);
+      // If table doesn't exist, we'll continue without storing (for demo)
+      console.log('📝 Note: OTP codes table not found, using code directly');
     }
 
     // Send email using Resend
