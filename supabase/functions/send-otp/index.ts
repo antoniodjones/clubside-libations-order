@@ -74,7 +74,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'noreply@nightlife.com',
+        from: 'onboarding@resend.dev',
         to: [email],
         subject: type === 'signup' ? 'Welcome! Verify your email' : 'Your sign-in code',
         html: `
