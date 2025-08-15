@@ -10,6 +10,7 @@ import { useMenuData } from "@/hooks/useMenuData";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
 import { useCategoryFilter } from "@/hooks/useCategoryFilter";
 import { MenuHero } from "@/components/menu/MenuHero";
+import { VenueSearch } from "@/components/menu/VenueSearch";
 import { FeaturedProductsSection } from "@/components/menu/FeaturedProductsSection";
 import { CategorySelector } from "@/components/menu/CategorySelector";
 import { ProductsGrid } from "@/components/menu/ProductsGrid";
@@ -22,9 +23,18 @@ const Menu = () => {
   const { categories, products, loading } = useMenuData();
   const { showAgeVerification, handleAgeVerified } = useAgeVerification();
   const { selectedCategory, setSelectedCategory, filteredProducts, featuredProducts } = useCategoryFilter(categories, products);
+  
+  // State for venue selection
+  const [selectedVenueId, setSelectedVenueId] = React.useState<string | null>(null);
+  const [selectedVenueName, setSelectedVenueName] = React.useState<string>('');
 
   const handleCheckout = () => {
     navigate('/checkout');
+  };
+
+  const handleVenueSelect = (venueId: string, venueName: string) => {
+    setSelectedVenueId(venueId);
+    setSelectedVenueName(venueName);
   };
 
   if (loading) {
@@ -50,6 +60,11 @@ const Menu = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <MenuHero />
+
+        <VenueSearch 
+          onVenueSelect={handleVenueSelect}
+          selectedVenueId={selectedVenueId}
+        />
 
         <FeaturedProductsSection
           featuredProducts={featuredProducts}
