@@ -30,7 +30,7 @@ export const FeaturedProductsSection = ({
   if (featuredProducts.length === 0) return null;
 
   return (
-    <div className="mb-16">
+    <div className="mb-12">
       <div className="bg-gradient-to-r from-yellow-400/10 to-purple-400/10 rounded-3xl p-8 border border-yellow-400/20">
         <h2 className="text-3xl font-bold text-white mb-6 text-center">Featured Today</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

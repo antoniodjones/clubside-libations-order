@@ -177,7 +177,7 @@ export const VenueSearch = ({ onVenueSelect, selectedVenueId }: VenueSearchProps
   };
 
   return (
-    <div className="mb-8">
+    <div className="mb-4">
       <div className="bg-black/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-6">
         <h3 className="text-2xl font-bold text-white mb-4">Find Venues Near You</h3>
         
@@ -266,11 +266,6 @@ export const VenueSearch = ({ onVenueSelect, selectedVenueId }: VenueSearchProps
           </div>
         )}
 
-        {!searchQuery && venues.length === 0 && !loading && (
-          <div className="text-center py-8">
-            <p className="text-gray-400">Search for venues or click "Near Me" to find venues nearby</p>
-          </div>
-        )}
 
         {loading && (
           <div className="text-center py-8">
