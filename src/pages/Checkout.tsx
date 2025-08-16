@@ -61,13 +61,13 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
       const orderData = user?.id ? {
         // Authenticated user order
         user_id: user.id,
-        venue_id: "00000000-0000-0000-0000-000000000001", // Default venue placeholder
+        venue_id: "01cf9bb6-9bee-4926-af17-a0d4fe01cf38", // The Dead Rabbit venue
         total_amount: total,
         status: "pending"
       } : {
         // Guest order - use null for user_id
         user_id: null,
-        venue_id: "00000000-0000-0000-0000-000000000001", // Default venue placeholder
+        venue_id: "01cf9bb6-9bee-4926-af17-a0d4fe01cf38", // The Dead Rabbit venue
         total_amount: total,
         status: "pending",
         guest_name: customerInfo.name,
