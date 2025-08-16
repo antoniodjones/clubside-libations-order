@@ -39,6 +39,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
   };
 
   const handleMockPayment = async () => {
+    // Validate required fields
     if (!customerInfo.name || !customerInfo.email) {
       toast({
         title: "Missing Information",
@@ -48,9 +49,64 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
       return;
     }
 
+    // Validate empty cart
+    if (!cart || cart.length === 0) {
+      toast({
+        title: "Empty Cart",
+        description: "Please add items to your cart before checkout",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerInfo.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
+      // Validate cart items are still available
+      const productIds = cart.map(item => item.product.id);
+      const { data: availableProducts, error: productError } = await supabase
+        .from("products")
+        .select("id, name, is_available")
+        .in("id", productIds);
+
+      if (productError) throw productError;
+
+      // Check if any products are no longer available
+      const unavailableProducts = cart.filter(item => {
+        const product = availableProducts?.find(p => p.id === item.product.id);
+        return !product || !product.is_available;
+      });
+
+      if (unavailableProducts.length > 0) {
+        toast({
+          title: "Items No Longer Available",
+          description: `${unavailableProducts.map(item => item.product.name).join(", ")} are no longer available. Please remove them from your cart.`,
+          variant: "destructive"
+        });
+        setIsProcessing(false);
+        return;
+      }
+
+      // Server-side email validation
+      const { error: emailValidationError } = await supabase.functions.invoke('validate-email', {
+        body: { email: customerInfo.email }
+      });
+
+      if (emailValidationError) {
+        console.warn("Email validation failed:", emailValidationError);
+        // Continue with checkout even if email validation fails (non-blocking)
+      }
       // Simulate payment processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
 
