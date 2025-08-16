@@ -65,8 +65,8 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
         total_amount: total,
         status: "pending"
       } : {
-        // Guest order
-        user_id: "00000000-0000-0000-0000-000000000000", // Guest user placeholder
+        // Guest order - use null for user_id
+        user_id: null,
         venue_id: "00000000-0000-0000-0000-000000000001", // Default venue placeholder
         total_amount: total,
         status: "pending",

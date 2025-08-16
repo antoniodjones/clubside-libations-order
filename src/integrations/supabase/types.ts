@@ -173,7 +173,7 @@ export type Database = {
           table_number: string | null
           total_amount: number
           updated_at: string
-          user_id: string
+          user_id: string | null
           venue_id: string
         }
         Insert: {
@@ -191,7 +191,7 @@ export type Database = {
           table_number?: string | null
           total_amount: number
           updated_at?: string
-          user_id: string
+          user_id?: string | null
           venue_id: string
         }
         Update: {
@@ -209,7 +209,7 @@ export type Database = {
           table_number?: string | null
           total_amount?: number
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
           venue_id?: string
         }
         Relationships: [
