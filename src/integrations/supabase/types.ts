@@ -124,10 +124,50 @@ export type Database = {
           },
         ]
       }
+      order_status_history: {
+        Row: {
+          changed_at: string
+          changed_by_user_id: string | null
+          duration_seconds: number | null
+          id: string
+          notes: string | null
+          order_id: string
+          previous_status: string | null
+          status: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by_user_id?: string | null
+          duration_seconds?: number | null
+          id?: string
+          notes?: string | null
+          order_id: string
+          previous_status?: string | null
+          status: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by_user_id?: string | null
+          duration_seconds?: number | null
+          id?: string
+          notes?: string | null
+          order_id?: string
+          previous_status?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
+          completed_at: string | null
           created_at: string
+          guest_email: string | null
+          guest_name: string | null
+          guest_phone: string | null
           id: string
+          preparing_at: string | null
+          ready_at: string | null
+          received_at: string | null
           special_instructions: string | null
           status: string
           table_number: string | null
@@ -137,8 +177,15 @@ export type Database = {
           venue_id: string
         }
         Insert: {
+          completed_at?: string | null
           created_at?: string
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_phone?: string | null
           id?: string
+          preparing_at?: string | null
+          ready_at?: string | null
+          received_at?: string | null
           special_instructions?: string | null
           status?: string
           table_number?: string | null
@@ -148,8 +195,15 @@ export type Database = {
           venue_id: string
         }
         Update: {
+          completed_at?: string | null
           created_at?: string
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_phone?: string | null
           id?: string
+          preparing_at?: string | null
+          ready_at?: string | null
+          received_at?: string | null
           special_instructions?: string | null
           status?: string
           table_number?: string | null
@@ -794,6 +848,14 @@ export type Database = {
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      update_order_status: {
+        Args: {
+          new_status: string
+          notes_param?: string
+          order_id_param: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
