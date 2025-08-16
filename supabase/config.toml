@@ -47,3 +47,6 @@ verify_jwt = false
 
 [functions.award-loyalty-points]
 verify_jwt = false
+
+[functions.validate-email]
+verify_jwt = false
