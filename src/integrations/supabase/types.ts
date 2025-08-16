@@ -159,6 +159,8 @@ export type Database = {
       }
       orders: {
         Row: {
+          assigned_bartender: string | null
+          bartender_notes: string | null
           completed_at: string | null
           created_at: string
           guest_email: string | null
@@ -177,6 +179,8 @@ export type Database = {
           venue_id: string
         }
         Insert: {
+          assigned_bartender?: string | null
+          bartender_notes?: string | null
           completed_at?: string | null
           created_at?: string
           guest_email?: string | null
@@ -195,6 +199,8 @@ export type Database = {
           venue_id: string
         }
         Update: {
+          assigned_bartender?: string | null
+          bartender_notes?: string | null
           completed_at?: string | null
           created_at?: string
           guest_email?: string | null
