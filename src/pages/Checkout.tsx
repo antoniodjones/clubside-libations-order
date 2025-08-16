@@ -58,12 +58,21 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
       const { data: { user } } = await supabase.auth.getUser();
       
       // Create order in database
-      const orderData = {
-        user_id: user?.id || "00000000-0000-0000-0000-000000000000", // Guest user placeholder
+      const orderData = user?.id ? {
+        // Authenticated user order
+        user_id: user.id,
         venue_id: "00000000-0000-0000-0000-000000000001", // Default venue placeholder
         total_amount: total,
-        status: "received",
-        special_instructions: `Guest order - ${customerInfo.name} (${customerInfo.email})`
+        status: "pending"
+      } : {
+        // Guest order
+        user_id: "00000000-0000-0000-0000-000000000000", // Guest user placeholder
+        venue_id: "00000000-0000-0000-0000-000000000001", // Default venue placeholder
+        total_amount: total,
+        status: "pending",
+        guest_name: customerInfo.name,
+        guest_email: customerInfo.email,
+        guest_phone: customerInfo.phone || null
       };
 
       const { data: order, error: orderError } = await supabase
