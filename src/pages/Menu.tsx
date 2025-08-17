@@ -5,12 +5,12 @@ import { Footer } from "@/components/Footer";
 import { HomeIcon } from "@/components/HomeIcon";
 import { AgeVerificationModal } from "@/components/AgeVerificationModal";
 import { CartSummary } from "@/components/CartSummary";
-import { useCart } from "@/hooks/useCart";
+import { useEnhancedCart } from "@/hooks/useEnhancedCart";
 import { useMenuData } from "@/hooks/useMenuData";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
 import { useCategoryFilter } from "@/hooks/useCategoryFilter";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
-import { useAbandonedCartStorage } from "@/hooks/useAbandonedCartStorage";
+import { useAuth } from "@/hooks/useAuth";
 import { MenuHero } from "@/components/menu/MenuHero";
 import { VenueSearch } from "@/components/menu/VenueSearch";
 import { FeaturedProductsSection } from "@/components/menu/FeaturedProductsSection";
@@ -19,39 +19,30 @@ import { ProductsGrid } from "@/components/menu/ProductsGrid";
 
 const Menu = () => {
   const navigate = useNavigate();
-  const { cart, addToCart, removeFromCart, getCartItemQuantity, cartTotal, cartItemCount } = useCart();
+  const [selectedVenue, setSelectedVenue] = React.useState<string | null>(null);
+  const [selectedVenueName, setSelectedVenueName] = React.useState<string>('');
   
-  // Custom hooks for data and state management
+  const { user } = useAuth();
+  const { cart, addToCart, removeFromCart, getCartItemQuantity, cartTotal, cartItemCount, deleteFromCart } = useEnhancedCart({
+    userId: user?.id,
+    selectedVenueId: selectedVenue,
+  });
+  
   const { categories, products, loading } = useMenuData();
   const { showAgeVerification, handleAgeVerified } = useAgeVerification();
   const { selectedCategory, setSelectedCategory, filteredProducts, featuredProducts } = useCategoryFilter(categories, products);
-  
-  // State for venue selection
-  const [selectedVenueId, setSelectedVenueId] = React.useState<string | null>(null);
-  const [selectedVenueName, setSelectedVenueName] = React.useState<string>('');
-
-  // Abandoned cart feature
-  const { clearAbandonedCartTimers } = useAbandonedCart({
-    cartItemCount,
-    onNudgeClick: () => navigate('/checkout')
-  });
-
-  // Abandoned cart storage
-  const { markAsConverted } = useAbandonedCartStorage({
-    cart,
-    selectedVenueId,
-    guestEmail: undefined, // Will be captured in checkout
-    guestPhone: undefined  // Will be captured in checkout
+  const { clearAbandonedCartTimers } = useAbandonedCart({ 
+    cartItemCount, 
+    onNudgeClick: () => navigate("/checkout") 
   });
 
   const handleCheckout = () => {
     clearAbandonedCartTimers();
-    markAsConverted();
     navigate('/checkout');
   };
 
   const handleVenueSelect = (venueId: string, venueName: string) => {
-    setSelectedVenueId(venueId);
+    setSelectedVenue(venueId);
     setSelectedVenueName(venueName);
   };
 
@@ -81,7 +72,7 @@ const Menu = () => {
 
         <VenueSearch 
           onVenueSelect={handleVenueSelect}
-          selectedVenueId={selectedVenueId}
+          selectedVenueId={selectedVenue}
         />
 
         <FeaturedProductsSection

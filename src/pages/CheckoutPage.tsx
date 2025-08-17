@@ -1,11 +1,16 @@
-import { useCart } from "@/hooks/useCart";
+import { useEnhancedCart } from "@/hooks/useEnhancedCart";
+import { useAuth } from "@/hooks/useAuth";
 import { Checkout } from "./Checkout";
 import { HomeIcon } from "@/components/HomeIcon";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const CheckoutPage = () => {
-  const { cart, cartTotal, cartItemCount, clearCart, deleteFromCart } = useCart();
+  const { user } = useAuth();
+  const { cart, cartTotal, cartItemCount, clearCart, deleteFromCart } = useEnhancedCart({
+    userId: user?.id,
+    selectedVenueId: null, // Will be handled by venue selection in checkout
+  });
   const navigate = useNavigate();
 
   // Redirect to menu if cart is empty

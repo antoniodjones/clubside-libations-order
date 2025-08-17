@@ -29,6 +29,7 @@ export type Database = {
           session_id: string
           total_amount: number | null
           updated_at: string
+          user_id: string | null
           venue_id: string | null
         }
         Insert: {
@@ -45,6 +46,7 @@ export type Database = {
           session_id: string
           total_amount?: number | null
           updated_at?: string
+          user_id?: string | null
           venue_id?: string | null
         }
         Update: {
@@ -61,6 +63,7 @@ export type Database = {
           session_id?: string
           total_amount?: number | null
           updated_at?: string
+          user_id?: string | null
           venue_id?: string | null
         }
         Relationships: []

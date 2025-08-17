@@ -10,6 +10,7 @@ interface CartItem {
 interface UseAbandonedCartStorageProps {
   cart: CartItem[];
   selectedVenueId: string | null;
+  userId?: string | null;
   guestEmail?: string;
   guestPhone?: string;
 }
@@ -17,6 +18,7 @@ interface UseAbandonedCartStorageProps {
 export const useAbandonedCartStorage = ({ 
   cart, 
   selectedVenueId, 
+  userId,
   guestEmail, 
   guestPhone 
 }: UseAbandonedCartStorageProps) => {
@@ -37,10 +39,17 @@ export const useAbandonedCartStorage = ({
     if (cart.length === 0) {
       // If cart is empty, try to delete any existing abandoned cart
       try {
-        await supabase
-          .from('abandoned_carts')
-          .delete()
-          .eq('session_id', sessionId.current);
+        if (userId) {
+          await supabase
+            .from('abandoned_carts')
+            .delete()
+            .eq('user_id', userId);
+        } else {
+          await supabase
+            .from('abandoned_carts')
+            .delete()
+            .eq('session_id', sessionId.current);
+        }
       } catch (error) {
         console.error('Error deleting abandoned cart:', error);
       }
@@ -50,15 +59,29 @@ export const useAbandonedCartStorage = ({
     if (!selectedVenueId) return;
 
     try {
-      // Check if abandoned cart already exists for this session
-      const { data: existingCart } = await supabase
-        .from('abandoned_carts')
-        .select('id')
-        .eq('session_id', sessionId.current)
-        .single();
+      let existingCart;
+      
+      // Check for existing cart based on user_id or session_id
+      if (userId) {
+        const { data } = await supabase
+          .from('abandoned_carts')
+          .select('id')
+          .eq('user_id', userId)
+          .single();
+        existingCart = data;
+      } else {
+        const { data } = await supabase
+          .from('abandoned_carts')
+          .select('id')
+          .eq('session_id', sessionId.current)
+          .is('user_id', null)
+          .single();
+        existingCart = data;
+      }
 
       const cartData = {
-        session_id: sessionId.current,
+        user_id: userId || null,
+        session_id: userId ? null : sessionId.current, // Only use session_id for guest carts
         cart_data: cart as any, // Type as any for JSONB storage
         venue_id: selectedVenueId,
         total_amount: cartTotal,
@@ -111,15 +134,22 @@ export const useAbandonedCartStorage = ({
         clearTimeout(saveTimer.current);
       }
     };
-  }, [cart, selectedVenueId, guestEmail, guestPhone]);
+  }, [cart, selectedVenueId, userId, guestEmail, guestPhone]);
 
   // Mark cart as converted when order is completed
   const markAsConverted = async () => {
     try {
-      await supabase
-        .from('abandoned_carts')
-        .update({ converted_to_order: true })
-        .eq('session_id', sessionId.current);
+      if (userId) {
+        await supabase
+          .from('abandoned_carts')
+          .update({ converted_to_order: true })
+          .eq('user_id', userId);
+      } else {
+        await supabase
+          .from('abandoned_carts')
+          .update({ converted_to_order: true })
+          .eq('session_id', sessionId.current);
+      }
     } catch (error) {
       console.error('Error marking cart as converted:', error);
     }
@@ -128,18 +158,86 @@ export const useAbandonedCartStorage = ({
   // Clear abandoned cart (when user actively clears cart)
   const clearAbandonedCart = async () => {
     try {
-      await supabase
-        .from('abandoned_carts')
-        .delete()
-        .eq('session_id', sessionId.current);
+      if (userId) {
+        await supabase
+          .from('abandoned_carts')
+          .delete()
+          .eq('user_id', userId);
+      } else {
+        await supabase
+          .from('abandoned_carts')
+          .delete()
+          .eq('session_id', sessionId.current);
+      }
     } catch (error) {
       console.error('Error clearing abandoned cart:', error);
+    }
+  };
+
+  // Restore cart from database for authenticated users
+  const restoreCart = async (): Promise<CartItem[]> => {
+    if (!userId) return [];
+    
+    try {
+      const { data: abandonedCart } = await supabase
+        .from('abandoned_carts')
+        .select('cart_data')
+        .eq('user_id', userId)
+        .eq('converted_to_order', false)
+        .single();
+
+      return (abandonedCart?.cart_data as unknown as CartItem[]) || [];
+    } catch (error) {
+      console.error('Error restoring cart:', error);
+      return [];
+    }
+  };
+
+  // Transfer guest cart to user account when they sign in
+  const transferGuestCartToUser = async (newUserId: string) => {
+    try {
+      const { data: guestCart } = await supabase
+        .from('abandoned_carts')
+        .select('*')
+        .eq('session_id', sessionId.current)
+        .is('user_id', null)
+        .single();
+
+      if (guestCart) {
+        // Check if user already has a cart
+        const { data: existingUserCart } = await supabase
+          .from('abandoned_carts')
+          .select('id')
+          .eq('user_id', newUserId)
+          .single();
+
+        if (existingUserCart) {
+          // Delete the guest cart since user already has one
+          await supabase
+            .from('abandoned_carts')
+            .delete()
+            .eq('id', guestCart.id);
+        } else {
+          // Transfer guest cart to user
+          await supabase
+            .from('abandoned_carts')
+            .update({ 
+              user_id: newUserId, 
+              session_id: null 
+            })
+            .eq('id', guestCart.id);
+        }
+      }
+    } catch (error) {
+      console.error('Error transferring guest cart:', error);
     }
   };
 
   return {
     sessionId: sessionId.current,
     markAsConverted,
-    clearAbandonedCart
+    clearAbandonedCart,
+    restoreCart,
+    transferGuestCartToUser
   };
 };
