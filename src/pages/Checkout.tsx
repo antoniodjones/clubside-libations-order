@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,12 +36,66 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
   const [tipPercentage, setTipPercentage] = useState(18);
   const [customTip, setCustomTip] = useState("");
   const [isCustomTip, setIsCustomTip] = useState(false);
+  const [venueInfo, setVenueInfo] = useState<{
+    state: string;
+    taxRate: number;
+    stateName: string;
+  } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // State tax rates mapping
+  const STATE_TAX_RATES = {
+    'NY': { rate: 0.08875, name: 'New York' },
+    'CA': { rate: 0.0725, name: 'California' },
+    'TX': { rate: 0.0625, name: 'Texas' },
+    'FL': { rate: 0.06, name: 'Florida' },
+    'WA': { rate: 0.065, name: 'Washington' },
+    'NV': { rate: 0.0685, name: 'Nevada' },
+    'IL': { rate: 0.0625, name: 'Illinois' },
+    // Add more states as needed
+  } as const;
+
+  // Fetch venue information on component mount
+  useEffect(() => {
+    const fetchVenueInfo = async () => {
+      try {
+        const { data: venue, error: venueError } = await supabase
+          .from('venues')
+          .select(`
+            id,
+            name,
+            cities!inner(state)
+          `)
+          .eq('id', '01cf9bb6-9bee-4926-af17-a0d4fe01cf38')
+          .single();
+
+        if (venueError) throw venueError;
+
+        const state = venue.cities.state as keyof typeof STATE_TAX_RATES;
+        const taxInfo = STATE_TAX_RATES[state] || { rate: 0.08, name: state };
+        
+        setVenueInfo({
+          state: state,
+          taxRate: taxInfo.rate,
+          stateName: taxInfo.name
+        });
+      } catch (error) {
+        console.error('Error fetching venue info:', error);
+        // Fallback to NY tax rate
+        setVenueInfo({
+          state: 'NY',
+          taxRate: 0.08875,
+          stateName: 'New York'
+        });
+      }
+    };
+
+    fetchVenueInfo();
+  }, []);
+
   // Calculate tax and tip
-  const TAX_RATE = 0.08875; // NY state tax rate as example
-  const taxAmount = total * TAX_RATE;
+  const taxAmount = venueInfo ? total * venueInfo.taxRate : 0;
   const tipAmount = isCustomTip ? parseFloat(customTip) || 0 : total * (tipPercentage / 100);
   const finalTotal = total + taxAmount + tipAmount;
 
@@ -271,7 +325,9 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
                 
                 {/* Tax */}
                 <div className="flex justify-between items-center text-lg">
-                  <span className="text-gray-300">Tax (NY - 8.875%)</span>
+                  <span className="text-gray-300">
+                    Tax ({venueInfo?.state} - {(venueInfo?.taxRate * 100 || 0).toFixed(3)}%)
+                  </span>
                   <span className="text-white">${taxAmount.toFixed(2)}</span>
                 </div>
                 
