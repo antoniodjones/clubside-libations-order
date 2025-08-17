@@ -33,11 +33,31 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
     email: "",
     phone: ""
   });
+  const [tipPercentage, setTipPercentage] = useState(18);
+  const [customTip, setCustomTip] = useState("");
+  const [isCustomTip, setIsCustomTip] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Calculate tax and tip
+  const TAX_RATE = 0.08875; // NY state tax rate as example
+  const taxAmount = total * TAX_RATE;
+  const tipAmount = isCustomTip ? parseFloat(customTip) || 0 : total * (tipPercentage / 100);
+  const finalTotal = total + taxAmount + tipAmount;
+
   const handleInputChange = (field: string, value: string) => {
     setCustomerInfo(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleTipSelect = (percentage: number) => {
+    setTipPercentage(percentage);
+    setIsCustomTip(false);
+    setCustomTip("");
+  };
+
+  const handleCustomTipChange = (value: string) => {
+    setCustomTip(value);
+    setIsCustomTip(true);
   };
 
   const handleMockPayment = async () => {
@@ -120,13 +140,13 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
         // Authenticated user order
         user_id: user.id,
         venue_id: "01cf9bb6-9bee-4926-af17-a0d4fe01cf38", // The Dead Rabbit venue
-        total_amount: total,
+        total_amount: finalTotal,
         status: "pending"
       } : {
         // Guest order - use null for user_id
         user_id: null,
         venue_id: "01cf9bb6-9bee-4926-af17-a0d4fe01cf38", // The Dead Rabbit venue
-        total_amount: total,
+        total_amount: finalTotal,
         status: "pending",
         guest_name: customerInfo.name,
         guest_email: customerInfo.email,
@@ -242,9 +262,65 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
                   </div>
                 ))}
                 <Separator className="bg-gray-700" />
+                
+                {/* Subtotal */}
+                <div className="flex justify-between items-center text-lg">
+                  <span className="text-gray-300">Subtotal</span>
+                  <span className="text-white">${total.toFixed(2)}</span>
+                </div>
+                
+                {/* Tax */}
+                <div className="flex justify-between items-center text-lg">
+                  <span className="text-gray-300">Tax (8.875%)</span>
+                  <span className="text-white">${taxAmount.toFixed(2)}</span>
+                </div>
+                
+                {/* Tip */}
+                <div className="flex justify-between items-center text-lg">
+                  <span className="text-gray-300">
+                    Tip {isCustomTip ? "(Custom)" : `(${tipPercentage}%)`}
+                  </span>
+                  <span className="text-white">${tipAmount.toFixed(2)}</span>
+                </div>
+                
+                <Separator className="bg-gray-700" />
                 <div className="flex justify-between items-center text-2xl font-bold">
                   <span className="text-white">Total</span>
-                  <span className="text-yellow-400">${total.toFixed(2)}</span>
+                  <span className="text-yellow-400">${finalTotal.toFixed(2)}</span>
+                </div>
+                
+                {/* Tip Selection */}
+                <div className="mt-6 space-y-4">
+                  <h3 className="text-white font-semibold text-lg">Add Tip</h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[15, 18, 20].map((percentage) => (
+                      <Button
+                        key={percentage}
+                        variant={tipPercentage === percentage && !isCustomTip ? "default" : "outline"}
+                        onClick={() => handleTipSelect(percentage)}
+                        className={`${
+                          tipPercentage === percentage && !isCustomTip
+                            ? "bg-yellow-400 text-black hover:bg-yellow-500"
+                            : "border-gray-600 text-gray-400 hover:bg-gray-700 hover:text-white"
+                        }`}
+                      >
+                        {percentage}%
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customTip" className="text-gray-400">Custom Tip Amount ($)</Label>
+                    <Input
+                      id="customTip"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={customTip}
+                      onChange={(e) => handleCustomTipChange(e.target.value)}
+                      className="bg-black/60 border-gray-600 text-white"
+                      placeholder="Enter custom tip amount"
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -310,7 +386,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
                       Processing Payment...
                     </>
                   ) : (
-                    `Complete Mock Payment - $${total.toFixed(2)}`
+                    `Complete Mock Payment - $${finalTotal.toFixed(2)}`
                   )}
                 </Button>
               </CardContent>
