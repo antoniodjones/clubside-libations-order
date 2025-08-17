@@ -50,3 +50,12 @@ verify_jwt = false
 
 [functions.validate-email]
 verify_jwt = false
+
+[functions.send-abandoned-cart-email]
+verify_jwt = false
+
+[functions.handle-opt-out]
+verify_jwt = false
+
+[functions.send-abandoned-cart-reminders]
+verify_jwt = false

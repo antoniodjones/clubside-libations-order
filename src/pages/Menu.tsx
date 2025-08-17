@@ -10,6 +10,7 @@ import { useMenuData } from "@/hooks/useMenuData";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
 import { useCategoryFilter } from "@/hooks/useCategoryFilter";
 import { useAbandonedCart } from "@/hooks/useAbandonedCart";
+import { useAbandonedCartStorage } from "@/hooks/useAbandonedCartStorage";
 import { MenuHero } from "@/components/menu/MenuHero";
 import { VenueSearch } from "@/components/menu/VenueSearch";
 import { FeaturedProductsSection } from "@/components/menu/FeaturedProductsSection";
@@ -18,7 +19,7 @@ import { ProductsGrid } from "@/components/menu/ProductsGrid";
 
 const Menu = () => {
   const navigate = useNavigate();
-  const { addToCart, removeFromCart, getCartItemQuantity, cartTotal, cartItemCount } = useCart();
+  const { cart, addToCart, removeFromCart, getCartItemQuantity, cartTotal, cartItemCount } = useCart();
   
   // Custom hooks for data and state management
   const { categories, products, loading } = useMenuData();
@@ -35,8 +36,17 @@ const Menu = () => {
     onNudgeClick: () => navigate('/checkout')
   });
 
+  // Abandoned cart storage
+  const { markAsConverted } = useAbandonedCartStorage({
+    cart,
+    selectedVenueId,
+    guestEmail: undefined, // Will be captured in checkout
+    guestPhone: undefined  // Will be captured in checkout
+  });
+
   const handleCheckout = () => {
     clearAbandonedCartTimers();
+    markAsConverted();
     navigate('/checkout');
   };
 
