@@ -9,6 +9,7 @@ import { useCart } from "@/hooks/useCart";
 import { useMenuData } from "@/hooks/useMenuData";
 import { useAgeVerification } from "@/hooks/useAgeVerification";
 import { useCategoryFilter } from "@/hooks/useCategoryFilter";
+import { useAbandonedCart } from "@/hooks/useAbandonedCart";
 import { MenuHero } from "@/components/menu/MenuHero";
 import { VenueSearch } from "@/components/menu/VenueSearch";
 import { FeaturedProductsSection } from "@/components/menu/FeaturedProductsSection";
@@ -28,7 +29,14 @@ const Menu = () => {
   const [selectedVenueId, setSelectedVenueId] = React.useState<string | null>(null);
   const [selectedVenueName, setSelectedVenueName] = React.useState<string>('');
 
+  // Abandoned cart feature
+  const { clearAbandonedCartTimers } = useAbandonedCart({
+    cartItemCount,
+    onNudgeClick: () => navigate('/checkout')
+  });
+
   const handleCheckout = () => {
+    clearAbandonedCartTimers();
     navigate('/checkout');
   };
 
