@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
-  const { cart, cartTotal, cartItemCount, clearCart, deleteFromCart } = useEnhancedCart({
+  const { cart, cartTotal, cartItemCount, clearCart, deleteFromCart, addToCart } = useEnhancedCart({
     userId: user?.id,
     selectedVenueId: null, // Will be handled by venue selection in checkout
   });
@@ -40,6 +40,7 @@ const CheckoutPage = () => {
         total={cartTotal} 
         onClearCart={handleClearCart}
         onDeleteFromCart={handleDeleteFromCart}
+        onAddToCart={addToCart}
       />
     </>
   );

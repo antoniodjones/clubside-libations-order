@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, CreditCard, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, CreditCard, Loader2, Plus, Trash2 } from "lucide-react";
 
 interface CheckoutProps {
   cart: Array<{
@@ -22,9 +22,10 @@ interface CheckoutProps {
   total: number;
   onClearCart: () => void;
   onDeleteFromCart: (productId: string) => void;
+  onAddToCart: (product: any) => void;
 }
 
-export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: CheckoutProps) => {
+export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCart }: CheckoutProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
@@ -209,6 +210,14 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart }: Checkou
                         <p className="text-yellow-400 font-bold text-xl">
                           ${(item.product.price * item.quantity).toFixed(2)}
                         </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onAddToCart(item.product)}
+                          className="border-gray-600 text-gray-400 hover:bg-gray-700 hover:text-white"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"
