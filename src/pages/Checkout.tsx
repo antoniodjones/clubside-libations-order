@@ -271,7 +271,7 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
                 
                 {/* Tax */}
                 <div className="flex justify-between items-center text-lg">
-                  <span className="text-gray-300">Tax (8.875%)</span>
+                  <span className="text-gray-300">Tax (NY - 8.875%)</span>
                   <span className="text-white">${taxAmount.toFixed(2)}</span>
                 </div>
                 
