@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      abandoned_carts: {
+        Row: {
+          cart_data: Json
+          converted_to_order: boolean
+          created_at: string
+          first_reminder_sent_at: string | null
+          guest_email: string | null
+          guest_phone: string | null
+          id: string
+          opt_out_token: string | null
+          opted_out: boolean
+          second_reminder_sent_at: string | null
+          session_id: string
+          total_amount: number | null
+          updated_at: string
+          venue_id: string | null
+        }
+        Insert: {
+          cart_data: Json
+          converted_to_order?: boolean
+          created_at?: string
+          first_reminder_sent_at?: string | null
+          guest_email?: string | null
+          guest_phone?: string | null
+          id?: string
+          opt_out_token?: string | null
+          opted_out?: boolean
+          second_reminder_sent_at?: string | null
+          session_id: string
+          total_amount?: number | null
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Update: {
+          cart_data?: Json
+          converted_to_order?: boolean
+          created_at?: string
+          first_reminder_sent_at?: string | null
+          guest_email?: string | null
+          guest_phone?: string | null
+          id?: string
+          opt_out_token?: string | null
+          opted_out?: boolean
+          second_reminder_sent_at?: string | null
+          session_id?: string
+          total_amount?: number | null
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Relationships: []
+      }
       check_ins: {
         Row: {
           bonus_type: string | null
@@ -850,6 +901,10 @@ export type Database = {
       cleanup_expired_otps: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      generate_opt_out_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
