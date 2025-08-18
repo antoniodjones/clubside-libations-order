@@ -3,13 +3,17 @@ import { useAuth } from "@/hooks/useAuth";
 import { Checkout } from "./Checkout";
 import { HomeIcon } from "@/components/HomeIcon";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CheckoutPage = () => {
   const { user } = useAuth();
+  const [guestInfo, setGuestInfo] = useState({ email: "", phone: "" });
+  
   const { cart, cartTotal, cartItemCount, clearCart, deleteFromCart, addToCart, removeFromCart } = useEnhancedCart({
     userId: user?.id,
-    selectedVenueId: null, // Will be handled by venue selection in checkout
+    selectedVenueId: "01cf9bb6-9bee-4926-af17-a0d4fe01cf38", // The Dead Rabbit venue
+    guestEmail: guestInfo.email,
+    guestPhone: guestInfo.phone
   });
   const navigate = useNavigate();
 
@@ -42,6 +46,7 @@ const CheckoutPage = () => {
         onDeleteFromCart={handleDeleteFromCart}
         onAddToCart={addToCart}
         onRemoveFromCart={removeFromCart}
+        onGuestInfoChange={setGuestInfo}
       />
     </>
   );

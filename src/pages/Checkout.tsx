@@ -24,9 +24,10 @@ interface CheckoutProps {
   onDeleteFromCart: (productId: string) => void;
   onAddToCart: (product: any) => void;
   onRemoveFromCart: (productId: string) => void;
+  onGuestInfoChange: (info: { email: string; phone: string }) => void;
 }
 
-export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCart, onRemoveFromCart }: CheckoutProps) => {
+export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCart, onRemoveFromCart, onGuestInfoChange }: CheckoutProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
@@ -100,7 +101,15 @@ export const Checkout = ({ cart, total, onClearCart, onDeleteFromCart, onAddToCa
   const finalTotal = total + taxAmount + tipAmount;
 
   const handleInputChange = (field: string, value: string) => {
-    setCustomerInfo(prev => ({ ...prev, [field]: value }));
+    setCustomerInfo(prev => {
+      const updated = { ...prev, [field]: value };
+      // Update guest info for abandoned cart tracking
+      onGuestInfoChange({
+        email: updated.email,
+        phone: updated.phone
+      });
+      return updated;
+    });
   };
 
   const handleTipSelect = (percentage: number) => {
