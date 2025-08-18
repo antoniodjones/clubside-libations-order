@@ -33,16 +33,21 @@ const handler = async (req: Request): Promise<Response> => {
     // Fetch abandoned cart details
     const { data: cart, error: cartError } = await supabase
       .from("abandoned_carts")
-      .select(`
-        *,
-        venues (
-          name,
-          address
-        )
-      `)
+      .select("*")
       .eq("id", cartId)
       .eq("opted_out", false)
       .single();
+
+    // Fetch venue details separately if we have a venue_id
+    let venueData = null;
+    if (cart?.venue_id) {
+      const { data: venue } = await supabase
+        .from("venues")
+        .select("name, address")
+        .eq("id", cart.venue_id)
+        .single();
+      venueData = venue;
+    }
 
     if (cartError || !cart) {
       console.error("Cart not found or error:", cartError);
@@ -86,7 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #333; text-align: center;">Don't forget your drinks!</h1>
           <p>Hi there!</p>
-          <p>We noticed you had some amazing drinks in your cart at <strong>${cart.venues?.name}</strong> but didn't complete your order.</p>
+          <p>We noticed you had some amazing drinks in your cart at <strong>${venueData?.name || "our venue"}</strong> but didn't complete your order.</p>
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0;">Your Cart (${cart.cart_data.length} items) - $${Number(cart.total_amount).toFixed(2)}</h3>
@@ -119,7 +124,7 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #dc3545; text-align: center;">⏰ Last Chance!</h1>
           <p>Hi there!</p>
-          <p><strong>Your cart at ${cart.venues?.name} will expire soon!</strong></p>
+          <p><strong>Your cart at ${venueData?.name || "our venue"} will expire soon!</strong></p>
           <p>Don't miss out on these delicious drinks you selected:</p>
           
           <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 8px; margin: 20px 0;">
