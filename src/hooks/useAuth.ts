@@ -58,12 +58,36 @@ export const useAuth = () => {
     }
   ) => {
     console.log('🔐 Verifying OTP for:', email);
-    const { error } = await supabase.functions.invoke('verify-otp', {
-      body: { email, code, type, additionalData }
-    }).catch(error => ({ error }));
     
-    console.log('🔐 OTP verify result:', { error });
-    return { error };
+    try {
+      const response = await supabase.functions.invoke('verify-otp', {
+        body: { email, code, type, additionalData }
+      });
+      
+      // If there's an error from the function call itself
+      if (response.error) {
+        console.log('🔐 OTP verify result:', { error: response.error });
+        return { error: response.error };
+      }
+      
+      // If the function returned an error in its response
+      if (response.data?.error) {
+        console.log('🔐 OTP verify result:', { error: response.data });
+        return { 
+          error: {
+            message: response.data.error,
+            errorCode: response.data.errorCode
+          }
+        };
+      }
+      
+      console.log('🔐 OTP verify result:', { error: null });
+      return { error: null };
+      
+    } catch (error) {
+      console.log('🔐 OTP verify result:', { error });
+      return { error };
+    }
   };
 
   const resetPassword = async (email: string) => {
