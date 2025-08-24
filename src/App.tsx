@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Menu from "./pages/Menu";
 import ProductDetail from "./pages/ProductDetail";
@@ -34,7 +35,7 @@ const App = () => (
           <Route path="/rewards-info" element={<RewardsInfo />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/customer-profile" element={<CustomerProfilePage />} />
-          <Route path="/profile" element={<CustomerProfilePage />} />
+          <Route path="/profile" element={<ProtectedRoute><CustomerProfilePage /></ProtectedRoute>} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/sobriety" element={<SobrietyMonitoring />} />
           <Route path="/backoffice" element={<BackOffice />} />
