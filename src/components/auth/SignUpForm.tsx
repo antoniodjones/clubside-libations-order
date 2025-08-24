@@ -3,11 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DatePicker } from '@/components/ui/date-picker';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, MapPin, Building } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { SimpleDateInput } from '@/components/ui/simple-date-input';
+import { MapPin, Building } from 'lucide-react';
 import { countries, formatMobileNumber } from '@/utils/phoneFormatting';
 
 interface SignUpFormProps {
@@ -128,27 +125,13 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label className="text-white">Birthday</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start text-left font-normal bg-gray-800 border-gray-600 text-white hover:bg-gray-700",
-                !birthdate && "text-gray-400"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {birthdate ? format(birthdate, "PPP") : "Select your birthday"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <DatePicker
-              value={birthdate}
-              onChange={setBirthdate}
-            />
-          </PopoverContent>
-        </Popover>
+        <Label className="text-white">Date of Birth *</Label>
+        <SimpleDateInput
+          value={birthdate}
+          onChange={setBirthdate}
+          placeholder="MM/DD/YYYY"
+          className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+        />
       </div>
 
       <div className="space-y-2">

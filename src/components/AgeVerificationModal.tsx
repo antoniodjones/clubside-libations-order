@@ -1,13 +1,8 @@
 import { useState } from "react";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
+import { SimpleDateInput } from "@/components/ui/simple-date-input";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 
 interface AgeVerificationModalProps {
@@ -87,33 +82,14 @@ export const AgeVerificationModal = ({ open, onVerified, onClose }: AgeVerificat
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Please select your birthday
+              Please enter your birthday
             </label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="relative">
-                  <Input
-                    value={birthDate ? format(birthDate, "MM/dd/yyyy") : ""}
-                    placeholder="Pick a date"
-                    readOnly
-                    className="bg-gray-800 border-gray-600 text-white pr-10 cursor-pointer"
-                  />
-                  <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={birthDate}
-                  onSelect={setBirthDate}
-                  disabled={(date) => date > new Date()}
-                  initialFocus
-                  className="p-3 pointer-events-auto"
-                  fromYear={1900}
-                  toYear={new Date().getFullYear()}
-                />
-              </PopoverContent>
-            </Popover>
+            <SimpleDateInput
+              value={birthDate}
+              onChange={setBirthDate}
+              placeholder="MM/DD/YYYY"
+              className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+            />
             <p className="text-xs text-gray-400 mt-1">
               Your date of birth is used to calculate your age.
             </p>
