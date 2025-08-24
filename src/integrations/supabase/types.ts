@@ -68,6 +68,56 @@ export type Database = {
         }
         Relationships: []
       }
+      biometric_readings: {
+        Row: {
+          blood_pressure_diastolic: number | null
+          blood_pressure_systolic: number | null
+          created_at: string
+          heart_rate: number | null
+          id: string
+          oxygen_saturation: number | null
+          recorded_at: string
+          session_id: string | null
+          source: string | null
+          temperature_celsius: number | null
+          user_id: string
+        }
+        Insert: {
+          blood_pressure_diastolic?: number | null
+          blood_pressure_systolic?: number | null
+          created_at?: string
+          heart_rate?: number | null
+          id?: string
+          oxygen_saturation?: number | null
+          recorded_at?: string
+          session_id?: string | null
+          source?: string | null
+          temperature_celsius?: number | null
+          user_id: string
+        }
+        Update: {
+          blood_pressure_diastolic?: number | null
+          blood_pressure_systolic?: number | null
+          created_at?: string
+          heart_rate?: number | null
+          id?: string
+          oxygen_saturation?: number | null
+          recorded_at?: string
+          session_id?: string | null
+          source?: string | null
+          temperature_celsius?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "biometric_readings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "drinking_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       check_ins: {
         Row: {
           bonus_type: string | null
@@ -132,6 +182,120 @@ export type Database = {
           state?: string
         }
         Relationships: []
+      }
+      drink_records: {
+        Row: {
+          alcohol_content: number
+          alcohol_ml: number
+          consumed_at: string
+          created_at: string
+          estimated_bac_after: number | null
+          id: string
+          order_id: string | null
+          product_id: string
+          session_id: string
+          user_id: string
+          volume_ml: number
+        }
+        Insert: {
+          alcohol_content: number
+          alcohol_ml: number
+          consumed_at?: string
+          created_at?: string
+          estimated_bac_after?: number | null
+          id?: string
+          order_id?: string | null
+          product_id: string
+          session_id: string
+          user_id: string
+          volume_ml: number
+        }
+        Update: {
+          alcohol_content?: number
+          alcohol_ml?: number
+          consumed_at?: string
+          created_at?: string
+          estimated_bac_after?: number | null
+          id?: string
+          order_id?: string | null
+          product_id?: string
+          session_id?: string
+          user_id?: string
+          volume_ml?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_records_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drink_records_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drink_records_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "drinking_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drinking_sessions: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          estimated_bac: number | null
+          id: string
+          started_at: string
+          status: string
+          total_alcohol_ml: number | null
+          total_drinks: number | null
+          updated_at: string
+          user_id: string
+          venue_id: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          estimated_bac?: number | null
+          id?: string
+          started_at?: string
+          status?: string
+          total_alcohol_ml?: number | null
+          total_drinks?: number | null
+          updated_at?: string
+          user_id: string
+          venue_id: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          estimated_bac?: number | null
+          id?: string
+          started_at?: string
+          status?: string
+          total_alcohol_ml?: number | null
+          total_drinks?: number | null
+          updated_at?: string
+          user_id?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drinking_sessions_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -726,6 +890,83 @@ export type Database = {
           },
         ]
       }
+      sobriety_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          alert_type: string
+          created_at: string
+          estimated_bac: number
+          id: string
+          intervention_taken: string | null
+          message: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          alert_type: string
+          created_at?: string
+          estimated_bac: number
+          id?: string
+          intervention_taken?: string | null
+          message: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          alert_type?: string
+          created_at?: string
+          estimated_bac?: number
+          id?: string
+          intervention_taken?: string | null
+          message?: string
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sobriety_alerts_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "drinking_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_biometrics: {
+        Row: {
+          body_fat_percentage: number | null
+          created_at: string
+          gender: string
+          height_cm: number
+          id: string
+          updated_at: string
+          user_id: string
+          weight_kg: number
+        }
+        Insert: {
+          body_fat_percentage?: number | null
+          created_at?: string
+          gender: string
+          height_cm: number
+          id?: string
+          updated_at?: string
+          user_id: string
+          weight_kg: number
+        }
+        Update: {
+          body_fat_percentage?: number | null
+          created_at?: string
+          gender?: string
+          height_cm?: number
+          id?: string
+          updated_at?: string
+          user_id?: string
+          weight_kg?: number
+        }
+        Relationships: []
+      }
       user_rewards: {
         Row: {
           anniversary_date: string | null
@@ -901,6 +1142,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_bac: {
+        Args: {
+          alcohol_grams: number
+          gender: string
+          hours_elapsed?: number
+          weight_kg: number
+        }
+        Returns: number
+      }
       cleanup_expired_otps: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -919,6 +1169,10 @@ export type Database = {
           notes_param?: string
           order_id_param: string
         }
+        Returns: undefined
+      }
+      update_session_bac: {
+        Args: { session_id_param: string }
         Returns: undefined
       }
     }
