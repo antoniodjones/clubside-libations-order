@@ -58,19 +58,63 @@ export const useAuth = () => {
     console.log('🔐 Verifying OTP for:', email);
     
     try {
+      // Use Supabase's built-in OTP verification instead of edge function
+      console.log('🔐 Using Supabase native OTP verification');
+      
+      const { data: authData, error: authError } = await supabase.auth.verifyOtp({
+        email,
+        token: code,
+        type: type === 'signup' ? 'signup' : 'email'
+      });
+      
+      console.log('🔐 Supabase OTP verification result:', { authData, authError });
+      
+      if (authError) {
+        // If native verification fails, fall back to edge function
+        console.log('🔐 Native OTP failed, trying edge function...');
+        return await verifyOTPWithEdgeFunction(email, code, type, additionalData);
+      }
+      
+      if (authData.session) {
+        console.log('🔐 Native OTP verification successful, session created');
+        return { error: null };
+      }
+      
+      return { error: { message: 'Verification failed' } };
+      
+    } catch (error) {
+      console.log('🔐 OTP verify error:', error);
+      return { error: error as any };
+    }
+  };
+
+  // Fallback to edge function method
+  const verifyOTPWithEdgeFunction = async (
+    email: string, 
+    code: string, 
+    type: AuthType,
+    additionalData?: UserSignUpData
+  ): Promise<AuthResponse> => {
+    console.log('🔐 Falling back to edge function verification');
+    
+    try {
       const response = await supabase.functions.invoke('verify-otp', {
         body: { email, code, type, additionalData }
       });
       
+      console.log('🔐 Raw edge function response:', response);
+      
       // Check for successful response with session data
       if (response.data?.success && response.data?.session) {
-        console.log('🔐 Setting session from OTP verification');
+        console.log('🔐 Setting session from OTP verification:', response.data.session);
         
         // Set the session in Supabase client
-        const { error: sessionError } = await supabase.auth.setSession({
+        const { data: sessionResult, error: sessionError } = await supabase.auth.setSession({
           access_token: response.data.session.access_token,
           refresh_token: response.data.session.refresh_token
         });
+        
+        console.log('🔐 setSession result:', { sessionResult, sessionError });
         
         if (sessionError) {
           console.error('🔐 Failed to set session:', sessionError);
@@ -85,7 +129,7 @@ export const useAuth = () => {
       console.log('🔐 OTP verify result:', result);
       return result;
     } catch (error) {
-      console.log('🔐 OTP verify error:', error);
+      console.log('🔐 Edge function OTP verify error:', error);
       return { error: error as any };
     }
   };
