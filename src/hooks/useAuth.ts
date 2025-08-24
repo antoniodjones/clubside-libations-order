@@ -70,7 +70,18 @@ export const useAuth = () => {
         return { error: response.error };
       }
       
-      // If the function returned an error in its response
+      // Check if the function returned success: false (our error case)
+      if (response.data?.success === false) {
+        console.log('🔐 OTP verify result:', { error: response.data });
+        return { 
+          error: {
+            message: response.data.error,
+            errorCode: response.data.errorCode
+          }
+        };
+      }
+      
+      // Check for any other error in the response
       if (response.data?.error) {
         console.log('🔐 OTP verify result:', { error: response.data });
         return { 

@@ -106,22 +106,27 @@ serve(async (req) => {
         // Handle the case where user already exists
         if (authResult.error.message?.includes('already been registered') || 
             authResult.error.status === 422) {
+          console.log('📧 Email already exists, returning structured error');
           return new Response(
             JSON.stringify({ 
+              success: false,
               error: 'This email is already registered. Please try signing in instead.',
               errorCode: 'EMAIL_EXISTS'
             }),
             { 
-              status: 409, // Use 409 for conflict instead of 400
+              status: 200, // Return 200 so Supabase client doesn't throw
               headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
             }
           );
         }
         
         return new Response(
-          JSON.stringify({ error: authResult.error.message }),
+          JSON.stringify({ 
+            success: false,
+            error: authResult.error.message 
+          }),
           { 
-            status: 400, 
+            status: 200, // Return 200 so Supabase client doesn't throw
             headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
           }
         );
