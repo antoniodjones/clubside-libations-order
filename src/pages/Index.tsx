@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Wine, Coffee, Star, Award, Users, TrendingUp, Clock, Smartphone } from "lucide-react";
@@ -151,7 +150,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-6xl font-black text-white mb-2 leading-[0.85] tracking-tight">
               WHY CHOOSE
               <br />
-              <span className="text-yellow-400">DRANX</span><span className="text-purple-400">+</span>
+              <span className="text-yellow-400">POURS</span><span className="text-purple-400">+</span>
             </h2>
           </div>
           

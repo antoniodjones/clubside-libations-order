@@ -32,7 +32,7 @@ export const Hero = () => {
           
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-            Experience the future of nightlife with dranx+. Order premium drinks and appetizers 
+            Experience the future of nightlife with pours+. Order premium drinks and appetizers 
             instantly from your phone while you enjoy the night.
           </p>
           
