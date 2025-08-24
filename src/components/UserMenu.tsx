@@ -22,6 +22,10 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Debug logging
+  console.log('👤 UserMenu render - user:', user?.email || 'no user');
+  console.log('👤 UserMenu render - user data:', user);
+
   const handleSignOut = async () => {
     const { error } = await signOut();
     if (error) {
