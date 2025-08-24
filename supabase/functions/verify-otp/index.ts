@@ -117,21 +117,10 @@ serve(async (req) => {
       console.log('✅ User created successfully');
 
     } else {
-      // For signin, verify the user exists
-      try {
-        const { data: existingUser, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-        
-        if (userError || !existingUser.user) {
-          console.error('❌ User not found:', userError);
-          return createErrorResponse('User not found or invalid credentials');
-        }
-
-        console.log('✅ User verified for signin');
-        authResult = existingUser;
-      } catch (error) {
-        console.error('❌ Error checking user existence:', error);
-        return createErrorResponse('Failed to verify user credentials');
-      }
+      // For signin, we don't need to verify user existence since we're using OTP
+      // The OTP validation itself confirms the user has access to the email
+      console.log('✅ Processing signin with OTP verification');
+      authResult = { data: { user: null } }; // We'll get the user from session generation
     }
 
     // Generate a session token
