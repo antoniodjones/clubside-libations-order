@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { AuthType } from '@/types/auth';
+import { formatTime, getExpirationTime } from '@/utils/authHelpers';
 
 interface OTPFormProps {
   otpCode: string;
@@ -30,13 +32,15 @@ export const OTPForm: React.FC<OTPFormProps> = ({
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isResending, setIsResending] = useState(false);
 
+  // Memoize auth type
+  const authType: AuthType = useMemo(() => isSignUp ? 'signup' : 'signin', [isSignUp]);
+
   // Set expiration time when component mounts (5 minutes from now)
   useEffect(() => {
-    const expirationTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-    setCodeExpiredAt(expirationTime);
+    setCodeExpiredAt(getExpirationTime(5));
   }, []);
 
-  // Update countdown timer
+  // Update countdown timer with useCallback for performance
   useEffect(() => {
     if (!codeExpiredAt) return;
 
@@ -44,15 +48,20 @@ export const OTPForm: React.FC<OTPFormProps> = ({
       const now = new Date();
       const remaining = Math.max(0, Math.floor((codeExpiredAt.getTime() - now.getTime()) / 1000));
       setTimeLeft(remaining);
+      
+      // Clear timer when expired to prevent unnecessary updates
+      if (remaining === 0) {
+        clearInterval(timer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
   }, [codeExpiredAt]);
 
-  const handleResendCode = async () => {
+  const handleResendCode = useCallback(async () => {
     setIsResending(true);
     try {
-      const { error } = await sendOTP(email, isSignUp ? 'signup' : 'signin');
+      const { error } = await sendOTP(email, authType);
       
       if (error) {
         toast({
@@ -62,8 +71,7 @@ export const OTPForm: React.FC<OTPFormProps> = ({
         });
       } else {
         // Reset expiration time
-        const newExpirationTime = new Date(Date.now() + 5 * 60 * 1000);
-        setCodeExpiredAt(newExpirationTime);
+        setCodeExpiredAt(getExpirationTime(5));
         
         toast({
           title: "Code sent",
@@ -79,15 +87,13 @@ export const OTPForm: React.FC<OTPFormProps> = ({
     } finally {
       setIsResending(false);
     }
-  };
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
+  }, [email, authType, sendOTP, toast]);
 
   const isCodeExpired = timeLeft === 0;
+  const buttonText = useMemo(() => {
+    if (isResending) return "Sending...";
+    return isCodeExpired ? "Send New Code" : "Resend Code";
+  }, [isResending, isCodeExpired]);
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -140,12 +146,7 @@ export const OTPForm: React.FC<OTPFormProps> = ({
         disabled={isResending}
         className="w-full border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
       >
-        {isResending 
-          ? "Sending..." 
-          : isCodeExpired 
-            ? "Send New Code" 
-            : "Resend Code"
-        }
+        {buttonText}
       </Button>
       
       <Button 

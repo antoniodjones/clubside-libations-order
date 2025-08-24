@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { AuthResponse, UserSignUpData, AuthType } from '@/types/auth';
+import { parseEdgeFunctionResponse } from '@/utils/authHelpers';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -31,32 +33,28 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const sendOTP = async (email: string, type: 'signup' | 'signin' = 'signin') => {
+  const sendOTP = async (email: string, type: AuthType = 'signin'): Promise<AuthResponse> => {
     console.log('🔐 Sending OTP to:', email);
-    const { error } = await supabase.functions.invoke('send-otp', {
-      body: { email, type }
-    }).catch(error => ({ error }));
-    
-    console.log('🔐 OTP send result:', { error });
-    return { error };
+    try {
+      const response = await supabase.functions.invoke('send-otp', {
+        body: { email, type }
+      });
+      
+      const result = parseEdgeFunctionResponse(response);
+      console.log('🔐 OTP send result:', result);
+      return result;
+    } catch (error) {
+      console.log('🔐 OTP send error:', error);
+      return { error: error as any };
+    }
   };
 
   const verifyOTP = async (
     email: string, 
     code: string, 
-    type: 'signup' | 'signin' = 'signin',
-    additionalData?: {
-      firstName?: string;
-      lastName?: string;
-      birthdate?: string;
-      mobileNumber?: string;
-      countryCode?: string;
-      cityId?: string;
-      venueId?: string;
-      joinRewards?: boolean;
-      referralCode?: string;
-    }
-  ) => {
+    type: AuthType = 'signin',
+    additionalData?: UserSignUpData
+  ): Promise<AuthResponse> => {
     console.log('🔐 Verifying OTP for:', email);
     
     try {
@@ -64,44 +62,16 @@ export const useAuth = () => {
         body: { email, code, type, additionalData }
       });
       
-      // If there's an error from the function call itself
-      if (response.error) {
-        console.log('🔐 OTP verify result:', { error: response.error });
-        return { error: response.error };
-      }
-      
-      // Check if the function returned success: false (our error case)
-      if (response.data?.success === false) {
-        console.log('🔐 OTP verify result:', { error: response.data });
-        return { 
-          error: {
-            message: response.data.error,
-            errorCode: response.data.errorCode
-          }
-        };
-      }
-      
-      // Check for any other error in the response
-      if (response.data?.error) {
-        console.log('🔐 OTP verify result:', { error: response.data });
-        return { 
-          error: {
-            message: response.data.error,
-            errorCode: response.data.errorCode
-          }
-        };
-      }
-      
-      console.log('🔐 OTP verify result:', { error: null });
-      return { error: null };
-      
+      const result = parseEdgeFunctionResponse(response);
+      console.log('🔐 OTP verify result:', result);
+      return result;
     } catch (error) {
-      console.log('🔐 OTP verify result:', { error });
-      return { error };
+      console.log('🔐 OTP verify error:', error);
+      return { error: error as any };
     }
   };
 
-  const resetPassword = async (email: string) => {
+  const resetPassword = async (email: string): Promise<AuthResponse> => {
     console.log('🔐 Sending password reset to:', email);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth?tab=reset-password`,
@@ -111,7 +81,7 @@ export const useAuth = () => {
     return { error };
   };
 
-  const updatePassword = async (newPassword: string) => {
+  const updatePassword = async (newPassword: string): Promise<AuthResponse> => {
     console.log('🔐 Updating password');
     const { error } = await supabase.auth.updateUser({
       password: newPassword
@@ -121,7 +91,7 @@ export const useAuth = () => {
     return { error };
   };
 
-  const signOut = async () => {
+  const signOut = async (): Promise<AuthResponse> => {
     const { error } = await supabase.auth.signOut();
     return { error };
   };

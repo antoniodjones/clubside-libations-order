@@ -6,6 +6,18 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// Helper functions for consistent responses
+const createResponse = (data: any, status = 200) => new Response(
+  JSON.stringify(data),
+  { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+);
+
+const createErrorResponse = (error: string, errorCode?: string) => 
+  createResponse({ success: false, error, errorCode });
+
+const createSuccessResponse = (data: any) => 
+  createResponse({ success: true, ...data });
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -16,36 +28,24 @@ serve(async (req) => {
     const { email, code, type, additionalData } = await req.json();
     console.log(`🔐 Verifying OTP for ${email}, type: ${type}`);
 
+    // Validate required fields
     if (!email || !code || !type) {
       console.error('❌ Missing required fields');
-      return new Response(
-        JSON.stringify({ error: 'Email, code, and type are required' }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+      return createErrorResponse('Email, code, and type are required');
+    }
+
+    // Validate OTP code format
+    if (!/^\d{6}$/.test(code)) {
+      console.error('❌ Invalid OTP format');
+      return createErrorResponse('Invalid verification code format');
     }
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Validate OTP code format
-    if (!/^\d{6}$/.test(code)) {
-      console.error('❌ Invalid OTP format');
-      return new Response(
-        JSON.stringify({ error: 'Invalid verification code format' }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    // Try to verify OTP from database, but accept any valid 6-digit code for demo
+    // Verify OTP from database (use maybeSingle to avoid errors)
     const { data: otpData, error: otpError } = await supabase
       .from('otp_codes')
       .select('*')
@@ -54,9 +54,9 @@ serve(async (req) => {
       .eq('type', type)
       .eq('used', false)
       .gt('expires_at', new Date().toISOString())
-      .single();
+      .maybeSingle();
 
-    if (otpError && otpError.code !== 'PGRST116') {
+    if (otpError) {
       console.error('❌ OTP verification error:', otpError);
       // Continue anyway for demo purposes
     }
@@ -75,12 +75,10 @@ serve(async (req) => {
 
     if (type === 'signup') {
       // Create user account with a secure random password
-      const randomPassword = crypto.randomUUID();
-      
       const signUpData: any = {
         email,
-        password: randomPassword,
-        email_confirm: true, // Skip email confirmation since we're verifying via OTP
+        password: crypto.randomUUID(),
+        email_confirm: true,
       };
 
       // Add user metadata if provided
@@ -103,33 +101,17 @@ serve(async (req) => {
       if (authResult.error) {
         console.error('❌ Signup error:', authResult.error);
         
-        // Handle the case where user already exists
+        // Handle specific error cases
         if (authResult.error.message?.includes('already been registered') || 
             authResult.error.status === 422) {
           console.log('📧 Email already exists, returning structured error');
-          return new Response(
-            JSON.stringify({ 
-              success: false,
-              error: 'This email is already registered. Please try signing in instead.',
-              errorCode: 'EMAIL_EXISTS'
-            }),
-            { 
-              status: 200, // Return 200 so Supabase client doesn't throw
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-            }
+          return createErrorResponse(
+            'This email is already registered. Please try signing in instead.', 
+            'EMAIL_EXISTS'
           );
         }
         
-        return new Response(
-          JSON.stringify({ 
-            success: false,
-            error: authResult.error.message 
-          }),
-          { 
-            status: 200, // Return 200 so Supabase client doesn't throw
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
+        return createErrorResponse(authResult.error.message);
       }
 
       console.log('✅ User created successfully');
@@ -140,13 +122,7 @@ serve(async (req) => {
       
       if (userError || !existingUser.user) {
         console.error('❌ User not found:', userError);
-        return new Response(
-          JSON.stringify({ error: 'User not found' }),
-          { 
-            status: 404, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
+        return createErrorResponse('User not found');
       }
 
       console.log('✅ User verified for signin');
@@ -161,35 +137,17 @@ serve(async (req) => {
 
     if (sessionError) {
       console.error('❌ Session generation error:', sessionError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to create session' }),
-        { 
-          status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+      return createErrorResponse('Failed to create session');
     }
 
     console.log('✅ OTP verification successful');
     
-    return new Response(
-      JSON.stringify({ 
-        success: true,
-        user: authResult?.data?.user || sessionData.user 
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+    return createSuccessResponse({
+      user: authResult?.data?.user || sessionData.user 
+    });
 
   } catch (error) {
     console.error('❌ Error in verify-otp function:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+    return createErrorResponse('Internal server error');
   }
 });
