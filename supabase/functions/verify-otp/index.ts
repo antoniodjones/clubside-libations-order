@@ -123,21 +123,48 @@ serve(async (req) => {
       authResult = { data: { user: null } }; // We'll get the user from session generation
     }
 
-    // Generate a session token
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: email,
-    });
+    // Generate a proper session instead of just a magic link
+    let sessionData;
+    
+    try {
+      // Create a session by generating a magic link and extracting the session
+      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+        type: 'magiclink',
+        email: email,
+      });
 
-    if (sessionError) {
-      console.error('❌ Session generation error:', sessionError);
-      return createErrorResponse('Failed to create session');
+      if (linkError) {
+        console.error('❌ Session generation error:', linkError);
+        return createErrorResponse('Failed to create session');
+      }
+
+      // The magic link contains session info, but we need to create an actual session
+      // Extract the access token from the magic link
+      const url = new URL(linkData.properties.action_link);
+      const accessToken = url.searchParams.get('access_token');
+      const refreshToken = url.searchParams.get('refresh_token');
+
+      if (!accessToken || !refreshToken) {
+        console.error('❌ Failed to extract tokens from magic link');
+        return createErrorResponse('Failed to create session tokens');
+      }
+
+      sessionData = {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        user: authResult?.data?.user || linkData.user
+      };
+
+    } catch (error) {
+      console.error('❌ Session creation error:', error);
+      return createErrorResponse('Failed to create user session');
     }
 
     console.log('✅ OTP verification successful');
     
     return createSuccessResponse({
-      user: authResult?.data?.user || sessionData.user 
+      session: sessionData,
+      user: sessionData.user
     });
 
   } catch (error) {

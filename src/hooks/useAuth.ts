@@ -62,6 +62,25 @@ export const useAuth = () => {
         body: { email, code, type, additionalData }
       });
       
+      // Check for successful response with session data
+      if (response.data?.success && response.data?.session) {
+        console.log('🔐 Setting session from OTP verification');
+        
+        // Set the session in Supabase client
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: response.data.session.access_token,
+          refresh_token: response.data.session.refresh_token
+        });
+        
+        if (sessionError) {
+          console.error('🔐 Failed to set session:', sessionError);
+          return { error: { message: 'Failed to establish session' } };
+        }
+        
+        console.log('🔐 OTP verify result: success');
+        return { error: null };
+      }
+      
       const result = parseEdgeFunctionResponse(response);
       console.log('🔐 OTP verify result:', result);
       return result;
