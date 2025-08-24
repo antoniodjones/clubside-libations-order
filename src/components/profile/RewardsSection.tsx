@@ -238,8 +238,8 @@ export const RewardsSection = () => {
     
     try {
       await navigator.share({
-        title: 'Join dranx+ and get rewards!',
-        text: `Use my referral code ${userLoyalty.referral_code} to get bonus points when you sign up for dranx+!`,
+        title: 'Join pours+ and get rewards!',
+        text: `Use my referral code ${userLoyalty.referral_code} to get bonus points when you sign up for pours+!`,
         url: `${window.location.origin}/auth?ref=${userLoyalty.referral_code}`
       });
     } catch (error) {

@@ -17,7 +17,7 @@ const RewardsInfo = () => {
               <Star className="w-6 h-6 text-black" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-yellow-400 bg-clip-text text-transparent">
-              dranx+ Rewards Program
+              pours+ Rewards Program
             </h1>
           </div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
@@ -38,7 +38,7 @@ const RewardsInfo = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400 text-center">
-                  Sign up for a dranx+ account and opt into our rewards program during registration.
+                  Sign up for a pours+ account and opt into our rewards program during registration.
                 </p>
               </CardContent>
             </Card>
@@ -190,7 +190,7 @@ const RewardsInfo = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400">
-                  Simply create a dranx+ account and opt into the rewards program during signup. It's completely free to join!
+                  Simply create a pours+ account and opt into the rewards program during signup. It's completely free to join!
                 </p>
               </CardContent>
             </Card>
@@ -212,7 +212,7 @@ const RewardsInfo = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-400">
-                  Points can be redeemed at any participating dranx+ venue. Check the venue details to see available rewards.
+                  Points can be redeemed at any participating pours+ venue. Check the venue details to see available rewards.
                 </p>
               </CardContent>
             </Card>
