@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Lock, Settings, BarChart3, ShoppingBag, CreditCard } from 'lucide-react';
+import { User, Lock, Settings, BarChart3, ShoppingBag, CreditCard, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ProfileSidebarProps {
@@ -12,6 +12,7 @@ const navigationItems = [
   { id: 'orders-history', label: 'Orders History', icon: ShoppingBag },
   { id: 'rewards', label: 'Rewards', icon: BarChart3 },
   { id: 'manage', label: 'Manage Profile', icon: Settings },
+  { id: 'biometrics', label: 'Biometric Settings', icon: Activity },
   { id: 'manage-payments', label: 'Manage Payments', icon: CreditCard },
   { id: 'password', label: 'Manage Password', icon: Lock },
 ];

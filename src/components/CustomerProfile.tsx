@@ -7,6 +7,7 @@ import { UpdatePassword } from '@/components/profile/UpdatePassword';
 import { OrderHistory } from '@/components/profile/OrderHistory';
 import { ManagePayments } from '@/components/profile/ManagePayments';
 import { RewardsSection } from '@/components/profile/RewardsSection';
+import { BiometricSettings } from '@/components/profile/BiometricSettings';
 import { HomeIcon } from '@/components/HomeIcon';
 import { ProfileSectionProps } from '@/types/profile';
 
@@ -15,6 +16,7 @@ const SECTIONS = {
   ORDERS_HISTORY: 'orders-history',
   REWARDS: 'rewards',
   MANAGE: 'manage',
+  BIOMETRICS: 'biometrics',
   MANAGE_PAYMENTS: 'manage-payments',
   PASSWORD: 'password'
 } as const;
@@ -45,6 +47,8 @@ export const CustomerProfile: React.FC = () => {
         return <RewardsSection />;
       case SECTIONS.MANAGE:
         return <ManageProfile />;
+      case SECTIONS.BIOMETRICS:
+        return <BiometricSettings />;
       case SECTIONS.MANAGE_PAYMENTS:
         return <ManagePayments />;
       case SECTIONS.PASSWORD:
