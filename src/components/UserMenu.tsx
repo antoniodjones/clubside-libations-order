@@ -39,20 +39,18 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
     }
   };
 
-  // Get user's initials for avatar fallback
-  const getUserInitials = () => {
-    if (!user?.email) return 'U';
-    const email = user.email;
-    const name = user.user_metadata?.first_name && user.user_metadata?.last_name
-      ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
-      : email;
+  // Get user's first name for avatar
+  const getUserDisplayName = () => {
+    if (user?.user_metadata?.first_name) {
+      return user.user_metadata.first_name;
+    }
     
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    if (user?.email) {
+      // Fallback to first part of email if no first name
+      return user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
+    }
+    
+    return 'User';
   };
 
   // Show profile icon when not signed in
@@ -82,8 +80,8 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
               src={user.user_metadata?.avatar_url} 
               alt={user.email || 'User'} 
             />
-            <AvatarFallback className="bg-purple-600 text-white font-semibold text-sm">
-              {getUserInitials()}
+            <AvatarFallback className="bg-purple-600 text-white font-semibold text-xs px-1">
+              {getUserDisplayName()}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -102,7 +100,7 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
                 alt={user.email || 'User'} 
               />
               <AvatarFallback className="bg-purple-600 text-white text-xs">
-                {getUserInitials()}
+                {getUserDisplayName()}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col space-y-1">
