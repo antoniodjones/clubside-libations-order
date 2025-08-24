@@ -118,15 +118,20 @@ serve(async (req) => {
 
     } else {
       // For signin, verify the user exists
-      const { data: existingUser, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-      
-      if (userError || !existingUser.user) {
-        console.error('❌ User not found:', userError);
-        return createErrorResponse('User not found');
-      }
+      try {
+        const { data: existingUser, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+        
+        if (userError || !existingUser.user) {
+          console.error('❌ User not found:', userError);
+          return createErrorResponse('User not found or invalid credentials');
+        }
 
-      console.log('✅ User verified for signin');
-      authResult = existingUser;
+        console.log('✅ User verified for signin');
+        authResult = existingUser;
+      } catch (error) {
+        console.error('❌ Error checking user existence:', error);
+        return createErrorResponse('Failed to verify user credentials');
+      }
     }
 
     // Generate a session token
