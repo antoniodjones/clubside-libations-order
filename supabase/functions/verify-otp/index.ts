@@ -123,49 +123,33 @@ serve(async (req) => {
       authResult = { data: { user: null } }; // We'll get the user from session generation
     }
 
-    // Generate a proper session instead of just a magic link
-    let sessionData;
-    
+    // For signin, create a session using admin method
     try {
-      // Create a session by generating a magic link and extracting the session
-      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      console.log('🔐 Creating admin session for signin');
+      
+      // Generate an access token for the user
+      const { data: tokenData, error: tokenError } = await supabase.auth.admin.generateLink({
         type: 'magiclink',
         email: email,
       });
 
-      if (linkError) {
-        console.error('❌ Session generation error:', linkError);
-        return createErrorResponse('Failed to create session');
+      if (tokenError || !tokenData) {
+        console.error('❌ Failed to generate auth link:', tokenError);
+        return createErrorResponse('Failed to create authentication session');
       }
 
-      // The magic link contains session info, but we need to create an actual session
-      // Extract the access token from the magic link
-      const url = new URL(linkData.properties.action_link);
-      const accessToken = url.searchParams.get('access_token');
-      const refreshToken = url.searchParams.get('refresh_token');
-
-      if (!accessToken || !refreshToken) {
-        console.error('❌ Failed to extract tokens from magic link');
-        return createErrorResponse('Failed to create session tokens');
-      }
-
-      sessionData = {
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        user: authResult?.data?.user || linkData.user
-      };
+      console.log('✅ OTP verification successful');
+      
+      return createSuccessResponse({
+        user: tokenData.user,
+        // Return the action link so frontend can use it to establish session
+        authUrl: tokenData.properties.action_link
+      });
 
     } catch (error) {
       console.error('❌ Session creation error:', error);
       return createErrorResponse('Failed to create user session');
     }
-
-    console.log('✅ OTP verification successful');
-    
-    return createSuccessResponse({
-      session: sessionData,
-      user: sessionData.user
-    });
 
   } catch (error) {
     console.error('❌ Error in verify-otp function:', error);

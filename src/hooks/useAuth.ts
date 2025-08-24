@@ -58,78 +58,49 @@ export const useAuth = () => {
     console.log('🔐 Verifying OTP for:', email);
     
     try {
-      // Use Supabase's built-in OTP verification instead of edge function
-      console.log('🔐 Using Supabase native OTP verification');
-      
-      const { data: authData, error: authError } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: type === 'signup' ? 'signup' : 'email'
-      });
-      
-      console.log('🔐 Supabase OTP verification result:', { authData, authError });
-      
-      if (authError) {
-        // If native verification fails, fall back to edge function
-        console.log('🔐 Native OTP failed, trying edge function...');
-        return await verifyOTPWithEdgeFunction(email, code, type, additionalData);
-      }
-      
-      if (authData.session) {
-        console.log('🔐 Native OTP verification successful, session created');
-        return { error: null };
-      }
-      
-      return { error: { message: 'Verification failed' } };
-      
-    } catch (error) {
-      console.log('🔐 OTP verify error:', error);
-      return { error: error as any };
-    }
-  };
-
-  // Fallback to edge function method
-  const verifyOTPWithEdgeFunction = async (
-    email: string, 
-    code: string, 
-    type: AuthType,
-    additionalData?: UserSignUpData
-  ): Promise<AuthResponse> => {
-    console.log('🔐 Falling back to edge function verification');
-    
-    try {
       const response = await supabase.functions.invoke('verify-otp', {
         body: { email, code, type, additionalData }
       });
       
       console.log('🔐 Raw edge function response:', response);
       
-      // Check for successful response with session data
-      if (response.data?.success && response.data?.session) {
-        console.log('🔐 Setting session from OTP verification:', response.data.session);
+      // Check for successful response with auth URL
+      if (response.data?.success && response.data?.authUrl) {
+        console.log('🔐 Using auth URL to establish session');
         
-        // Set the session in Supabase client
-        const { data: sessionResult, error: sessionError } = await supabase.auth.setSession({
-          access_token: response.data.session.access_token,
-          refresh_token: response.data.session.refresh_token
-        });
+        // Navigate to the auth URL to establish session
+        // Extract hash parameters from the auth URL
+        const authUrl = new URL(response.data.authUrl);
+        const hashParams = new URLSearchParams(authUrl.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
         
-        console.log('🔐 setSession result:', { sessionResult, sessionError });
-        
-        if (sessionError) {
-          console.error('🔐 Failed to set session:', sessionError);
-          return { error: { message: 'Failed to establish session' } };
+        if (accessToken && refreshToken) {
+          console.log('🔐 Setting session with extracted tokens');
+          
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+          
+          if (sessionError) {
+            console.error('🔐 Failed to set session:', sessionError);
+            return { error: { message: 'Failed to establish session' } };
+          }
+          
+          console.log('🔐 Session established successfully');
+          return { error: null };
+        } else {
+          console.error('🔐 No tokens found in auth URL');
+          return { error: { message: 'Authentication tokens not found' } };
         }
-        
-        console.log('🔐 OTP verify result: success');
-        return { error: null };
       }
       
       const result = parseEdgeFunctionResponse(response);
       console.log('🔐 OTP verify result:', result);
       return result;
     } catch (error) {
-      console.log('🔐 Edge function OTP verify error:', error);
+      console.log('🔐 OTP verify error:', error);
       return { error: error as any };
     }
   };
