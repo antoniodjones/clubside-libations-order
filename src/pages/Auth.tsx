@@ -162,11 +162,24 @@ const Auth = () => {
       const { error } = await verifyOTP(email, otpCode, authType, additionalData);
       
       if (error) {
-        toast({
-          title: "Verification Error",
-          description: error.message,
-          variant: "destructive"
-        });
+        // Handle specific error cases
+        if (error.message?.includes('already registered') || error.errorCode === 'EMAIL_EXISTS') {
+          toast({
+            title: "Email Already Registered",
+            description: "This email is already registered. Please try signing in instead.",
+            variant: "destructive"
+          });
+          // Switch to sign in mode
+          setAuthType('signin');
+          setOtpSent(false);
+          setOtpCode('');
+        } else {
+          toast({
+            title: "Verification Error",
+            description: error.message || "Failed to verify code. Please try again.",
+            variant: "destructive"
+          });
+        }
       } else {
         toast({
           title: authType === 'signup' ? "Welcome!" : "Welcome back!",

@@ -102,6 +102,22 @@ serve(async (req) => {
       
       if (authResult.error) {
         console.error('❌ Signup error:', authResult.error);
+        
+        // Handle the case where user already exists
+        if (authResult.error.message?.includes('already been registered') || 
+            authResult.error.status === 422) {
+          return new Response(
+            JSON.stringify({ 
+              error: 'This email is already registered. Please try signing in instead.',
+              errorCode: 'EMAIL_EXISTS'
+            }),
+            { 
+              status: 409, // Use 409 for conflict instead of 400
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+            }
+          );
+        }
+        
         return new Response(
           JSON.stringify({ error: authResult.error.message }),
           { 
