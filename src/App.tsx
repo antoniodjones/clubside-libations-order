@@ -15,6 +15,7 @@ import Rewards from "./pages/Rewards";
 import Auth from "./pages/Auth";
 import CheckoutPage from "./pages/CheckoutPage";
 import CustomerProfilePage from "./pages/CustomerProfile";
+import SobrietyMonitoring from "./pages/SobrietyMonitoring";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/customer-profile" element={<CustomerProfilePage />} />
           <Route path="/profile" element={<CustomerProfilePage />} />
           <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/sobriety" element={<SobrietyMonitoring />} />
           <Route path="/backoffice" element={<BackOffice />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

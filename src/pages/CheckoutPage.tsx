@@ -2,6 +2,7 @@ import { useEnhancedCart } from "@/hooks/useEnhancedCart";
 import { useAuth } from "@/hooks/useAuth";
 import { Checkout } from "./Checkout";
 import { HomeIcon } from "@/components/HomeIcon";
+import { SobrietyCheckoutWrapper } from "@/components/sobriety/SobrietyCheckoutWrapper";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -39,15 +40,20 @@ const CheckoutPage = () => {
   return (
     <>
       <HomeIcon />
-      <Checkout 
-        cart={cart} 
-        total={cartTotal} 
-        onClearCart={handleClearCart}
-        onDeleteFromCart={handleDeleteFromCart}
-        onAddToCart={addToCart}
-        onRemoveFromCart={removeFromCart}
-        onGuestInfoChange={setGuestInfo}
-      />
+      <SobrietyCheckoutWrapper
+        venueId="01cf9bb6-9bee-4926-af17-a0d4fe01cf38"
+        cart={cart}
+      >
+        <Checkout 
+          cart={cart} 
+          total={cartTotal} 
+          onClearCart={handleClearCart}
+          onDeleteFromCart={handleDeleteFromCart}
+          onAddToCart={addToCart}
+          onRemoveFromCart={removeFromCart}
+          onGuestInfoChange={setGuestInfo}
+        />
+      </SobrietyCheckoutWrapper>
     </>
   );
 };
