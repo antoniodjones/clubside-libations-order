@@ -12,23 +12,55 @@ export const useAuth = () => {
   useEffect(() => {
     console.log('🔐 Setting up auth state listener...');
     
-    // Set up auth state listener FIRST
+    // Check for demo session first
+    const checkDemoSession = () => {
+      const demoSession = localStorage.getItem('demo-session');
+      if (demoSession) {
+        try {
+          const parsedSession = JSON.parse(demoSession);
+          console.log('🔐 Found demo session:', parsedSession.user?.email);
+          setSession(parsedSession);
+          setUser(parsedSession.user);
+          setLoading(false);
+          return true;
+        } catch (error) {
+          console.log('🔐 Invalid demo session, clearing...');
+          localStorage.removeItem('demo-session');
+        }
+      }
+      return false;
+    };
+
+    // Check demo session immediately
+    if (checkDemoSession()) {
+      return () => {}; // Early return if demo session found
+    }
+    
+    // Set up auth state listener for real Supabase auth
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('🔐 Auth state changed:', event, session?.user?.email || 'no user');
-        console.log('🔐 Full session data:', session);
-        setSession(session);
-        setUser(session?.user ?? null);
+        if (!session) {
+          // Check for demo session when Supabase session is null
+          checkDemoSession();
+        } else {
+          setSession(session);
+          setUser(session?.user ?? null);
+        }
         setLoading(false);
       }
     );
 
-    // THEN check for existing session
+    // Check for existing Supabase session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('🔐 Initial session check:', session?.user?.email || 'no session');
-      console.log('🔐 Full initial session:', session);
-      setSession(session);
-      setUser(session?.user ?? null);
+      if (!session) {
+        // Check for demo session if no Supabase session
+        checkDemoSession();
+      } else {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
       setLoading(false);
     });
 
@@ -116,9 +148,9 @@ export const useAuth = () => {
           }
         };
         
-        // Store in localStorage (simple approach)
-        const supabaseKey = 'sb-auth-token';
-        localStorage.setItem(supabaseKey, JSON.stringify(demoSession));
+        // Store demo session
+        console.log('🔐 Storing demo session in localStorage');
+        localStorage.setItem('demo-session', JSON.stringify(demoSession));
         
         // Force trigger auth state change
         console.log('🔐 Triggering manual auth state update');
@@ -167,6 +199,11 @@ export const useAuth = () => {
   };
 
   const signOut = async (): Promise<AuthResponse> => {
+    // Clear demo session
+    localStorage.removeItem('demo-session');
+    setSession(null);
+    setUser(null);
+    
     const { error } = await supabase.auth.signOut();
     return { error };
   };
