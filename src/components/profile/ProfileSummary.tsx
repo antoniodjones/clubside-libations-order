@@ -12,28 +12,40 @@ import { ExpandableSection } from '@/components/profile/common/ExpandableSection
 import { mockCustomerData } from '@/data/mockCustomerData';
 import { truncateList } from '@/utils/profile';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/contexts/ProfileContext';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const ProfileSummary: React.FC = React.memo(() => {
   const { user, loading } = useAuth();
+  const { profile } = useProfile();
   const [showAllPlaces, setShowAllPlaces] = useState(false);
   const [showAllStaff, setShowAllStaff] = useState(false);
   const [showAllVenues, setShowAllVenues] = useState(false);
 
   const maxDisplayItems = 5;
 
-  // Simplified profile data - use user data directly without complex dependencies
+  // Use profile data from context with fallbacks
   const profileData = useMemo(() => {
-    if (user?.email) {
+    // If we have profile data from context, use it
+    if (profile.first_name || profile.last_name || profile.email) {
       return {
         ...mockCustomerData.profile,
-        first_name: user.user_metadata?.first_name || user.email.split('@')[0] || 'User',
-        last_name: user.user_metadata?.last_name || '',
-        email: user.email,
+        first_name: profile.first_name || 'User',
+        last_name: profile.last_name || '',
+        email: profile.email || user?.email || mockCustomerData.profile.email,
+        mobile_number: profile.mobile_number || '',
+        birthday: profile.birthday || '',
+        address_line_1: profile.address_line_1 || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        postal_code: profile.postal_code || '',
+        gender: profile.gender || ''
       };
     }
+    
+    // Fallback to mock data
     return mockCustomerData.profile;
-  }, [user?.email, user?.user_metadata?.first_name, user?.user_metadata?.last_name]);
+  }, [profile, user?.email]);
 
   // Use mock rewards for now to prevent complexity
   const rewardsData = useMemo(() => mockCustomerData.rewards, []);

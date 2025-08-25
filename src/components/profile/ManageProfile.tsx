@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { User, Settings, Plus, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/contexts/ProfileContext';
 
 const mockPreferences = {
   favorite_categories: ['Cocktails', 'Premium Appetizers', 'Cannabis Products'],
@@ -18,7 +18,7 @@ const mockPreferences = {
 
 export const ManageProfile = () => {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { profile, updateProfile } = useProfile();
   
   const [profileData, setProfileData] = useState({
     first_name: '',
@@ -34,56 +34,22 @@ export const ManageProfile = () => {
     gender: ''
   });
 
-  // Load user data when component mounts or user changes
+  // Load profile data when component mounts or profile changes
   useEffect(() => {
-    if (user) {
-      setProfileData({
-        first_name: user.user_metadata?.first_name || '',
-        last_name: user.user_metadata?.last_name || '',
-        email: user.email || '',
-        mobile_number: user.user_metadata?.mobile_number || '',
-        birthday: user.user_metadata?.birthdate || '',
-        address_line_1: '',
-        address_line_2: '',
-        city: '',
-        state: '',
-        postal_code: '',
-        gender: ''
-      });
-    }
-  }, [user]);
+    setProfileData(profile);
+  }, [profile]);
   
   const [preferences, setPreferences] = useState(mockPreferences);
   const [newCategory, setNewCategory] = useState('');
   const [newRestriction, setNewRestriction] = useState('');
 
   const handleProfileUpdate = () => {
-    // Update the demo session in localStorage to persist changes
-    if (user) {
-      const demoSession = localStorage.getItem('demo-session');
-      if (demoSession) {
-        try {
-          const session = JSON.parse(demoSession);
-          session.user.user_metadata = {
-            ...session.user.user_metadata,
-            first_name: profileData.first_name,
-            last_name: profileData.last_name,
-            mobile_number: profileData.mobile_number,
-            birthdate: profileData.birthday
-          };
-          localStorage.setItem('demo-session', JSON.stringify(session));
-          
-          // Force a page refresh to update all components with new data
-          setTimeout(() => window.location.reload(), 1000);
-        } catch (error) {
-          console.error('Error updating demo session:', error);
-        }
-      }
-    }
+    // Update profile through context
+    updateProfile(profileData);
     
     toast({
       title: "Profile Updated",
-      description: "Your profile information has been updated successfully. Page will refresh to show changes.",
+      description: "Your profile information has been updated successfully.",
     });
   };
 

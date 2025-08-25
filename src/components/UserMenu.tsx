@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { User, LogOut, Award, ShoppingBag, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/contexts/ProfileContext';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,6 +20,7 @@ interface UserMenuProps {
 
 export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
   const { user, signOut } = useAuth();
+  const { profile } = useProfile();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -43,18 +45,36 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
     }
   };
 
-  // Get user's first name for avatar
+  // Get user's display name from profile context or fallback to user metadata
   const getUserDisplayName = () => {
+    // Use profile context first
+    if (profile.first_name) {
+      return profile.first_name;
+    }
+    
+    // Fallback to user metadata
     if (user?.user_metadata?.first_name) {
       return user.user_metadata.first_name;
     }
     
+    // Fallback to email parsing
     if (user?.email) {
-      // Fallback to first part of email if no first name
       return user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
     }
     
     return 'User';
+  };
+
+  const getFullDisplayName = () => {
+    if (profile.first_name && profile.last_name) {
+      return `${profile.first_name} ${profile.last_name}`;
+    }
+    
+    if (user?.user_metadata?.first_name && user?.user_metadata?.last_name) {
+      return `${user.user_metadata.first_name} ${user.user_metadata.last_name}`;
+    }
+    
+    return user?.email?.split('@')[0] || 'User';
   };
 
   // Show profile icon when not signed in
@@ -109,10 +129,7 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
             </Avatar>
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium text-white">
-                {user.user_metadata?.first_name && user.user_metadata?.last_name
-                  ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
-                  : user.email?.split('@')[0]
-                }
+                {getFullDisplayName()}
               </p>
               <p className="text-xs text-gray-400">{user.email}</p>
             </div>
