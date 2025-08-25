@@ -132,16 +132,33 @@ export const useAuth = () => {
         // DEMO: Create a direct session by updating localStorage
         console.log('🔐 Creating demo session in localStorage');
         
+        // Parse email to create proper first/last names
+        const emailUsername = email.split('@')[0];
+        let firstName = additionalData?.firstName;
+        let lastName = additionalData?.lastName;
+        
+        // If no additionalData, try to parse from email
+        if (!firstName) {
+          if (emailUsername.includes('.')) {
+            const parts = emailUsername.split('.');
+            firstName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+            lastName = parts.slice(1).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+          } else {
+            firstName = emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
+            lastName = '';
+          }
+        }
+        
         const demoSession = {
           access_token: 'demo-token-' + Date.now(),
           refresh_token: 'demo-refresh-' + Date.now(),
           expires_in: 3600,
           user: {
-            id: 'demo-user-' + email.replace('@', '-').replace('.', '-'),
+            id: 'demo-user-' + email.replace(/[@.]/g, '-'),
             email: email,
             user_metadata: {
-              first_name: additionalData?.firstName || email.split('@')[0],
-              last_name: additionalData?.lastName || '',
+              first_name: firstName,
+              last_name: lastName || '',
               ...additionalData
             },
             created_at: new Date().toISOString()
