@@ -23,6 +23,11 @@ export default {
 				'sans': ['Inter', 'sans-serif'],
 			},
 			colors: {
+				'purple-gradient': 'linear-gradient(135deg, hsl(270 50% 15%), hsl(280 60% 25%))',
+				'accent-yellow': 'hsl(60 100% 50%)',
+				'accent-green': 'hsl(120 60% 50%)',
+			},
+			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
