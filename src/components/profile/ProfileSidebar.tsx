@@ -9,6 +9,7 @@ interface ProfileSidebarProps {
 
 const navigationItems = [
   { id: 'summary', label: 'Profile Summary', icon: User },
+  { id: 'dashboard', label: 'Account Dashboard', icon: BarChart3 },
   { id: 'orders-history', label: 'Orders History', icon: ShoppingBag },
   { id: 'rewards', label: 'Rewards', icon: BarChart3 },
   { id: 'manage', label: 'Manage Profile', icon: Settings },

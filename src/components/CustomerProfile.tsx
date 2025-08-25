@@ -8,11 +8,13 @@ import { OrderHistory } from '@/components/profile/OrderHistory';
 import { ManagePayments } from '@/components/profile/ManagePayments';
 import { RewardsSection } from '@/components/profile/RewardsSection';
 import { BiometricSettings } from '@/components/profile/BiometricSettings';
+import { AccountDashboard } from '@/components/profile/AccountDashboard';
 import { HomeIcon } from '@/components/HomeIcon';
 import { ProfileSectionProps } from '@/types/profile';
 
 const SECTIONS = {
   SUMMARY: 'summary',
+  DASHBOARD: 'dashboard',
   ORDERS_HISTORY: 'orders-history',
   REWARDS: 'rewards',
   MANAGE: 'manage',
@@ -41,6 +43,8 @@ export const CustomerProfile: React.FC = () => {
     switch (activeSection) {
       case SECTIONS.SUMMARY:
         return <ProfileSummary />;
+      case SECTIONS.DASHBOARD:
+        return <AccountDashboard />;
       case SECTIONS.ORDERS_HISTORY:
         return <OrderHistory />;
       case SECTIONS.REWARDS:
