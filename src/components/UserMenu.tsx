@@ -81,11 +81,11 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
         >
           <Avatar className="h-9 w-9 border-2 border-purple-400/30">
             <AvatarImage 
-              src={user.user_metadata?.avatar_url} 
+              src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
               alt={user.email || 'User'} 
             />
-            <AvatarFallback className="bg-purple-600 text-white font-semibold text-xs px-1">
-              {getUserDisplayName()}
+            <AvatarFallback className="bg-purple-600 text-white font-semibold text-xs">
+              {getUserDisplayName().charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -100,11 +100,11 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
           <div className="flex items-center space-x-3">
             <Avatar className="h-8 w-8">
               <AvatarImage 
-                src={user.user_metadata?.avatar_url} 
+                src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
                 alt={user.email || 'User'} 
               />
               <AvatarFallback className="bg-purple-600 text-white text-xs">
-                {getUserDisplayName()}
+                {getUserDisplayName().charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col space-y-1">
