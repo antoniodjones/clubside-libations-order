@@ -224,11 +224,11 @@ export const ManageProfile = () => {
               <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-600">
-                <SelectItem value="Male">Male</SelectItem>
-                <SelectItem value="Female">Female</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-                <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+              <SelectContent className="bg-gray-900 border-gray-600 text-white z-50">
+                <SelectItem value="Male" className="text-white hover:bg-gray-700 focus:bg-gray-700">Male</SelectItem>
+                <SelectItem value="Female" className="text-white hover:bg-gray-700 focus:bg-gray-700">Female</SelectItem>
+                <SelectItem value="Other" className="text-white hover:bg-gray-700 focus:bg-gray-700">Other</SelectItem>
+                <SelectItem value="Prefer not to say" className="text-white hover:bg-gray-700 focus:bg-gray-700">Prefer not to say</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -315,10 +315,10 @@ export const ManageProfile = () => {
               <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white mt-2">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-600">
-                <SelectItem value="Downtown Lounge">Downtown Lounge</SelectItem>
-                <SelectItem value="Uptown Bar">Uptown Bar</SelectItem>
-                <SelectItem value="Rooftop Venue">Rooftop Venue</SelectItem>
+              <SelectContent className="bg-gray-900 border-gray-600 text-white z-50">
+                <SelectItem value="Downtown Lounge" className="text-white hover:bg-gray-700 focus:bg-gray-700">Downtown Lounge</SelectItem>
+                <SelectItem value="Uptown Bar" className="text-white hover:bg-gray-700 focus:bg-gray-700">Uptown Bar</SelectItem>
+                <SelectItem value="Rooftop Venue" className="text-white hover:bg-gray-700 focus:bg-gray-700">Rooftop Venue</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -111,7 +111,7 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        className="w-56 bg-gray-900 border border-purple-400/20 text-white z-50" 
+        className="w-56 bg-gray-900 border border-purple-400/20 text-white z-50 shadow-lg" 
         align="end"
         side="bottom"
         sideOffset={5}
@@ -138,21 +138,21 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
         
         <div className="py-1">
           <DropdownMenuItem 
-            className="text-white hover:bg-purple-400/10 cursor-pointer"
+            className="text-white hover:bg-purple-400/10 cursor-pointer focus:bg-purple-400/10"
             onClick={() => navigate('/profile')}
           >
             <Settings className="w-4 h-4 mr-3" />
             Profile Settings
           </DropdownMenuItem>
           <DropdownMenuItem 
-            className="text-white hover:bg-purple-400/10 cursor-pointer"
+            className="text-white hover:bg-purple-400/10 cursor-pointer focus:bg-purple-400/10"
             onClick={() => navigate('/rewards')}
           >
             <Award className="w-4 h-4 mr-3" />
             Rewards
           </DropdownMenuItem>
           <DropdownMenuItem 
-            className="text-white hover:bg-purple-400/10 cursor-pointer"
+            className="text-white hover:bg-purple-400/10 cursor-pointer focus:bg-purple-400/10"
             onClick={() => navigate('/track-order')}
           >
             <ShoppingBag className="w-4 h-4 mr-3" />
@@ -164,7 +164,7 @@ export const UserMenu = ({ onLoginClick }: UserMenuProps) => {
         
         <div className="py-1">
           <DropdownMenuItem 
-            className="text-red-400 hover:bg-red-400/10 cursor-pointer"
+            className="text-red-400 hover:bg-red-400/10 cursor-pointer focus:bg-red-400/10"
             onClick={handleSignOut}
           >
             <LogOut className="w-4 h-4 mr-3" />

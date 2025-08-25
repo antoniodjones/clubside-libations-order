@@ -90,9 +90,13 @@ export function DatePicker({
             <SelectTrigger className="w-20">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="max-h-48">
+            <SelectContent className="max-h-48 bg-gray-900 border-gray-600 text-white z-50">
               {years.reverse().map((year) => (
-                <SelectItem key={year} value={year.toString()}>
+                <SelectItem 
+                  key={year} 
+                  value={year.toString()}
+                  className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                >
                   {year}
                 </SelectItem>
               ))}
