@@ -22,6 +22,7 @@ interface ProfileHeaderProps {
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile, rewards }) => {
   const userInitials = `${profile.first_name[0] || ''}${profile.last_name[0] || ''}`.toUpperCase();
+  const fullName = `${profile.first_name}${profile.last_name}`.replace(/\s/g, '');
   
   return (
     <div className="bg-black/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-6">
@@ -37,7 +38,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile
         </Avatar>
         <div>
           <h1 className="text-3xl font-bold mb-2 text-white">
-            {profile.first_name} {profile.last_name}
+            {fullName}
           </h1>
           <div className="flex items-center gap-4 text-gray-300">
             <div className="flex items-center gap-1">
