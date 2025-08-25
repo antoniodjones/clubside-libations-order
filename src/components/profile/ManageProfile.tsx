@@ -18,7 +18,7 @@ const mockPreferences = {
 
 export const ManageProfile = () => {
   const { toast } = useToast();
-  const { profile, updateProfile } = useProfile();
+  const { profile, updateProfile, isLoading } = useProfile();
   
   const [profileData, setProfileData] = useState({
     first_name: '',
@@ -43,14 +43,12 @@ export const ManageProfile = () => {
   const [newCategory, setNewCategory] = useState('');
   const [newRestriction, setNewRestriction] = useState('');
 
-  const handleProfileUpdate = () => {
-    // Update profile through context
-    updateProfile(profileData);
-    
-    toast({
-      title: "Profile Updated",
-      description: "Your profile information has been updated successfully.",
-    });
+  const handleProfileUpdate = async () => {
+    try {
+      await updateProfile(profileData);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+    }
   };
 
   const handlePreferencesUpdate = () => {
@@ -233,8 +231,12 @@ export const ManageProfile = () => {
             </Select>
           </div>
 
-          <Button onClick={handleProfileUpdate} className="bg-purple-500 hover:bg-purple-600">
-            Update Profile
+          <Button 
+            onClick={handleProfileUpdate} 
+            disabled={isLoading}
+            className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Update Profile'}
           </Button>
         </CardContent>
       </Card>
