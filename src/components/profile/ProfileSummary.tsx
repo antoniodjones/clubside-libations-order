@@ -11,62 +11,51 @@ import { AvailableOffersCard } from '@/components/profile/sections/AvailableOffe
 import { ExpandableSection } from '@/components/profile/common/ExpandableSection';
 import { mockCustomerData } from '@/data/mockCustomerData';
 import { truncateList } from '@/utils/profile';
-import { useUserProfile } from '@/hooks/useUserProfile';
 import { useAuth } from '@/hooks/useAuth';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const ProfileSummary: React.FC = React.memo(() => {
-  const { user } = useAuth();
-  const { profile, rewards, loading } = useUserProfile();
+  const { user, loading } = useAuth();
   const [showAllPlaces, setShowAllPlaces] = useState(false);
   const [showAllStaff, setShowAllStaff] = useState(false);
   const [showAllVenues, setShowAllVenues] = useState(false);
 
   const maxDisplayItems = 5;
 
-  // Create profile data with fallbacks
+  // Simplified profile data - use user data directly without complex dependencies
   const profileData = useMemo(() => {
-    if (profile) {
-      // Ensure all required fields are present for Profile type compatibility
-      return {
-        ...profile,
-        mobile_number: profile.mobile_number || '',
-        birthday: profile.birthday || '',
-        address_line_1: profile.address_line_1 || '',
-        city: profile.city || '',
-        state: profile.state || '',
-        postal_code: profile.postal_code || '',
-        gender: profile.gender || '',
-      };
-    }
-    
-    // Fallback to user metadata if no profile yet
-    if (user) {
+    if (user?.email) {
       return {
         ...mockCustomerData.profile,
-        first_name: user.user_metadata?.first_name || user.email?.split('@')[0] || 'User',
+        first_name: user.user_metadata?.first_name || user.email.split('@')[0] || 'User',
         last_name: user.user_metadata?.last_name || '',
-        email: user.email || mockCustomerData.profile.email,
+        email: user.email,
       };
     }
-    
     return mockCustomerData.profile;
-  }, [profile, user]);
+  }, [user?.email, user?.user_metadata?.first_name, user?.user_metadata?.last_name]);
 
-  // Use real rewards data or fallback to mock
-  const rewardsData = useMemo(() => {
-    if (rewards) {
-      return {
-        total_points: rewards.total_points,
-        available_points: rewards.available_points,
-        tier: 'Gold', // TODO: Calculate from rewards.reward_tier_id
-        tier_color: 'hsl(45, 100%, 50%)',
-        lifetime_spent: rewards.lifetime_spent,
-        anniversary_date: rewards.anniversary_date || '2023-01-15'
-      };
-    }
-    return mockCustomerData.rewards;
-  }, [rewards]);
+  // Use mock rewards for now to prevent complexity
+  const rewardsData = useMemo(() => mockCustomerData.rewards, []);
+
+  const displayedPlaces = useMemo(() => 
+    truncateList(mockCustomerData.aboutCustomer.favoritePlaces, maxDisplayItems, showAllPlaces),
+    [showAllPlaces]
+  );
+
+  const displayedStaff = useMemo(() => 
+    truncateList(mockCustomerData.aboutCustomer.favoriteStaffMembers, maxDisplayItems, showAllStaff),
+    [showAllStaff]
+  );
+
+  const displayedVenues = useMemo(() => 
+    truncateList(mockCustomerData.aboutCustomer.venuesVisited, maxDisplayItems, showAllVenues),
+    [showAllVenues]
+  );
+
+  const togglePlaces = React.useCallback(() => setShowAllPlaces(prev => !prev), []);
+  const toggleStaff = React.useCallback(() => setShowAllStaff(prev => !prev), []);
+  const toggleVenues = React.useCallback(() => setShowAllVenues(prev => !prev), []);
 
   if (loading) {
     return (
@@ -95,25 +84,6 @@ export const ProfileSummary: React.FC = React.memo(() => {
       </div>
     );
   }
-
-  const displayedPlaces = useMemo(() => 
-    truncateList(mockCustomerData.aboutCustomer.favoritePlaces, maxDisplayItems, showAllPlaces),
-    [showAllPlaces]
-  );
-
-  const displayedStaff = useMemo(() => 
-    truncateList(mockCustomerData.aboutCustomer.favoriteStaffMembers, maxDisplayItems, showAllStaff),
-    [showAllStaff]
-  );
-
-  const displayedVenues = useMemo(() => 
-    truncateList(mockCustomerData.aboutCustomer.venuesVisited, maxDisplayItems, showAllVenues),
-    [showAllVenues]
-  );
-
-  const togglePlaces = React.useCallback(() => setShowAllPlaces(prev => !prev), []);
-  const toggleStaff = React.useCallback(() => setShowAllStaff(prev => !prev), []);
-  const toggleVenues = React.useCallback(() => setShowAllVenues(prev => !prev), []);
 
   return (
     <div className="space-y-6">

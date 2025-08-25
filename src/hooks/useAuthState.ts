@@ -44,16 +44,18 @@ export const useAuthState = () => {
   };
 
   useEffect(() => {
+    let mounted = true;
     console.log('🔐 Setting up auth state listener...');
     
     // Check demo session first
     if (checkDemoSession()) {
-      return () => {}; 
+      return () => { mounted = false; }; 
     }
     
     // Set up Supabase auth listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (!mounted) return;
         console.log('🔐 Auth state changed:', event, session?.user?.email || 'no user');
         if (!session) {
           checkDemoSession();
@@ -67,6 +69,7 @@ export const useAuthState = () => {
 
     // Check existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
       console.log('🔐 Initial session check:', session?.user?.email || 'no session');
       if (!session) {
         checkDemoSession();
@@ -77,7 +80,10 @@ export const useAuthState = () => {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   return {

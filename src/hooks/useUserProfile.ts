@@ -73,7 +73,7 @@ export const useUserProfile = () => {
     } finally {
       setLoading(false);
     }
-  }, [user?.id, user?.user_metadata, user?.email]);
+  }, [user?.id]); // Only depend on user.id, not the full user object
 
   const updateProfile = useCallback(async (updates: Partial<UserProfile>) => {
     if (!user?.id) {
@@ -100,9 +100,16 @@ export const useUserProfile = () => {
     }
   }, [user?.id]);
 
+  // Only call fetchProfile when user.id changes, not on every user change
   useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+    if (user?.id) {
+      fetchProfile();
+    } else {
+      setProfile(null);
+      setRewards(null);
+      setLoading(false);
+    }
+  }, [user?.id, fetchProfile]);
 
   return {
     profile,
