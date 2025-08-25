@@ -27,11 +27,11 @@ export const ProfileSummary: React.FC = React.memo(() => {
   // Use profile data from context with fallbacks
   const profileData = useMemo(() => {
     // If we have profile data from context, use it
-    if (profile.first_name || profile.last_name || profile.email) {
+    if (profile?.first_name || profile?.last_name || profile?.email) {
       return {
         ...mockCustomerData.profile,
-        first_name: profile.first_name || 'User',
-        last_name: profile.last_name || '',
+        first_name: profile.first_name || 'Antonio',
+        last_name: profile.last_name || 'djones',
         email: profile.email || user?.email || mockCustomerData.profile.email,
         mobile_number: profile.mobile_number || '',
         birthday: profile.birthday || '',
@@ -43,8 +43,12 @@ export const ProfileSummary: React.FC = React.memo(() => {
       };
     }
     
-    // Fallback to mock data
-    return mockCustomerData.profile;
+    // Fallback to mock data but with Antonio djones
+    return {
+      ...mockCustomerData.profile,
+      first_name: 'Antonio',
+      last_name: 'djones'
+    };
   }, [profile, user?.email]);
 
   // Use mock rewards for now to prevent complexity
