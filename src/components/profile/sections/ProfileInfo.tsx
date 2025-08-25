@@ -1,11 +1,21 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User, Mail, Phone, MapPin, Calendar } from 'lucide-react';
-import { Profile } from '@/types/profile';
 import { calculateAge, formatDate } from '@/utils/profile';
 
+interface ProfileData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  mobile_number: string;
+  birthday: string;
+  address_line_1: string;
+  city: string;
+  state: string;
+}
+
 interface ProfileInfoProps {
-  profile: Profile;
+  profile: ProfileData;
 }
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = React.memo(({ profile }) => {

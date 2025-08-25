@@ -11,27 +11,90 @@ import { AvailableOffersCard } from '@/components/profile/sections/AvailableOffe
 import { ExpandableSection } from '@/components/profile/common/ExpandableSection';
 import { mockCustomerData } from '@/data/mockCustomerData';
 import { truncateList } from '@/utils/profile';
+import { useUserProfile } from '@/hooks/useUserProfile';
 import { useAuth } from '@/hooks/useAuth';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const ProfileSummary: React.FC = () => {
+export const ProfileSummary: React.FC = React.memo(() => {
   const { user } = useAuth();
+  const { profile, rewards, loading } = useUserProfile();
   const [showAllPlaces, setShowAllPlaces] = useState(false);
   const [showAllStaff, setShowAllStaff] = useState(false);
   const [showAllVenues, setShowAllVenues] = useState(false);
 
   const maxDisplayItems = 5;
 
-  // Create profile data from authenticated user
+  // Create profile data with fallbacks
   const profileData = useMemo(() => {
-    if (!user) return mockCustomerData.profile;
+    if (profile) {
+      // Ensure all required fields are present for Profile type compatibility
+      return {
+        ...profile,
+        mobile_number: profile.mobile_number || '',
+        birthday: profile.birthday || '',
+        address_line_1: profile.address_line_1 || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        postal_code: profile.postal_code || '',
+        gender: profile.gender || '',
+      };
+    }
     
-    return {
-      ...mockCustomerData.profile,
-      first_name: user.user_metadata?.first_name || user.email?.split('@')[0] || 'User',
-      last_name: user.user_metadata?.last_name || '',
-      email: user.email || mockCustomerData.profile.email,
-    };
-  }, [user]);
+    // Fallback to user metadata if no profile yet
+    if (user) {
+      return {
+        ...mockCustomerData.profile,
+        first_name: user.user_metadata?.first_name || user.email?.split('@')[0] || 'User',
+        last_name: user.user_metadata?.last_name || '',
+        email: user.email || mockCustomerData.profile.email,
+      };
+    }
+    
+    return mockCustomerData.profile;
+  }, [profile, user]);
+
+  // Use real rewards data or fallback to mock
+  const rewardsData = useMemo(() => {
+    if (rewards) {
+      return {
+        total_points: rewards.total_points,
+        available_points: rewards.available_points,
+        tier: 'Gold', // TODO: Calculate from rewards.reward_tier_id
+        tier_color: 'hsl(45, 100%, 50%)',
+        lifetime_spent: rewards.lifetime_spent,
+        anniversary_date: rewards.anniversary_date || '2023-01-15'
+      };
+    }
+    return mockCustomerData.rewards;
+  }, [rewards]);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-black/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-6">
+          <div className="flex items-center gap-6">
+            <Skeleton className="h-20 w-20 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bg-black/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-6">
+              <Skeleton className="h-6 w-32 mb-4" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   const displayedPlaces = useMemo(() => 
     truncateList(mockCustomerData.aboutCustomer.favoritePlaces, maxDisplayItems, showAllPlaces),
@@ -48,19 +111,23 @@ export const ProfileSummary: React.FC = () => {
     [showAllVenues]
   );
 
+  const togglePlaces = React.useCallback(() => setShowAllPlaces(prev => !prev), []);
+  const toggleStaff = React.useCallback(() => setShowAllStaff(prev => !prev), []);
+  const toggleVenues = React.useCallback(() => setShowAllVenues(prev => !prev), []);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <ProfileHeader 
         profile={profileData} 
-        rewards={mockCustomerData.rewards} 
+        rewards={rewardsData} 
       />
 
       <div className="space-y-6">
         {/* Top Section - Profile and Loyalty */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <ProfileInfo profile={profileData} />
-          <RewardsStatusCard rewards={mockCustomerData.rewards} />
+          <RewardsStatusCard rewards={rewardsData} />
           <OrderHistoryCard orders={mockCustomerData.recentOrders} />
         </div>
 
@@ -115,7 +182,7 @@ export const ProfileSummary: React.FC = () => {
                 title="Venues Visited"
                 totalCount={mockCustomerData.aboutCustomer.venuesVisited.length}
                 isExpanded={showAllVenues}
-                onToggle={() => setShowAllVenues(!showAllVenues)}
+                onToggle={toggleVenues}
                 maxDisplayItems={maxDisplayItems}
               >
                 <div className="space-y-2">
@@ -144,7 +211,7 @@ export const ProfileSummary: React.FC = () => {
                 title="Favorite Staff"
                 totalCount={mockCustomerData.aboutCustomer.favoriteStaffMembers.length}
                 isExpanded={showAllStaff}
-                onToggle={() => setShowAllStaff(!showAllStaff)}
+                onToggle={toggleStaff}
                 maxDisplayItems={maxDisplayItems}
               >
                 <div className="space-y-2">
@@ -173,7 +240,7 @@ export const ProfileSummary: React.FC = () => {
               title="Favorite Places"
               totalCount={mockCustomerData.aboutCustomer.favoritePlaces.length}
               isExpanded={showAllPlaces}
-              onToggle={() => setShowAllPlaces(!showAllPlaces)}
+              onToggle={togglePlaces}
               maxDisplayItems={maxDisplayItems}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -199,4 +266,6 @@ export const ProfileSummary: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+ProfileSummary.displayName = 'ProfileSummary';

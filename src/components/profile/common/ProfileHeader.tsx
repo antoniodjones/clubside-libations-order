@@ -1,21 +1,38 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trophy, Star } from 'lucide-react';
-import { Profile, RewardsData } from '@/types/profile';
+
+interface ProfileData {
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
+interface RewardsData {
+  total_points: number;
+  available_points: number;
+  tier: string;
+  tier_color?: string;
+}
 
 interface ProfileHeaderProps {
-  profile: Profile;
+  profile: ProfileData;
   rewards: RewardsData;
 }
 
-export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profile, rewards }) => {
+export const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile, rewards }) => {
+  const userInitials = `${profile.first_name[0] || ''}${profile.last_name[0] || ''}`.toUpperCase();
+  
   return (
     <div className="bg-black/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-6">
       <div className="flex items-center gap-6">
         <Avatar className="h-20 w-20">
-          <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
+          <AvatarImage 
+            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.email}`}
+            alt={`${profile.first_name} ${profile.last_name}`} 
+          />
           <AvatarFallback className="text-2xl bg-purple-500/20 text-white">
-            {profile.first_name[0]}{profile.last_name[0]}
+            {userInitials}
           </AvatarFallback>
         </Avatar>
         <div>
@@ -36,4 +53,4 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profile, rewards }
       </div>
     </div>
   );
-};
+});
