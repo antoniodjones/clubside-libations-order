@@ -11,13 +11,27 @@ import { AvailableOffersCard } from '@/components/profile/sections/AvailableOffe
 import { ExpandableSection } from '@/components/profile/common/ExpandableSection';
 import { mockCustomerData } from '@/data/mockCustomerData';
 import { truncateList } from '@/utils/profile';
+import { useAuth } from '@/hooks/useAuth';
 
 export const ProfileSummary: React.FC = () => {
+  const { user } = useAuth();
   const [showAllPlaces, setShowAllPlaces] = useState(false);
   const [showAllStaff, setShowAllStaff] = useState(false);
   const [showAllVenues, setShowAllVenues] = useState(false);
 
   const maxDisplayItems = 5;
+
+  // Create profile data from authenticated user
+  const profileData = useMemo(() => {
+    if (!user) return mockCustomerData.profile;
+    
+    return {
+      ...mockCustomerData.profile,
+      first_name: user.user_metadata?.first_name || user.email?.split('@')[0] || 'User',
+      last_name: user.user_metadata?.last_name || '',
+      email: user.email || mockCustomerData.profile.email,
+    };
+  }, [user]);
 
   const displayedPlaces = useMemo(() => 
     truncateList(mockCustomerData.aboutCustomer.favoritePlaces, maxDisplayItems, showAllPlaces),
@@ -38,14 +52,14 @@ export const ProfileSummary: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <ProfileHeader 
-        profile={mockCustomerData.profile} 
+        profile={profileData} 
         rewards={mockCustomerData.rewards} 
       />
 
       <div className="space-y-6">
         {/* Top Section - Profile and Loyalty */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <ProfileInfo profile={mockCustomerData.profile} />
+          <ProfileInfo profile={profileData} />
           <RewardsStatusCard rewards={mockCustomerData.rewards} />
           <OrderHistoryCard orders={mockCustomerData.recentOrders} />
         </div>
@@ -58,7 +72,7 @@ export const ProfileSummary: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <User className="h-5 w-5" />
-              About {mockCustomerData.profile.first_name}
+              About {profileData.first_name}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
