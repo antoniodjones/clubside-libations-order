@@ -121,13 +121,15 @@ export const AccountDashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Account Dashboard</h1>
-          <p className="text-muted-foreground">Track your spending, orders, and biometric data over the last 24 months</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Account Dashboard
+          </h1>
+          <p className="text-muted-foreground mt-2">Track your spending, orders, and biometric data over the last 24 months</p>
         </div>
-        <Badge variant="outline" className="text-primary border-primary/30">
+        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
           <Calendar className="w-4 h-4 mr-2" />
           Last 24 Months
         </Badge>
@@ -135,50 +137,58 @@ export const AccountDashboard = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-card/50 backdrop-blur-sm border-primary/20">
+        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-300 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm">Total Spending</p>
-                <p className="text-2xl font-bold text-foreground">${totals.totalSpending.toFixed(2)}</p>
+                <p className="text-muted-foreground text-sm font-medium">Total Spending</p>
+                <p className="text-2xl font-bold text-foreground mt-1">${totals.totalSpending.toFixed(2)}</p>
               </div>
-              <DollarSign className="h-8 w-8 text-primary" />
+              <div className="bg-primary/10 p-3 rounded-full">
+                <DollarSign className="h-6 w-6 text-primary" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur-sm border-primary/20">
+        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 hover:border-accent/30 transition-all duration-300 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm">Total Orders</p>
-                <p className="text-2xl font-bold text-foreground">{totals.totalOrders}</p>
+                <p className="text-muted-foreground text-sm font-medium">Total Orders</p>
+                <p className="text-2xl font-bold text-foreground mt-1">{totals.totalOrders}</p>
               </div>
-              <ShoppingBag className="h-8 w-8 text-primary" />
+              <div className="bg-accent/10 p-3 rounded-full">
+                <ShoppingBag className="h-6 w-6 text-accent-foreground" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur-sm border-primary/20">
+        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 hover:border-secondary/30 transition-all duration-300 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm">Avg Monthly Spending</p>
-                <p className="text-2xl font-bold text-foreground">${totals.avgMonthlySpending.toFixed(2)}</p>
+                <p className="text-muted-foreground text-sm font-medium">Avg Monthly Spending</p>
+                <p className="text-2xl font-bold text-foreground mt-1">${totals.avgMonthlySpending.toFixed(2)}</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-primary" />
+              <div className="bg-secondary/20 p-3 rounded-full">
+                <TrendingUp className="h-6 w-6 text-secondary-foreground" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur-sm border-primary/20">
+        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 hover:border-destructive/30 transition-all duration-300 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm">Biometric Sessions</p>
-                <p className="text-2xl font-bold text-foreground">{totals.biometricSessions}</p>
+                <p className="text-muted-foreground text-sm font-medium">Biometric Sessions</p>
+                <p className="text-2xl font-bold text-foreground mt-1">{totals.biometricSessions}</p>
               </div>
-              <Activity className="h-8 w-8 text-primary" />
+              <div className="bg-destructive/10 p-3 rounded-full">
+                <Activity className="h-6 w-6 text-destructive" />
+              </div>
             </div>
           </CardContent>
         </Card>
